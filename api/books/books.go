@@ -21,6 +21,11 @@ func GetBooks(c *fiber.Ctx) error {
 	db := database.DB
 	var books []Book
 	db.Find(&books)
+	println(len(books))
+
+	for i := 0; i < len(books); i++ {
+		println(books[i].Title)
+	}
 	return c.JSON(books)
 }
 

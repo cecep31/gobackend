@@ -5,6 +5,7 @@ import (
 
 	"github.com/cecep31/gobackend/api"
 	"github.com/cecep31/gobackend/api/books"
+	"github.com/cecep31/gobackend/api/items"
 	"github.com/cecep31/gobackend/database"
 	"github.com/cecep31/gobackend/server"
 
@@ -22,6 +23,7 @@ func main() {
 
 	// Migrations
 	database.DB.AutoMigrate(&books.Book{})
+	database.DB.AutoMigrate(&items.Items{})
 
 	// Api routes
 	api.Setup(app)
