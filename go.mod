@@ -13,6 +13,8 @@ require (
 	github.com/go-sql-driver/mysql v1.4.0 // indirect
 	github.com/gofiber/fiber/v2 v2.39.0
 	github.com/gofiber/helmet/v2 v2.2.21
+	github.com/gofiber/jwt/v2 v2.2.7 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/hashicorp/go-version v1.2.0 // indirect
 	github.com/hashicorp/go.net v0.0.1 // indirect

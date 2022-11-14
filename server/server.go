@@ -24,6 +24,7 @@ func setupMiddlewares(app *fiber.App) {
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed, // 1
 	}))
+
 	app.Use(etag.New())
 	if os.Getenv("ENABLE_LIMITER") != "" {
 		app.Use(limiter.New())

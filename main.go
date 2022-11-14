@@ -22,8 +22,7 @@ func main() {
 	app := server.Create()
 
 	// Migrations
-	database.DB.AutoMigrate(&books.Book{})
-	database.DB.AutoMigrate(&items.Items{})
+	database.DB.AutoMigrate(&books.Book{}, &items.Items{})
 
 	// Api routes
 	api.Setup(app)

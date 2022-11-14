@@ -1,8 +1,12 @@
 package items
 
 import (
+	"errors"
+
 	"github.com/cecep31/gobackend/database"
+	"github.com/cecep31/gobackend/pkg"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 type Items struct {
@@ -22,4 +26,18 @@ func GetItems(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(items)
+}
+
+func GetItem(c *fiber.Ctx) error {
+	id := c.Params("id")
+	db := database.DB
+	var item Items
+	err := db.First(&item, id).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return pkg.EntityNotFound("Item not found")
+	} else if err != nil {
+		return pkg.Unexpected(err.Error())
+	}
+	return c.JSON(item)
 }
