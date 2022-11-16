@@ -53,7 +53,10 @@ func Create() *fiber.App {
 	setupMiddlewares(app)
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("OK")
+		return c.JSON(fiber.Map{
+			"status":  "success",
+			"message": "server ready",
+		})
 	})
 
 	return app

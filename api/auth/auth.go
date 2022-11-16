@@ -21,7 +21,7 @@ func Login(c *fiber.Ctx) error {
 
 	identity := input.Identity
 	pass := input.Password
-	if identity != "ender" || pass != "ender" {
+	if identity != "pilput" || pass != "pilput" {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
@@ -36,7 +36,6 @@ func Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
-
 	return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": t})
 
 }
