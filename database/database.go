@@ -30,7 +30,7 @@ func SetupDatabase() {
 
 	var err error
 	var config gorm.Config
-	dsn := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
+	dsn := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=prefer password=%s", dbHost, username, dbName, password)
 
 	if os.Getenv("ENABLE_GORM_LOGGER") != "" {
 		config = gorm.Config{}
