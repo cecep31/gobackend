@@ -1,28 +1,13 @@
-FROM golang:1.18-alpine AS builder
+FROM golang:1.18-alpine
 
-ENV CGO_ENABLED=0
-ENV GOOS=linux
-ENV GOARCH=amd64
-
-WORKDIR /build
-
-COPY go.mod .
-COPY go.sum .
-
-RUN go mod download
+WORKDIR /app
 
 COPY . .
 
-RUN go build -o main .
+RUN go get
 
-WORKDIR /dist
+RUN go build
 
-RUN cp /build/main .
+EXPOSE 8080
 
-FROM scratch
-
-COPY --from=builder /dist/main /
-COPY --from=builder /build/.env /
-
-# Command to run
-ENTRYPOINT ["/main"]
+CMD ./gobackend
