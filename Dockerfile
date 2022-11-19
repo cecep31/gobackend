@@ -8,6 +8,6 @@ RUN go get
 
 RUN go build
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ./gobackend
