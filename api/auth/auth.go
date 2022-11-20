@@ -26,7 +26,6 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
-	role := "admin"
 	claims := token.Claims.(jwt.MapClaims)
 	claims["identity"] = identity
 	claims["role"] = "admin"
@@ -36,15 +35,11 @@ func Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
-	var data = map[string]string{
-		"name":  identity,
-		"role":  role,
-		"token": t,
-	}
+
 	return c.JSON(fiber.Map{
 		"status":  "success",
 		"message": "Success login",
-		"data":    data,
+		"data":    t,
 	})
 
 }
