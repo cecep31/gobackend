@@ -6,9 +6,9 @@ import (
 	"github.com/cecep31/gobackend/api"
 	"github.com/cecep31/gobackend/api/books"
 	"github.com/cecep31/gobackend/api/items"
+	"github.com/cecep31/gobackend/api/users"
 	"github.com/cecep31/gobackend/database"
 	"github.com/cecep31/gobackend/server"
-
 	"github.com/joho/godotenv"
 )
 
@@ -22,7 +22,7 @@ func main() {
 	app := server.Create()
 
 	// Migrations
-	database.DB.AutoMigrate(&books.Book{}, &items.Items{})
+	database.DB.AutoMigrate(&books.Book{}, &items.Items{}, &users.User{})
 
 	// Api routes
 	api.Setup(app)
