@@ -43,8 +43,6 @@ func Login(c *fiber.Ctx) error {
 		return pkg.Unexpected(err.Error())
 	}
 
-	username := user.Password
-	println(username)
 	pass := input.Password
 
 	if !CheckPasswordHash(pass, user.Password) {
