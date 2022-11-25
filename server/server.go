@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cecep31/gobackend/database"
-	"github.com/cecep31/gobackend/pkg"
+	"gobackend/database"
+	"gobackend/pkg"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"

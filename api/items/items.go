@@ -3,8 +3,9 @@ package items
 import (
 	"errors"
 
-	"github.com/cecep31/gobackend/database"
-	"github.com/cecep31/gobackend/pkg"
+	"gobackend/database"
+	"gobackend/pkg"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )

@@ -3,23 +3,17 @@ package books
 import (
 	"errors"
 
-	"github.com/cecep31/gobackend/database"
-	"github.com/cecep31/gobackend/pkg"
+	"gobackend/database"
+	"gobackend/pkg"
+	"gobackend/pkg/entities"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-type Book struct {
-	database.DefaultModel
-	Title  string `json:"title"`
-	Author string `json:"author"`
-	Rating int    `json:"rating"`
-}
-
 func GetBooks(c *fiber.Ctx) error {
 	db := database.DB
-	var books []Book
+	var books []entities.Book
 	db.Find(&books)
 	return c.JSON(books)
 }
@@ -27,7 +21,7 @@ func GetBooks(c *fiber.Ctx) error {
 func GetBook(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
-	var book Book
+	var book entities.Book
 	err := db.First(&book, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -41,7 +35,7 @@ func GetBook(c *fiber.Ctx) error {
 
 func NewBook(c *fiber.Ctx) error {
 	db := database.DB
-	book := new(Book)
+	book := new(entities.Book)
 	if err := c.BodyParser(book); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
@@ -52,7 +46,7 @@ func NewBook(c *fiber.Ctx) error {
 func UpdateBook(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
-	var book Book
+	var book entities.Book
 	err := db.First(&book, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -61,13 +55,13 @@ func UpdateBook(c *fiber.Ctx) error {
 		return pkg.Unexpected(err.Error())
 	}
 
-	updatedBook := new(Book)
+	updatedBook := new(entities.Book)
 
 	if err := c.BodyParser(updatedBook); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
 
-	updatedBook = &Book{Title: updatedBook.Title, Author: updatedBook.Author, Rating: updatedBook.Rating}
+	updatedBook = &entities.Book{Title: updatedBook.Title, Author: updatedBook.Author, Rating: updatedBook.Rating}
 
 	if err = db.Model(&book).Updates(updatedBook).Error; err != nil {
 		return pkg.Unexpected(err.Error())
@@ -80,7 +74,7 @@ func DeleteBook(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 
-	var book Book
+	var book entities.Book
 	err := db.First(&book, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {

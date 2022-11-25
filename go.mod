@@ -1,4 +1,4 @@
-module github.com/cecep31/gobackend
+module gobackend
 
 go 1.16
 

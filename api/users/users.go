@@ -3,8 +3,9 @@ package users
 import (
 	"errors"
 
-	"github.com/cecep31/gobackend/database"
-	"github.com/cecep31/gobackend/pkg"
+	"gobackend/database"
+	"gobackend/pkg"
+
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -13,13 +14,22 @@ import (
 type User struct {
 	database.DefaultModel
 	Username string `json:"username"`
+	Role     string `json:"role"`
 	Password string `json:"password" gorm:"type:text"`
+	Image    string `json:"image" gorm:"type:text"`
+}
+
+// users without paasword
+type Users struct {
+	database.DefaultModel
+	Username string `json:"username"`
+	Role     string `json:"role"`
 	Image    string `json:"image" gorm:"type:text"`
 }
 
 func GetUsers(c *fiber.Ctx) error {
 	db := database.DB
-	var users []User
+	var users []Users
 	db.Find(&users)
 	println(len(users))
 	return c.JSON(users)

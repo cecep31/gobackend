@@ -3,12 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/cecep31/gobackend/api"
-	"github.com/cecep31/gobackend/api/books"
-	"github.com/cecep31/gobackend/api/items"
-	"github.com/cecep31/gobackend/api/users"
-	"github.com/cecep31/gobackend/database"
-	"github.com/cecep31/gobackend/server"
+	"gobackend/api"
+	"gobackend/database"
+	"gobackend/pkg/entities"
+	"gobackend/server"
+
 	"github.com/joho/godotenv"
 )
 
@@ -22,7 +21,7 @@ func main() {
 	app := server.Create()
 
 	// Migrations
-	database.DB.AutoMigrate(&books.Book{}, &items.Items{}, &users.User{})
+	database.DB.AutoMigrate(&entities.Book{}, &entities.Items{}, &entities.User{})
 
 	// Api routes
 	api.Setup(app)

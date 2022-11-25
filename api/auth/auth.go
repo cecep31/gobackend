@@ -5,9 +5,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/cecep31/gobackend/api/users"
-	"github.com/cecep31/gobackend/database"
-	"github.com/cecep31/gobackend/pkg"
+	"gobackend/api/users"
+	"gobackend/database"
+	"gobackend/pkg"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"

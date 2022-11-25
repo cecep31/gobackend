@@ -1,11 +1,11 @@
 package api
 
 import (
-	"github.com/cecep31/gobackend/api/auth"
-	"github.com/cecep31/gobackend/api/books"
-	"github.com/cecep31/gobackend/api/items"
-	"github.com/cecep31/gobackend/api/users"
-	"github.com/cecep31/gobackend/middleware"
+	"gobackend/api/auth"
+	"gobackend/api/books"
+	"gobackend/api/items"
+	"gobackend/api/users"
+	"gobackend/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
