@@ -5,6 +5,7 @@ import (
 
 	"gobackend/database"
 	"gobackend/pkg"
+	"gobackend/pkg/entities"
 
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
@@ -42,16 +43,25 @@ func HashPassword(password string) (string, error) {
 
 func NewUser(c *fiber.Ctx) error {
 	db := database.DB
-	user := new(User)
+	user := new(entities.User)
 	if err := c.BodyParser(user); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
-	hash, _ := HashPassword(user.Password)
 
+	var existuser Users
+	err := db.Where("username = ?", user.Username).First(&existuser).Error
+	if !(errors.Is(err, gorm.ErrRecordNotFound)) {
+		return c.JSON(fiber.Map{
+			"message": "user telah ada",
+		})
+	}
+
+	hash, _ := HashPassword(user.Password)
 	// println(&bytes)
 	// newuser.Password = string(hash)
 	user.Password = hash
 	db.Create(&user)
+
 	return c.JSON(fiber.Map{
 		"username": user.Username,
 	})
@@ -61,7 +71,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 
-	var user User
+	var user entities.User
 	err := db.First(&user, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
