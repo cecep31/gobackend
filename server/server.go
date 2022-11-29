@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/goccy/go-json"
+
 	"gobackend/database"
 	"gobackend/pkg"
 
@@ -48,6 +50,9 @@ func Create() *fiber.App {
 				return ctx.Status(500).JSON(pkg.Error{Status: 500, Code: "internal-server", Message: err.Error()})
 			}
 		},
+		AppName:     "pilput-turbo",
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
 	})
 
 	setupMiddlewares(app)

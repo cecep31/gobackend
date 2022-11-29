@@ -3,6 +3,7 @@ module gobackend
 go 1.16
 
 require (
+	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/gofiber/fiber/v2 v2.40.1
 	github.com/gofiber/helmet/v2 v2.2.22
 	github.com/gofiber/jwt/v2 v2.2.7
