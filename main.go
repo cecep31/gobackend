@@ -21,7 +21,7 @@ func main() {
 	app := server.Create()
 
 	// Migrations
-	database.DB.AutoMigrate(&entities.Book{}, &entities.Items{}, &entities.User{})
+	database.DB.AutoMigrate(&entities.Book{}, &entities.Items{}, &entities.User{}, &entities.Task{}, &entities.Taskgorup{})
 
 	// Api routes
 	api.Setup(app)

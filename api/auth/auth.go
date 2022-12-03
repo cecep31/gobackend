@@ -5,15 +5,23 @@ import (
 	"os"
 	"time"
 
-	"gobackend/api/users"
 	"gobackend/database"
 	"gobackend/pkg"
+	"gobackend/pkg/entities"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
+
+type Users struct {
+	database.DefaultModel
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Role     string `json:"role"`
+	Image    string `json:"image" gorm:"type:text"`
+}
 
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
@@ -26,7 +34,7 @@ func Login(c *fiber.Ctx) error {
 		Identity string `json:"identity"`
 		Password string `jsno:"password"`
 	}
-	var user users.User
+	var user entities.User
 
 	var input LoginInput
 
