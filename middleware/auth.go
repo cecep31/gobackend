@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"gobackend/database"
 	"gobackend/pkg"
+	"gobackend/pkg/entities"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -43,4 +45,16 @@ func IsSuperAdmin(c *fiber.Ctx) error {
 	} else {
 		return c.Next()
 	}
+}
+
+func GetUser(c *fiber.Ctx) error {
+	userlocal := c.Locals("user").(*jwt.Token)
+	claims := userlocal.Claims.(jwt.MapClaims)
+	username := claims["identity"].(string)
+	db := database.DB
+	var userdata entities.User
+	db.Where("username = ?", username).First(&userdata)
+
+	c.Locals("datauser", userdata)
+	return c.Next()
 }
