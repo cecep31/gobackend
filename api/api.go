@@ -12,7 +12,7 @@ import (
 )
 
 func Setup(app *fiber.App) {
-	v1 := app.Group("/api/v1", middleware.Protected(), middleware.GetUser)
+	v1 := app.Group("/api/v1", middleware.Protected())
 	authg := app.Group("api/auth")
 	books.Routes(v1)
 	items.Routes(v1)
