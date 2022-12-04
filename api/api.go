@@ -4,6 +4,7 @@ import (
 	"gobackend/api/auth"
 	"gobackend/api/books"
 	"gobackend/api/items"
+	"gobackend/api/tasks"
 	"gobackend/api/users"
 	"gobackend/middleware"
 
@@ -16,5 +17,6 @@ func Setup(app *fiber.App) {
 	books.Routes(v1)
 	items.Routes(v1)
 	users.Routes(v1)
+	tasks.Routes(v1)
 	auth.Routes(authg)
 }

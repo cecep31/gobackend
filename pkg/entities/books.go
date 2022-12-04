@@ -7,4 +7,5 @@ type Book struct {
 	Title  string `json:"title"`
 	Author string `json:"author"`
 	Rating int    `json:"rating"`
+	Price  int32  `json:"price" gorm:"default:0"`
 }

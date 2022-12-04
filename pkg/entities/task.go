@@ -10,4 +10,5 @@ type Task struct {
 	Group      Taskgorup
 	Created_by int64 `json:"created_by"`
 	CreatedBy  User  `gorm:"foreignKey:Created_by"`
+	Order      int64 `json:"order"`
 }

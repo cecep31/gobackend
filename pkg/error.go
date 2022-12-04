@@ -21,3 +21,7 @@ func BadRequest(m string) *Error {
 func Unexpected(m string) *Error {
 	return &Error{Status: 500, Code: "internal-server", Message: m}
 }
+
+func CredentionProtect(m string) *Error {
+	return &Error{Status: 403, Code: "Forbidden access", Message: m}
+}

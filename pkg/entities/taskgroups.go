@@ -7,4 +7,5 @@ type Taskgorup struct {
 	Name       string `json:"name"`
 	Created_by int64  `json:"created_by"`
 	CreatedBy  User   `gorm:"foreignKey:created_by"`
+	Order      int64  `json:"order"`
 }
