@@ -10,4 +10,5 @@ func Routes(route fiber.Router) {
 	route.Get("tasks", GetTasks)
 	route.Get("mytasks", middleware.GetUser, GetMyTasks)
 	route.Post("taskgroups", middleware.GetUser, NewTaskGroup)
+	route.Post("tasks", middleware.GetUser, NewTask)
 }
