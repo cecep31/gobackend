@@ -21,6 +21,15 @@ func GetTaskGroups(c *fiber.Ctx) error {
 	db.Find(&taskgroup)
 	return c.JSON(taskgroup)
 }
+
+func GetMyTaskGroup(c *fiber.Ctx) error {
+	user := c.Locals("datauser").(entities.User)
+	db := database.DB
+	var taskgroup []entities.Taskgorup
+	db.Where("created_by = ?", user.ID).Preload("Task").Find(&taskgroup)
+	return c.JSON(taskgroup)
+
+}
 func GetMyTasks(c *fiber.Ctx) error {
 	user := c.Locals("datauser").(entities.User)
 	var task []entities.Task
