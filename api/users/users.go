@@ -25,7 +25,6 @@ func GetUsers(c *fiber.Ctx) error {
 	db := database.DB
 	var users []Users
 	db.Find(&users)
-	println(len(users))
 	return c.JSON(users)
 }
 
