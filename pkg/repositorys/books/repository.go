@@ -5,7 +5,7 @@ import (
 )
 
 type Repository interface {
-	CreateBook() (*entities.Book, error)
+	CreateBook() (*entities.Books, error)
 }
 
 // type repository struct {

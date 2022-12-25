@@ -30,16 +30,16 @@ func TestMain(m *testing.M) {
 	}
 
 	app = server.Create()
-	database.DB.AutoMigrate(&entities.Book{})
+	database.DB.AutoMigrate(&entities.Books{})
 	Routes(app)
 
 	// Cleanup books
-	database.DB.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&entities.Book{})
+	database.DB.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&entities.Books{})
 
 	exitVal := m.Run()
 
 	// Cleanup books
-	database.DB.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&entities.Book{})
+	database.DB.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&entities.Books{})
 
 	os.Exit(exitVal)
 }
@@ -51,14 +51,14 @@ func TestGetBooks(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode, "status ok")
 	assert.Equal(t, string(body), "[]", "empty body")
 
-	book := &entities.Book{Title: "The Name of the Wind: The Kingkiller Chronicle", Author: "Patrick Rothfuss", Rating: 10}
+	book := &entities.Books{Title: "The Name of the Wind: The Kingkiller Chronicle", Author: "Patrick Rothfuss", Rating: 10}
 	database.DB.Create(book)
 
 	req = httptest.NewRequest("GET", "/books", nil)
 	resp, _ = app.Test(req)
 	body, _ = ioutil.ReadAll(resp.Body)
 
-	var books []entities.Book
+	var books []entities.Books
 	err := json.Unmarshal(body, &books)
 	assert.Equal(t, err, nil)
 
@@ -77,14 +77,14 @@ func TestGetBook(t *testing.T) {
 	resp, _ = app.Test(req)
 	assert.Equal(t, 500, resp.StatusCode, "status ok")
 
-	newBook := &entities.Book{Title: "The Wise Man's Fear", Author: "Patrick Rothfuss", Rating: 10}
+	newBook := &entities.Books{Title: "The Wise Man's Fear", Author: "Patrick Rothfuss", Rating: 10}
 	database.DB.Create(newBook)
 
 	req = httptest.NewRequest("GET", fmt.Sprintf("/books/%d", newBook.ID), nil)
 	resp, _ = app.Test(req)
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	var book entities.Book
+	var book entities.Books
 	err := json.Unmarshal(body, &book)
 	assert.Equal(t, err, nil)
 
@@ -107,7 +107,7 @@ func TestNewBook(t *testing.T) {
 	body, _ = ioutil.ReadAll(resp.Body)
 	assert.Equal(t, 200, resp.StatusCode, "status ok")
 
-	var book entities.Book
+	var book entities.Books
 	err := json.Unmarshal(body, &book)
 	assert.Equal(t, err, nil)
 
@@ -118,7 +118,7 @@ func TestNewBook(t *testing.T) {
 }
 
 func TestUpdateBook(t *testing.T) {
-	book := &entities.Book{Title: "The Wise Man's Fear", Author: "Patrick Rothfuss", Rating: 10}
+	book := &entities.Books{Title: "The Wise Man's Fear", Author: "Patrick Rothfuss", Rating: 10}
 	database.DB.Create(book)
 
 	newTitle := "Foo"
@@ -136,7 +136,7 @@ func TestUpdateBook(t *testing.T) {
 	resp, _ = app.Test(req)
 	body, _ = ioutil.ReadAll(resp.Body)
 
-	var updatedBook entities.Book
+	var updatedBook entities.Books
 	err := json.Unmarshal(body, &updatedBook)
 	assert.Equal(t, err, nil)
 
@@ -155,7 +155,7 @@ func TestDeleteBook(t *testing.T) {
 	resp, _ = app.Test(req)
 	assert.Equal(t, 500, resp.StatusCode, "status ok")
 
-	newBook := &entities.Book{Title: "The Wise Man's Fear", Author: "Patrick Rothfuss", Rating: 10}
+	newBook := &entities.Books{Title: "The Wise Man's Fear", Author: "Patrick Rothfuss", Rating: 10}
 	database.DB.Create(newBook)
 
 	req = httptest.NewRequest("DELETE", fmt.Sprintf("/books/%d", newBook.ID), nil)

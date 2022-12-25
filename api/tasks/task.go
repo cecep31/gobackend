@@ -10,29 +10,29 @@ import (
 
 func GetTasks(c *fiber.Ctx) error {
 	db := database.DB
-	var taks []entities.Task
+	var taks []entities.Tasks
 	db.Preload("Group").Find(&taks)
 	return c.JSON(taks)
 }
 
 func GetTaskGroups(c *fiber.Ctx) error {
 	db := database.DB
-	var taskgroup []entities.Taskgorup
+	var taskgroup []entities.Taskgorups
 	db.Find(&taskgroup)
 	return c.JSON(taskgroup)
 }
 
 func GetMyTaskGroup(c *fiber.Ctx) error {
-	user := c.Locals("datauser").(entities.User)
+	user := c.Locals("datauser").(entities.Users)
 	db := database.DB
-	var taskgroup []entities.Taskgorup
+	var taskgroup []entities.Taskgorups
 	db.Where("created_by = ?", user.ID).Preload("Task").Find(&taskgroup)
 	return c.JSON(taskgroup)
 
 }
 func GetMyTasks(c *fiber.Ctx) error {
-	user := c.Locals("datauser").(entities.User)
-	var task []entities.Task
+	user := c.Locals("datauser").(entities.Users)
+	var task []entities.Tasks
 	println(user.Email)
 	db := database.DB
 	db.Where("created_by = ?", user.ID).Find(&task)
@@ -40,19 +40,19 @@ func GetMyTasks(c *fiber.Ctx) error {
 }
 
 func NewTaskGroup(c *fiber.Ctx) error {
-	type Taskgorup struct {
+	type Taskgorups struct {
 		database.DefaultModel
 		Name  string `json:"name"`
 		Order int64  `json:"order"`
 	}
-	user := c.Locals("datauser").(entities.User)
+	user := c.Locals("datauser").(entities.Users)
 	// _ := c.Locals("datauser").(entities.User)
 	db := database.DB
-	taskgroup := new(Taskgorup)
+	taskgroup := new(Taskgorups)
 	if err := c.BodyParser(taskgroup); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
-	taskgroupnew := new(entities.Taskgorup)
+	taskgroupnew := new(entities.Taskgorups)
 	taskgroupnew.Name = taskgroup.Name
 	taskgroupnew.Order = taskgroup.Order
 	taskgroupnew.Created_by = int64(user.ID)
@@ -63,7 +63,7 @@ func NewTaskGroup(c *fiber.Ctx) error {
 }
 
 func NewTask(c *fiber.Ctx) error {
-	user := c.Locals("datauser").(entities.User)
+	user := c.Locals("datauser").(entities.Users)
 	db := database.DB
 	type Task struct {
 		database.DefaultModel
@@ -77,7 +77,7 @@ func NewTask(c *fiber.Ctx) error {
 		return pkg.BadRequest("Invalid params")
 		// return c.SendString(err)
 	}
-	var tasknew entities.Task
+	var tasknew entities.Tasks
 	tasknew.Title = task.Title
 	tasknew.Desc = task.Desc
 	tasknew.GroupID = task.GroupID

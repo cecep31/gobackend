@@ -22,7 +22,7 @@ func main() {
 
 	// Migrations
 	println("Migration...")
-	database.DB.AutoMigrate(&entities.Book{}, &entities.Items{}, &entities.User{}, &entities.Task{}, &entities.Taskgorup{}, &entities.Post{})
+	database.DB.AutoMigrate(&entities.Books{}, &entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{})
 
 	// Api routes
 	api.Setup(app)

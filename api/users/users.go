@@ -23,8 +23,8 @@ type Users struct {
 
 func GetUsers(c *fiber.Ctx) error {
 	db := database.DB
-	var users []Users
-	db.Find(&users)
+	var users []entities.Users
+	db.Select("id", "username", "role", "email").Find(&users)
 	return c.JSON(users)
 }
 
@@ -35,7 +35,7 @@ func HashPassword(password string) (string, error) {
 
 func NewUser(c *fiber.Ctx) error {
 	db := database.DB
-	user := new(entities.User)
+	user := new(entities.Users)
 	if err := c.BodyParser(user); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
@@ -63,7 +63,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 
-	var user entities.User
+	var user entities.Users
 	err := db.First(&user, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {

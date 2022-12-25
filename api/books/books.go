@@ -13,7 +13,7 @@ import (
 
 func GetBooks(c *fiber.Ctx) error {
 	db := database.DB
-	var books []entities.Book
+	var books []entities.Books
 	db.Find(&books)
 	return c.JSON(books)
 }
@@ -21,7 +21,7 @@ func GetBooks(c *fiber.Ctx) error {
 func GetBook(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
-	var book entities.Book
+	var book entities.Books
 	err := db.First(&book, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -35,7 +35,7 @@ func GetBook(c *fiber.Ctx) error {
 
 func NewBook(c *fiber.Ctx) error {
 	db := database.DB
-	book := new(entities.Book)
+	book := new(entities.Books)
 	if err := c.BodyParser(book); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
@@ -46,7 +46,7 @@ func NewBook(c *fiber.Ctx) error {
 func UpdateBook(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
-	var book entities.Book
+	var book entities.Books
 	err := db.First(&book, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -55,13 +55,13 @@ func UpdateBook(c *fiber.Ctx) error {
 		return pkg.Unexpected(err.Error())
 	}
 
-	updatedBook := new(entities.Book)
+	updatedBook := new(entities.Books)
 
 	if err := c.BodyParser(updatedBook); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
 
-	updatedBook = &entities.Book{Title: updatedBook.Title, Author: updatedBook.Author, Rating: updatedBook.Rating}
+	updatedBook = &entities.Books{Title: updatedBook.Title, Author: updatedBook.Author, Rating: updatedBook.Rating}
 
 	if err = db.Model(&book).Updates(updatedBook).Error; err != nil {
 		return pkg.Unexpected(err.Error())
@@ -74,7 +74,7 @@ func DeleteBook(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 
-	var book entities.Book
+	var book entities.Books
 	err := db.First(&book, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {

@@ -34,7 +34,7 @@ func Login(c *fiber.Ctx) error {
 		Identity string `json:"identity"`
 		Password string `jsno:"password"`
 	}
-	var user entities.User
+	var user entities.Users
 
 	var input LoginInput
 
@@ -62,6 +62,7 @@ func Login(c *fiber.Ctx) error {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["identity"] = identity
 	claims["role"] = user.Role
+	claims["issuperadmin"] = user.Issuperadmin
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 	t, err := token.SignedString([]byte(os.Getenv("SIGNKEY")))
