@@ -7,9 +7,9 @@ import (
 )
 
 func Routes(route fiber.Router) {
-	route.Get("tasks", GetTasks)
+	route.Get("tasks", middleware.Protected(), middleware.IsSuperAdmin, GetTasks)
 	route.Get("mytasks", middleware.Protected(), middleware.GetUser, GetMyTasks)
-	route.Post("taskgroups", middleware.GetUser, NewTaskGroup)
-	route.Post("tasks", middleware.GetUser, NewTask)
-	route.Get("mytaskgroups", middleware.GetUser, GetMyTaskGroup)
+	route.Post("taskgroups", middleware.Protected(), middleware.GetUser, NewTaskGroup)
+	route.Post("tasks", middleware.Protected(), middleware.GetUser, NewTask)
+	route.Get("mytaskgroups", middleware.Protected(), middleware.GetUser, GetMyTaskGroup)
 }
