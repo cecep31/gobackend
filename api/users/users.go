@@ -24,7 +24,7 @@ type Users struct {
 func GetUsers(c *fiber.Ctx) error {
 	db := database.DB
 	var users []entities.Users
-	db.Select("id", "username", "role", "email").Find(&users)
+	db.Select("id", "username", "role", "email", "issuperadmin", "image").Find(&users)
 	return c.JSON(users)
 }
 
@@ -73,4 +73,33 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 	db.Delete(&user)
 	return c.SendStatus(204)
+}
+
+func UpdateUser(c *fiber.Ctx) error {
+	type uservalidate struct {
+		Email    string `json:"email"`
+		Username string `json:"username"`
+	}
+	validate := new(uservalidate)
+	var user entities.Users
+
+	db := database.DB
+	id := c.Params("id")
+	err := db.First(&user, id).Error
+	// return c.JSON(user)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return pkg.EntityNotFound("No book found")
+	} else if err != nil {
+		// return pkg.Unexpected(err.Error())
+		return pkg.Unexpected("i dont know")
+	}
+
+	if err := c.BodyParser(validate); err != nil {
+		return pkg.BadRequest("invalid params")
+	}
+
+	db.Model(&user).Updates(&entities.Users{Email: validate.Email, Username: validate.Username})
+
+	return c.JSON(validate)
+
 }
