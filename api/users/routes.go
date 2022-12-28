@@ -7,8 +7,8 @@ import (
 )
 
 func Routes(route fiber.Router) {
-	route.Get("/users", GetUsers)
-	route.Post("/users", middleware.IsSuperAdmin, NewUser)
+	route.Get("/users", middleware.Protected(), GetUsers)
+	route.Post("/users", middleware.Protected(), middleware.IsSuperAdmin, middleware.GetUser, NewUser)
 	route.Delete("/users/:id", middleware.Protected(), middleware.IsSuperAdmin, DeleteUser)
 	route.Put("/users/:id", middleware.Protected(), UpdateUser)
 }

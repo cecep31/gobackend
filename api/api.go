@@ -22,5 +22,6 @@ func Setup(app *fiber.App) {
 	tasks.Routes(v1)
 	auth.Routes(authg)
 	posts.Routes(v1)
+	// payments.Routes(v1)
 
 }
