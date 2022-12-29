@@ -51,7 +51,7 @@ func TestGetBooks(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode, "status ok")
 	assert.Equal(t, string(body), "[]", "empty body")
 
-	book := &entities.Books{Title: "The Name of the Wind: The Kingkiller Chronicle", Author: "Patrick Rothfuss", Rating: 10}
+	book := &entities.Books{Title: "The Name of the Wind: The Kingkiller Chronicle", Desc: "asd", Author: "Patrick Rothfuss", Rating: 10, Price: 100, Image: "asd"}
 	database.DB.Create(book)
 
 	req = httptest.NewRequest("GET", "/books", nil)
@@ -99,6 +99,8 @@ func TestNewBook(t *testing.T) {
 		"title":  "The Name of the Wind: The Kingkiller Chronicle",
 		"author": "Patrick Rothfuss",
 		"rating": 10,
+		"desc":   "asd",
+		"image":  "asd",
 	}
 	body, _ := json.Marshal(newBook)
 	req := httptest.NewRequest("POST", "/books", bytes.NewReader(body))

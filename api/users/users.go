@@ -28,6 +28,21 @@ func GetUsers(c *fiber.Ctx) error {
 	return c.JSON(users)
 }
 
+func Getuser(c *fiber.Ctx) error {
+	id := c.Params("id")
+	db := database.DB
+	var user entities.Users
+	err := db.First(&user, id).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return pkg.EntityNotFound("record Not Found")
+	} else if err != nil {
+		return pkg.Unexpected(err.Error())
+	}
+
+	return c.JSON(user)
+}
+
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
