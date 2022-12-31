@@ -1,0 +1,64 @@
+openapi: "3.0.2"
+info:
+  title: Gobackend API
+  version: "1.0"
+servers:
+  - url: https://api.pilput.dev/api/v1
+paths:
+  /posts:
+    get:
+      description: List Of All category
+      responses:
+        "200":
+          description: Success get all category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        title:
+                          type: string
+  /users:
+    get:
+      description: Gett ALL Users
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        username:
+                          type: string
+                        email:
+                          type: string
+
