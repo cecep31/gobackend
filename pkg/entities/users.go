@@ -6,7 +6,7 @@ type Users struct {
 	database.DefaultModel
 	Username     string `json:"username" gorm:"uniqueIndex"`
 	Email        string `json:"email" gorm:"uniqueIndex"`
-	Password     string `json:"password" gorm:"type:text"`
+	Password     string `json:"-" gorm:"type:text"`
 	Image        string `json:"image" gorm:"type:text"`
 	Issuperadmin bool   `json:"issuperadmin" gorm:"default:false"`
 }

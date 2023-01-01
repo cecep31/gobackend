@@ -24,7 +24,7 @@ type Users struct {
 func GetUsers(c *fiber.Ctx) error {
 	db := database.DB
 	var users []entities.Users
-	db.Select("id", "username", "role", "email", "issuperadmin", "image").Find(&users)
+	db.Find(&users)
 	return c.Status(200).JSON(users)
 }
 
@@ -49,29 +49,37 @@ func HashPassword(password string) (string, error) {
 }
 
 func NewUser(c *fiber.Ctx) error {
+	type user struct {
+		database.DefaultModel
+		Username string `json:"username" gorm:"uniqueIndex"`
+		Email    string `json:"email" gorm:"uniqueIndex"`
+		Password string `json:"-" gorm:"type:text"`
+		Image    string `json:"image" gorm:"type:text"`
+	}
 	db := database.DB
-	user := new(entities.Users)
-	if err := c.BodyParser(user); err != nil {
+	newuser := new(user)
+	if err := c.BodyParser(newuser); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
 
 	var existuser Users
-	err := db.Where("username = ?", user.Username).First(&existuser).Error
+	err := db.Where("username = ?", newuser.Username).First(&existuser).Error
 	if !(errors.Is(err, gorm.ErrRecordNotFound)) {
 		return c.JSON(fiber.Map{
 			"message": "user telah ada",
 		})
 	}
 
-	hash, _ := HashPassword(user.Password)
+	hash, _ := HashPassword(newuser.Password)
 	// println(&bytes)
 	// newuser.Password = string(hash)
-	user.Password = hash
-	db.Create(&user)
+	newuser.Password = hash
+	dberr := db.Create(&newuser).Error
 
-	return c.JSON(fiber.Map{
-		"username": user.Username,
-	})
+	if dberr != nil {
+		return pkg.BadRequest("Failet to save user")
+	}
+	return c.JSON(newuser)
 }
 
 func DeleteUser(c *fiber.Ctx) error {
@@ -91,16 +99,20 @@ func DeleteUser(c *fiber.Ctx) error {
 }
 
 func UpdateUser(c *fiber.Ctx) error {
-	type uservalidate struct {
-		Email    string `json:"email"`
-		Username string `json:"username"`
+	//update Repository
+	type user struct {
+		database.DefaultModel
+		Username string `json:"username" gorm:"uniqueIndex"`
+		Email    string `json:"email" gorm:"uniqueIndex"`
+		Password string `json:"-" gorm:"type:text"`
+		Image    string `json:"image" gorm:"type:text"`
 	}
-	validate := new(uservalidate)
-	var user entities.Users
+	uservalidate := new(user)
+	var modeluser entities.Users
 
 	db := database.DB
 	id := c.Params("id")
-	err := db.First(&user, id).Error
+	err := db.First(&modeluser, id).Error
 	// return c.JSON(user)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return pkg.EntityNotFound("No book found")
@@ -109,12 +121,15 @@ func UpdateUser(c *fiber.Ctx) error {
 		return pkg.Unexpected("i dont know")
 	}
 
-	if err := c.BodyParser(validate); err != nil {
+	if err := c.BodyParser(uservalidate); err != nil {
 		return pkg.BadRequest("invalid params")
 	}
 
-	db.Model(&user).Updates(&entities.Users{Email: validate.Email, Username: validate.Username})
+	err2 := db.Model(&modeluser).Updates(&entities.Users{Email: uservalidate.Email, Username: uservalidate.Username}).Error
+	if err2 == nil {
+		return pkg.BadRequest("Failed To Save User")
+	}
 
-	return c.JSON(validate)
+	return c.JSON(uservalidate)
 
 }
