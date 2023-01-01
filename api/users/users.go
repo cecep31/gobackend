@@ -25,10 +25,7 @@ func GetUsers(c *fiber.Ctx) error {
 	db := database.DB
 	var users []entities.Users
 	db.Select("id", "username", "role", "email", "issuperadmin", "image").Find(&users)
-	return c.Status(200).JSON(&fiber.Map{
-		"success": true,
-		"data":    users,
-	})
+	return c.Status(200).JSON(users)
 }
 
 func Getuser(c *fiber.Ctx) error {
@@ -43,10 +40,7 @@ func Getuser(c *fiber.Ctx) error {
 		return pkg.Unexpected(err.Error())
 	}
 
-	return c.Status(200).JSON(&fiber.Map{
-		"success": true,
-		"data":    user,
-	})
+	return c.Status(200).JSON(user)
 }
 
 func HashPassword(password string) (string, error) {
