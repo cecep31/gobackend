@@ -24,7 +24,39 @@ paths:
                       type: string
                     desc:
                       type: string
-
+                    created_at:
+                      type: string
+                    created_by:
+                      type: number
+    post:
+      description: this is to create new post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "title"
+                - "desc"
+              properties:
+                title:
+                  type: string
+                desc:
+                  type: string
+      responses:
+        "200":
+          description: response succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  title:
+                    type: string
+                  desc:
+                    type: string
   /users:
     get:
       description: Gett ALL Users

@@ -17,19 +17,25 @@ func GetTasks(c *fiber.Ctx) error {
 
 func GetTaskGroups(c *fiber.Ctx) error {
 	db := database.DB
-	var taskgroup []entities.Taskgorups
-	db.Find(&taskgroup)
-	return c.JSON(taskgroup)
+	var taskgroups []entities.Taskgorups
+	db.Preload("Task").Find(&taskgroups)
+	return c.JSON(taskgroups)
 }
 
 func GetMyTaskGroup(c *fiber.Ctx) error {
 	user := c.Locals("datauser").(entities.Users)
 	db := database.DB
-	var taskgroup []entities.Taskgorups
-	db.Where("created_by = ?", user.ID).Preload("Task").Find(&taskgroup)
-	return c.JSON(taskgroup)
-
+	var taskgroups []entities.Taskgorups
+	db.Where("created_by = ?", user.ID).Preload("Task").Find(&taskgroups)
+	return c.JSON(taskgroups)
 }
+func GetTaskGroup(c *fiber.Ctx) error {
+	db := database.DB
+	var taskgroup entities.Taskgorups
+	db.Preload("Task").First(&taskgroup)
+	return c.JSON(taskgroup)
+}
+
 func GetMyTasks(c *fiber.Ctx) error {
 	user := c.Locals("datauser").(entities.Users)
 	var task []entities.Tasks
@@ -83,6 +89,9 @@ func NewTask(c *fiber.Ctx) error {
 	tasknew.GroupID = task.GroupID
 	tasknew.Created_by = int64(user.ID)
 
-	db.Create(&tasknew)
-	return c.JSON(tasknew)
+	err2 := db.Create(&tasknew).Error
+	if err2 != nil {
+		return pkg.BadRequest("Ivalid Request")
+	}
+	return c.Status(200).JSON(tasknew)
 }
