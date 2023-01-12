@@ -10,4 +10,7 @@ import (
 
 func CreateLinkajaPayment(c *fiber.Ctx) error {
 	// return c.JSON(fiber.map{"berhasil":"hore"})
+	return c.JSON(fiber.Map{
+		"hello": "wkwkwkw hahah",
+	})
 }
