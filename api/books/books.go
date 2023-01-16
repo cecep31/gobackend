@@ -34,16 +34,19 @@ func GetBook(c *fiber.Ctx) error {
 }
 
 func NewBook(c *fiber.Ctx) error {
+	user := c.Locals("datauser").(entities.Users)
 	db := database.DB
 	book := new(entities.Books)
 	if err := c.BodyParser(book); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
+	book.Created_by = int64(user.ID)
 	db.Create(&book)
 	return c.JSON(book)
 }
 
 func UpdateBook(c *fiber.Ctx) error {
+
 	id := c.Params("id")
 	db := database.DB
 	var book entities.Books
