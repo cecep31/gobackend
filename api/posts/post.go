@@ -1,11 +1,13 @@
 package posts
 
 import (
+	"errors"
 	"gobackend/database"
 	"gobackend/pkg"
 	"gobackend/pkg/entities"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 func Newpost(c *fiber.Ctx) error {
@@ -37,4 +39,17 @@ func GetPosts(c *fiber.Ctx) error {
 	var posts []entities.Posts
 	db.Find(&posts)
 	return c.JSON(posts)
+}
+
+func getpost(c *fiber.Ctx) error {
+	id := c.Params("id")
+	db := database.DB
+	var post entities.Posts
+	err := db.First(&post, id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return pkg.EntityNotFound("record Not Found")
+	} else if err != nil {
+		return pkg.Unexpected(err.Error())
+	}
+	return c.JSON(post)
 }
