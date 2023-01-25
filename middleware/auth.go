@@ -54,7 +54,6 @@ func GetUser(c *fiber.Ctx) error {
 	db := database.DB
 	var userdata entities.Users
 	db.Where("username = ?", username).First(&userdata)
-
 	c.Locals("datauser", userdata)
 	return c.Next()
 }

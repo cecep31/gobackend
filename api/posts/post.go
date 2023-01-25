@@ -27,7 +27,6 @@ func Newpost(c *fiber.Ctx) error {
 	post.Created_by = int64(user.ID)
 
 	result := db.Create(&post).Error
-	// return result
 	if result != nil {
 		return pkg.BadRequest("invalid params db")
 	}

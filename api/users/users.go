@@ -42,6 +42,11 @@ func Getuser(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(user)
 }
+func Getyou(c *fiber.Ctx) error {
+	user := c.Locals("datauser").(entities.Users)
+	// fmt.Println(user)
+	return c.Status(200).JSON(user)
+}
 
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
