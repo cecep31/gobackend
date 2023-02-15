@@ -31,7 +31,7 @@ func CheckPasswordHash(password, hash string) bool {
 func Login(c *fiber.Ctx) error {
 	db := database.DB
 	type LoginInput struct {
-		Identity string `json:"identity"`
+		Username string `json:"username"`
 		Password string `jsno:"password"`
 	}
 	var user entities.Users
@@ -42,8 +42,8 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
-	identity := input.Identity
-	err := db.Where("username = ?", identity).First(&user).Error
+	username := input.Username
+	err := db.Where("username = ?", username).First(&user).Error
 
 	// check ada error di query
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -60,9 +60,9 @@ func Login(c *fiber.Ctx) error {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["identity"] = identity
+	claims["username"] = username
 	claims["issuperadmin"] = user.Issuperadmin
-	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
 
 	t, err := token.SignedString([]byte(os.Getenv("SIGNKEY")))
 	if err != nil {

@@ -22,7 +22,10 @@ import (
 func setupMiddlewares(app *fiber.App) {
 	app.Use(helmet.New())
 	app.Use(recover.New())
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		// AllowOrigins: "https://pilput.dev, https://pilput.test, http://pilput.test",
+		AllowOrigins: "*",
+	}))
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed, // 1
 	}))
@@ -34,6 +37,7 @@ func setupMiddlewares(app *fiber.App) {
 	if os.Getenv("ENABLE_LOGGER") != "" {
 		app.Use(logger.New())
 	}
+
 }
 
 func Create() *fiber.App {
