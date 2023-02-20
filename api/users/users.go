@@ -33,7 +33,7 @@ func Getuser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 	var user entities.Users
-	err := db.First(&user, id).Error
+	err := db.Where("id = ?", id).First(&user).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return pkg.EntityNotFound("record Not Found")
@@ -45,7 +45,6 @@ func Getuser(c *fiber.Ctx) error {
 }
 func Getyou(c *fiber.Ctx) error {
 	user := c.Locals("datauser").(entities.Users)
-	// fmt.Println(user)
 	return c.Status(200).JSON(user)
 }
 
