@@ -1,10 +1,17 @@
 # gobackend
+
 example Frontend: pilput-forntend
 
-# to run 
+# to run
+
 # **Windows(PowerShell)**
-	.\rundev.bat
+
+    .\rundev.ps1
+
 # **Linux**
-	./rundev.bash
+
+    ./rundev.bash
+
 # **Docker**
-	docker build -t gobackend . && docker run -p 8080:8080 -d gobackend
+
+    docker build -t gobackend . && docker run -p 8080:8080 -d gobackend

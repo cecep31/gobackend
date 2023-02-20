@@ -60,7 +60,8 @@ func NewUser(c *fiber.Ctx) error {
 		Username string `json:"username" gorm:"uniqueIndex"`
 		Email    string `json:"email" gorm:"uniqueIndex"`
 		Password string `json:"password" gorm:"type:text"`
-		Image    string `json:"image" gorm:"type:text"`
+		// Issuperadmin bool   `json:"issuperadmin"`
+		Image string `json:"image" gorm:"type:text"`
 	}
 	db := database.DB
 	newuser := new(user)
