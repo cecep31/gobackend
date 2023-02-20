@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"time"
 
@@ -26,11 +25,7 @@ type Users struct {
 
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-
-	fmt.Println(hash)
-	fmt.Println(err)
 	return err == nil
-
 }
 
 func Login(c *fiber.Ctx) error {
