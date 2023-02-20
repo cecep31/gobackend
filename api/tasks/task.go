@@ -61,7 +61,7 @@ func NewTaskGroup(c *fiber.Ctx) error {
 	taskgroupnew := new(entities.Taskgorups)
 	taskgroupnew.Name = taskgroup.Name
 	taskgroupnew.Order = taskgroup.Order
-	taskgroupnew.Created_by = int64(user.ID)
+	taskgroupnew.Created_by = user.ID
 
 	// taskgroup.Created_by = int64(user.ID)
 	db.Create(&taskgroupnew)
@@ -87,7 +87,7 @@ func NewTask(c *fiber.Ctx) error {
 	tasknew.Title = task.Title
 	tasknew.Desc = task.Desc
 	tasknew.GroupID = task.GroupID
-	tasknew.Created_by = int64(user.ID)
+	tasknew.Created_by = user.ID
 
 	err2 := db.Create(&tasknew).Error
 	if err2 != nil {

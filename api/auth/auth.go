@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -25,7 +26,11 @@ type Users struct {
 
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+
+	fmt.Println(hash)
+	fmt.Println(err)
 	return err == nil
+
 }
 
 func Login(c *fiber.Ctx) error {
@@ -44,10 +49,8 @@ func Login(c *fiber.Ctx) error {
 
 	username := input.Username
 	err := db.Where("username = ?", username).First(&user).Error
-
-	// check ada error di query
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return c.SendStatus(fiber.StatusUnauthorized)
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
 	} else if err != nil {
 		return pkg.Unexpected(err.Error())
 	}
@@ -55,7 +58,7 @@ func Login(c *fiber.Ctx) error {
 	pass := input.Password
 
 	if !CheckPasswordHash(pass, user.Password) {
-		return c.SendStatus(fiber.StatusUnauthorized)
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -70,9 +73,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"status":  "success",
-		"message": "Success login",
-		"data":    t,
+		"access_token": t,
 	})
 
 }

@@ -7,6 +7,7 @@ import (
 	"gobackend/pkg/entities"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -22,9 +23,10 @@ func Newpost(c *fiber.Ctx) error {
 	if err := c.BodyParser(validate); err != nil {
 		return pkg.BadRequest("invalid params")
 	}
+	post.ID = uuid.New()
 	post.Title = validate.Title
 	post.Desc = validate.Desc
-	post.Created_by = int64(user.ID)
+	post.Created_by = user.ID
 
 	result := db.Create(&post).Error
 	if result != nil {

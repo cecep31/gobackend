@@ -8,6 +8,7 @@ import (
 	"gobackend/pkg/entities"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -58,7 +59,7 @@ func NewUser(c *fiber.Ctx) error {
 		database.DefaultModel
 		Username string `json:"username" gorm:"uniqueIndex"`
 		Email    string `json:"email" gorm:"uniqueIndex"`
-		Password string `json:"-" gorm:"type:text"`
+		Password string `json:"password" gorm:"type:text"`
 		Image    string `json:"image" gorm:"type:text"`
 	}
 	db := database.DB
@@ -76,9 +77,8 @@ func NewUser(c *fiber.Ctx) error {
 	}
 
 	hash, _ := HashPassword(newuser.Password)
-	// println(&bytes)
-	// newuser.Password = string(hash)
 	newuser.Password = hash
+	newuser.ID = uuid.New()
 	dberr := db.Create(&newuser).Error
 
 	if dberr != nil {

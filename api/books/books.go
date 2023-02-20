@@ -40,7 +40,7 @@ func NewBook(c *fiber.Ctx) error {
 	if err := c.BodyParser(book); err != nil {
 		return pkg.BadRequest("Invalid params")
 	}
-	book.Created_by = int64(user.ID)
+	book.Created_by = user.ID
 	db.Create(&book)
 	return c.JSON(book)
 }
