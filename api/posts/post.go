@@ -32,7 +32,7 @@ func Newpost(c *fiber.Ctx) error {
 	if result != nil {
 		return pkg.BadRequest("invalid params db")
 	}
-	return c.JSON(post)
+	return c.Status(200).JSON(post)
 }
 
 func GetPosts(c *fiber.Ctx) error {

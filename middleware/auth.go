@@ -50,7 +50,7 @@ func IsSuperAdmin(c *fiber.Ctx) error {
 func GetUser(c *fiber.Ctx) error {
 	userlocal := c.Locals("user").(*jwt.Token)
 	claims := userlocal.Claims.(jwt.MapClaims)
-	username := claims["identity"].(string)
+	username := claims["username"].(string)
 	db := database.DB
 	var userdata entities.Users
 	db.Where("username = ?", username).First(&userdata)
