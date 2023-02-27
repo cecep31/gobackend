@@ -1,22 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"gobackend/api"
 	"gobackend/database"
 	"gobackend/pkg/entities"
 	"gobackend/server"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	fmt.Println("Error loading .env file")
+	// }
 
 	// Server initialization
 	app := server.Create()
