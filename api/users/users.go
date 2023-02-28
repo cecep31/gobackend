@@ -2,10 +2,13 @@ package users
 
 import (
 	"errors"
+	"fmt"
 
 	"gobackend/database"
 	"gobackend/pkg"
 	"gobackend/pkg/entities"
+
+	"gobackend/storage"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -14,13 +17,13 @@ import (
 )
 
 // users without paasword
-type Users struct {
-	database.DefaultModel
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Role     string `json:"role"`
-	Image    string `json:"image" gorm:"type:text"`
-}
+// type Users struct {
+// 	database.DefaultModel
+// 	Username string `json:"username"`
+// 	Email    string `json:"email"`
+// 	Role     string `json:"role"`
+// 	Image    string `json:"image" gorm:"type:text"`
+// }
 
 func GetUsers(c *fiber.Ctx) error {
 	db := database.DB
@@ -68,7 +71,7 @@ func NewUser(c *fiber.Ctx) error {
 		return pkg.BadRequest("Invalid params")
 	}
 
-	var existuser Users
+	var existuser entities.Users
 	err := db.Where("username = ?", newuser.Username).First(&existuser).Error
 	if !(errors.Is(err, gorm.ErrRecordNotFound)) {
 		return c.JSON(fiber.Map{
@@ -137,4 +140,19 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	return c.JSON(uservalidate)
 
+}
+
+func Uploadpicture(c *fiber.Ctx) error {
+	if form, err := c.MultipartForm(); err == nil {
+		files := form.File["document"]
+
+		for _, file := range files {
+			fmt.Println(file.Filename, file.Size, file.Header["Content-Type"][0])
+			if err := c.SaveFileToStorage(file, fmt.Sprintf("./%s", file.Filename), storage.Storage()); err != nil {
+				return err
+			}
+		}
+		return err
+	}
+	return c.Status(500).JSON(pkg.Unexpected("Failed Upload"))
 }

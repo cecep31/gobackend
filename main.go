@@ -7,6 +7,8 @@ import (
 	"gobackend/database"
 	"gobackend/pkg/entities"
 	"gobackend/server"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -14,7 +16,7 @@ func main() {
 	// if err != nil {
 	// 	fmt.Println("Error loading .env file")
 	// }
-
+	godotenv.Load()
 	// Server initialization
 	app := server.Create()
 
