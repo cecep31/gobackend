@@ -3,14 +3,15 @@ package users
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"gobackend/database"
 	"gobackend/pkg"
 	"gobackend/pkg/entities"
-
 	"gobackend/storage"
 
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -142,17 +143,34 @@ func UpdateUser(c *fiber.Ctx) error {
 
 }
 
-func Uploadpicture(c *fiber.Ctx) error {
+func UploadAvatar(c *fiber.Ctx) error {
 	if form, err := c.MultipartForm(); err == nil {
-		files := form.File["document"]
-
-		for _, file := range files {
-			fmt.Println(file.Filename, file.Size, file.Header["Content-Type"][0])
-			if err := c.SaveFileToStorage(file, fmt.Sprintf("./%s", file.Filename), storage.Storage()); err != nil {
-				return err
+		files := form.File["image"]
+		if len(files) != 0 {
+			for _, file := range files {
+				maxFileSize := int64(1 * 1024 * 1024)
+				if file.Size > maxFileSize {
+					return c.Status(413).JSON(pkg.BadRequest("file not more than 1 mb"))
+				}
+				path := fmt.Sprintf("avatar/%02d%s", time.Now().Nanosecond(), file.Filename)
+				fmt.Println("sebelum save file")
+				if err := c.SaveFileToStorage(file, path, storage.Storage()); err != nil {
+					return err
+				}
+				fmt.Println("sesudah save file")
+				user := c.Locals("datauser").(entities.Users)
+				db := database.DB
+				db.Model(user).Update("image", path)
+				c.Status(200).JSON(fiber.Map{
+					"file": user.Image,
+				})
 			}
+		} else {
+			return c.SendStatus(fiber.StatusBadRequest)
 		}
+
 		return err
+	} else {
+		return c.SendStatus(fiber.StatusBadRequest)
 	}
-	return c.Status(500).JSON(pkg.Unexpected("Failed Upload"))
 }
