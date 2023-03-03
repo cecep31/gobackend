@@ -168,8 +168,7 @@ func UploadAvatar(c *fiber.Ctx) error {
 		} else {
 			return c.SendStatus(fiber.StatusBadRequest)
 		}
-
-		return err
+		return c.SendStatus(fiber.StatusBadRequest)
 	} else {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
