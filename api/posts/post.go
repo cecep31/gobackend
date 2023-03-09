@@ -46,7 +46,7 @@ func getpost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 	var post entities.Posts
-	err := db.First(&post, id).Error
+	err := db.First(&post, "id = ?", id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return pkg.EntityNotFound("record Not Found")
 	} else if err != nil {

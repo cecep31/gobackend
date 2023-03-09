@@ -96,7 +96,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	db := database.DB
 
 	var user entities.Users
-	err := db.First(&user, id).Error
+	err := db.First(&user, "id = ?", id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return pkg.EntityNotFound("No user found")
