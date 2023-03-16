@@ -2,7 +2,9 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"sync"
 
 	"github.com/goccy/go-json"
 
@@ -17,7 +19,18 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/helmet/v2"
+	"github.com/gofiber/websocket/v2"
 )
+
+type client struct {
+	isClosing bool
+	mu        sync.Mutex
+}
+
+var clients = make(map[*websocket.Conn]*client) // Note: although large maps with pointer-like types (e.g. strings) as keys are slow, using pointers themselves as keys is acceptable and fast
+var register = make(chan *websocket.Conn)
+var broadcast = make(chan string)
+var unregister = make(chan *websocket.Conn)
 
 func setupMiddlewares(app *fiber.App) {
 	app.Use(helmet.New())
@@ -37,6 +50,14 @@ func setupMiddlewares(app *fiber.App) {
 	if os.Getenv("ENABLE_LOGGER") != "" {
 		app.Use(logger.New())
 	}
+	app.Use("/ws", func(c *fiber.Ctx) error {
+		if websocket.IsWebSocketUpgrade(c) { // Returns true if the client requested upgrade to the WebSocket protocol
+			c.Locals("allowed", true)
+			fmt.Println("jalan websocket")
+			return c.Next()
+		}
+		return c.SendStatus(fiber.StatusUpgradeRequired)
+	})
 
 }
 
@@ -67,6 +88,34 @@ func Create() *fiber.App {
 			"message": "server ready",
 		})
 	})
+
+	app.Get("/ws/:id", websocket.New(func(c *websocket.Conn) {
+		// c.Locals is added to the *websocket.Conn
+		log.Println(c.Locals("allowed"))  // true
+		log.Println(c.Params("id"))       // 123
+		log.Println(c.Query("v"))         // 1.0
+		log.Println(c.Cookies("session")) // ""
+
+		// websocket.Conn bindings https://pkg.go.dev/github.com/fasthttp/websocket?tab=doc#pkg-index
+		var (
+			mt  int
+			msg []byte
+			err error
+		)
+		for {
+			if mt, msg, err = c.ReadMessage(); err != nil {
+				log.Println("read:", err)
+				break
+			}
+			log.Printf("recv: %s", msg)
+
+			if err = c.WriteMessage(mt, msg); err != nil {
+				log.Println("write:", err)
+				break
+			}
+		}
+
+	}))
 
 	return app
 }
