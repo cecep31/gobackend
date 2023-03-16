@@ -7,6 +7,7 @@ import (
 	"gobackend/database"
 	"gobackend/pkg/entities"
 	"gobackend/server"
+	"gobackend/ws"
 
 	"github.com/joho/godotenv"
 )
@@ -26,6 +27,7 @@ func main() {
 
 	// Api routes
 	api.Setup(app)
+	ws.WsSetup(app)
 
 	if err := server.Listen(app); err != nil {
 		log.Panic(err)

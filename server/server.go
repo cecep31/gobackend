@@ -89,12 +89,12 @@ func Create() *fiber.App {
 		})
 	})
 
-	app.Get("/ws/:id", websocket.New(func(c *websocket.Conn) {
+	app.Get("/ws", websocket.New(func(c *websocket.Conn) {
 		// c.Locals is added to the *websocket.Conn
-		log.Println(c.Locals("allowed"))  // true
-		log.Println(c.Params("id"))       // 123
-		log.Println(c.Query("v"))         // 1.0
-		log.Println(c.Cookies("session")) // ""
+		log.Println(c.Locals("allowed")) // true
+		log.Println(c.Params("id"))      // 123
+		log.Println(c.Query("v"))        // 1.0
+		log.Println(c.Cookies("token"))  // ""
 
 		// websocket.Conn bindings https://pkg.go.dev/github.com/fasthttp/websocket?tab=doc#pkg-index
 		var (
@@ -109,7 +109,7 @@ func Create() *fiber.App {
 			}
 			log.Printf("recv: %s", msg)
 
-			if err = c.WriteMessage(mt, msg); err != nil {
+			if err = c.WriteMessage(mt, []byte("hello")); err != nil {
 				log.Println("write:", err)
 				break
 			}
