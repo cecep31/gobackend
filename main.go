@@ -4,8 +4,6 @@ import (
 	"log"
 
 	"gobackend/api"
-	"gobackend/database"
-	"gobackend/pkg/entities"
 	"gobackend/server"
 	"gobackend/ws"
 
@@ -23,7 +21,7 @@ func main() {
 
 	// Migrations
 	println("Migration...")
-	database.DB.AutoMigrate(&entities.Books{}, &entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{})
+	// database.DB.AutoMigrate(&entities.Books{}, &entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{})
 
 	// Api routes
 	api.Setup(app)
