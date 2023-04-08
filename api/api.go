@@ -3,6 +3,7 @@ package api
 import (
 	"gobackend/api/auth"
 	"gobackend/api/books"
+	"gobackend/api/gobasic"
 	"gobackend/api/items"
 	"gobackend/api/posts"
 	"gobackend/api/tasks"
@@ -22,6 +23,7 @@ func Setup(app *fiber.App) {
 	tasks.Routes(v1)
 	auth.Routes(authg)
 	posts.Routes(v1)
+	gobasic.Routes(v1)
 	// payments.Routes(v1)
 
 }
