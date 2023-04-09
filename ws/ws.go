@@ -1,9 +1,11 @@
 package ws
 
 import (
-	"fmt"
+	"gobackend/middleware"
+	"gobackend/pkg/entities"
 	"log"
 
+	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
 )
@@ -11,7 +13,14 @@ import (
 var connections []*websocket.Conn
 
 func WsSetup(app *fiber.App) {
-	app.Get("/ws/global", websocket.New(func(c *websocket.Conn) {
+	app.Get("/ws/global", middleware.Protected(), middleware.GetUser, websocket.New(func(c *websocket.Conn) {
+		user := c.Locals("datauser").(entities.Users)
+		type data struct {
+			msg  string
+			user string
+		}
+		// fmt.Println(user)
+
 		connections = append(connections, c)
 		defer func() {
 			log.Println("WebSocket disconnected")
@@ -22,7 +31,6 @@ func WsSetup(app *fiber.App) {
 				}
 			}
 		}()
-		fmt.Println(connections)
 
 		for {
 			messageType, message, err := c.ReadMessage()
@@ -30,16 +38,21 @@ func WsSetup(app *fiber.App) {
 				log.Println("WebSocket read error:", err)
 				break
 			}
-			log.Printf("WebSocket message: %s", message)
+
+			h, errjson := json.Marshal(&fiber.Map{"message": string(message), "username": user.Username})
+			if errjson != nil {
+				return
+			}
+			log.Printf("WebSocket message: %s", []byte(h))
 
 			// Broadcast the incoming message to all other WebSocket connections
 			for _, conn := range connections {
-				if conn != c {
-					if err := conn.WriteMessage(messageType, message); err != nil {
-						log.Println("WebSocket write error:", err)
-						break
-					}
+				// if conn != c {
+				if err := conn.WriteMessage(messageType, []byte(h)); err != nil {
+					log.Println("WebSocket write error:", err)
+					break
 				}
+				// }
 			}
 		}
 	}))

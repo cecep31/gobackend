@@ -11,4 +11,13 @@ func Routes(route fiber.Router) {
 			"new data": newdata,
 		})
 	})
+	route.Post("/testbodyparse", func(c *fiber.Ctx) error {
+		var data interface{}
+		if err := c.BodyParser(&data); err != nil {
+			return err
+		}
+		return c.JSON(fiber.Map{
+			"hello": data,
+		})
+	})
 }
