@@ -154,7 +154,7 @@ func UploadAvatar(c *fiber.Ctx) error {
 				}
 				path := fmt.Sprintf("avatar/%02d%s", time.Now().Nanosecond(), file.Filename)
 				fmt.Println("sebelum save file")
-				if err := c.SaveFileToStorage(file, path, storage.Storage()); err != nil {
+				if err := c.SaveFileToStorage(file, path, storage.Storage); err != nil {
 					return err
 				}
 				fmt.Println("sesudah save file")
