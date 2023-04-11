@@ -90,7 +90,6 @@ func setupMiddlewares(app *fiber.App) {
 	app.Use("/ws", func(c *fiber.Ctx) error {
 		if websocket.IsWebSocketUpgrade(c) { // Returns true if the client requested upgrade to the WebSocket protocol
 			c.Locals("allowed", true)
-			fmt.Println("jalan websocket")
 			return c.Next()
 		}
 		return c.SendStatus(fiber.StatusUpgradeRequired)

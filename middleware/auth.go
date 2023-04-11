@@ -11,6 +11,15 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
+func Protectedws() func(*fiber.Ctx) error {
+	return jwtware.New(jwtware.Config{
+		SigningKey:   []byte(os.Getenv("SIGNKEY")),
+		ErrorHandler: jwtError,
+		TokenLookup:  "query:token",
+		AuthScheme:   "",
+	})
+}
+
 func Protected() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
 		SigningKey:   []byte(os.Getenv("SIGNKEY")),

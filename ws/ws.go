@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"gobackend/database"
 	"gobackend/middleware"
 	"gobackend/pkg/entities"
 	"log"
@@ -8,18 +9,15 @@ import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
+	"github.com/google/uuid"
 )
 
 var connections []*websocket.Conn
 
 func WsSetup(app *fiber.App) {
-	app.Get("/ws/global", middleware.Protected(), middleware.GetUser, websocket.New(func(c *websocket.Conn) {
+	app.Get("/ws/global", middleware.Protectedws(), middleware.GetUser, websocket.New(func(c *websocket.Conn) {
 		user := c.Locals("datauser").(entities.Users)
-		type data struct {
-			msg  string
-			user string
-		}
-		// fmt.Println(user)
+		db := database.DB
 
 		connections = append(connections, c)
 		defer func() {
@@ -39,20 +37,26 @@ func WsSetup(app *fiber.App) {
 				break
 			}
 
-			h, errjson := json.Marshal(&fiber.Map{"message": string(message), "username": user.Username})
+			var globalchat = new(entities.Globalchat)
+			globalchat.ID = uuid.New()
+			globalchat.UserID = user.ID
+			globalchat.Msg = string(message)
+
+			dberr := db.Create(&globalchat)
+			if dberr.Error != nil {
+				log.Printf("error fb: %s", dberr.Error)
+			}
+			h, errjson := json.Marshal(&fiber.Map{"msg": string(message), "userID": user.ID})
 			if errjson != nil {
 				return
 			}
 			log.Printf("WebSocket message: %s", []byte(h))
-
 			// Broadcast the incoming message to all other WebSocket connections
 			for _, conn := range connections {
-				// if conn != c {
 				if err := conn.WriteMessage(messageType, []byte(h)); err != nil {
 					log.Println("WebSocket write error:", err)
 					break
 				}
-				// }
 			}
 		}
 	}))
