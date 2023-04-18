@@ -10,6 +10,7 @@ import (
 
 	"gobackend/database"
 	"gobackend/pkg"
+	validate "gobackend/pkg/validator"
 	"gobackend/storage"
 
 	"github.com/gofiber/fiber/v2"
@@ -101,6 +102,7 @@ func setupMiddlewares(app *fiber.App) {
 func Create() *fiber.App {
 	database.SetupDatabase()
 	storage.IniStorage()
+	validate.SetupValidate()
 	app := fiber.New(fiber.Config{
 		// Override default error handler
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {

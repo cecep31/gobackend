@@ -2,13 +2,16 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
 	"gobackend/database"
 	"gobackend/pkg"
 	"gobackend/pkg/entities"
+	validate "gobackend/pkg/validator"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -31,15 +34,25 @@ func CheckPasswordHash(password, hash string) bool {
 func Login(c *fiber.Ctx) error {
 	db := database.DB
 	type LoginInput struct {
-		Username string `json:"username"`
-		Password string `jsno:"password"`
+		Username string `json:"username" validate:"required"`
+		Password string `jsno:"password" validate:"required,min=8" `
 	}
+
 	var user entities.Users
 
 	var input LoginInput
 
 	if err := c.BodyParser(&input); err != nil {
 		return c.SendStatus(fiber.StatusUnauthorized)
+	}
+
+	validate := validate.V
+	if errvalidate := validate.Struct(input); errvalidate != nil {
+		errMsgs := make(map[string]string)
+		for _, err := range errvalidate.(validator.ValidationErrors) {
+			errMsgs[err.Field()] = fmt.Sprintf("Field validation for '%s' failed on the '%s' tag", err.Field(), err.Tag())
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(errMsgs)
 	}
 
 	username := input.Username
