@@ -15,4 +15,5 @@ func Routes(route fiber.Router) {
 	route.Put("/users/:id", middleware.Protected(), UpdateUser)
 	route.Get("/users/:id", middleware.Protected(), Getuser)
 	route.Post("/profile/avatar", middleware.Protected(), middleware.GetUser, UploadAvatar)
+	route.Delete("/profile/avatar", middleware.Protected(), middleware.GetUser, RemoveAvatar)
 }

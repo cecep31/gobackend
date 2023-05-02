@@ -173,3 +173,14 @@ func UploadAvatar(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 }
+func RemoveAvatar(c *fiber.Ctx) error {
+	user := c.Locals("datauser").(entities.Users)
+	err := storage.Storage.Delete(user.Image)
+	if err != nil {
+		return c.Status(fiber.ErrNotFound.Code).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	return c.SendStatus(fiber.StatusOK)
+
+}
