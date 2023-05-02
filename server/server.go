@@ -102,7 +102,9 @@ func setupMiddlewares(app *fiber.App) {
 func Create() *fiber.App {
 	database.SetupDatabase()
 	storage.IniStorage()
+	storage.InitFileStorage()
 	validate.SetupValidate()
+
 	app := fiber.New(fiber.Config{
 		// Override default error handler
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {

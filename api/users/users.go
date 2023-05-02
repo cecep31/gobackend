@@ -3,6 +3,7 @@ package users
 import (
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"gobackend/database"
@@ -11,6 +12,7 @@ import (
 	"gobackend/storage"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/minio/minio-go/v7"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -143,6 +145,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 }
 
+// deprecated
 func UploadAvatar(c *fiber.Ctx) error {
 	if form, err := c.MultipartForm(); err == nil {
 		files := form.File["image"]
@@ -173,6 +176,54 @@ func UploadAvatar(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 }
+
+func UploadProfilePicture(c *fiber.Ctx) error {
+	file, err := c.FormFile("image")
+	if err != nil {
+		return err
+	}
+
+	maxFileSize := int64(1 * 1024 * 1024)
+
+	if file.Size > maxFileSize {
+		return pkg.BadRequest("File Cannot more than 1 mb")
+	}
+
+	srcFile, err := file.Open()
+	if err != nil {
+		return pkg.Unexpected("Failed to Read File")
+	}
+	defer srcFile.Close()
+
+	filename := fmt.Sprintf("avatar/%v%v", time.Now().Nanosecond(), file.Filename)
+
+	_, err = storage.FileStorage.PutObject(c.Context(), os.Getenv("S3_BUCKET"), filename, srcFile, file.Size, minio.PutObjectOptions{
+		ContentType: file.Header.Get("Content-Type"),
+	})
+
+	if err != nil {
+		return pkg.Unexpected("Failed to save file")
+	}
+
+	user := c.Locals("datauser").(entities.Users)
+	db := database.DB
+	db.Model(user).Update("image", filename)
+	c.Status(200).JSON(fiber.Map{
+		"file": user.Image,
+	})
+
+	return c.SendStatus(fiber.StatusOK)
+}
+
+func RemoveProfilePicture(c *fiber.Ctx) error {
+	user := c.Locals("datauser").(entities.Users)
+	err := storage.FileStorage.RemoveObject(c.Context(), os.Getenv("S3_BUCKET"), user.Image, minio.RemoveObjectOptions{})
+	if err != nil {
+		return pkg.Unexpected(err.Error())
+	}
+	return c.SendStatus(fiber.StatusOK)
+}
+
 func RemoveAvatar(c *fiber.Ctx) error {
 	user := c.Locals("datauser").(entities.Users)
 	err := storage.Storage.Delete(user.Image)

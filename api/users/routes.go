@@ -14,6 +14,7 @@ func Routes(route fiber.Router) {
 	route.Delete("/users/:id", middleware.Protected(), middleware.IsSuperAdmin, DeleteUser)
 	route.Put("/users/:id", middleware.Protected(), UpdateUser)
 	route.Get("/users/:id", middleware.Protected(), Getuser)
-	route.Post("/profile/avatar", middleware.Protected(), middleware.GetUser, UploadAvatar)
-	route.Delete("/profile/avatar", middleware.Protected(), middleware.GetUser, RemoveAvatar)
+	route.Post("/profile/avatar", middleware.Protected(), middleware.GetUser, UploadProfilePicture)
+	// route.Post("/profile/avatar2", middleware.Protected(), UploadProfilePicture)
+	route.Delete("/profile/avatar", middleware.Protected(), middleware.GetUser, RemoveProfilePicture)
 }
