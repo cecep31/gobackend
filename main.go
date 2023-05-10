@@ -4,7 +4,10 @@ import (
 	"log"
 
 	"gobackend/api"
+	"gobackend/database"
+	"gobackend/pkg/user"
 	"gobackend/server"
+	"gobackend/storage"
 	"gobackend/ws"
 
 	"github.com/joho/godotenv"
@@ -17,7 +20,14 @@ func main() {
 	// }
 	godotenv.Load()
 	// Server initialization
+	database.SetupDatabase()
+	storage.InitFileStorage()
+	userrepo := user.NewRepo(database.DB)
+	userserivce := user.NewService(userrepo)
 	app := server.Create()
+
+	v2 := app.Group("api/v2")
+	api.UserRouter(v2, userserivce)
 
 	// Migrations
 	println("Migration...")

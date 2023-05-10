@@ -8,10 +8,8 @@ import (
 
 	"github.com/goccy/go-json"
 
-	"gobackend/database"
 	"gobackend/pkg"
 	validate "gobackend/pkg/validator"
-	"gobackend/storage"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -100,9 +98,7 @@ func setupMiddlewares(app *fiber.App) {
 }
 
 func Create() *fiber.App {
-	database.SetupDatabase()
-	storage.IniStorage()
-	storage.InitFileStorage()
+
 	validate.SetupValidate()
 
 	app := fiber.New(fiber.Config{

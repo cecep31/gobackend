@@ -17,7 +17,6 @@ var (
 func IniStorage() {
 	Storage = s3.New(s3.Config{
 		Bucket: os.Getenv("S3_BUCKET"),
-		// Endpoint: os.Getenv("S3_ENDPOINT"),
 		Region: os.Getenv("S3_REGION"),
 		Reset:  false,
 		Credentials: s3.Credentials{

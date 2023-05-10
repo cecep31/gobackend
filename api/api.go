@@ -16,6 +16,8 @@ import (
 func Setup(app *fiber.App) {
 	api := app.Group("api")
 	v1 := api.Group("/v1")
+	// v2 := api.Group("/v2")
+	// Routes.UserRouter(v2,)
 	// v1noauth := app.Group("/api/v1")
 	authg := app.Group("api/auth")
 	books.Routes(v1)
