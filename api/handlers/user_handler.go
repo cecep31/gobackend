@@ -14,12 +14,21 @@ func AddUser(service user.Service) fiber.Handler {
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			c.Status(fiber.StatusBadRequest)
-			return c.JSON(presenter.BookErrorResponse(err))
+			return c.JSON(presenter.UserErrorResponse(err))
 		}
 		result, err := service.InserUser(&requestBody)
 		if err != nil {
-			return c.JSON(presenter.BookErrorResponse(err))
+			return c.JSON(presenter.UserErrorResponse(err))
 		}
-		return c.JSON(presenter.BookSuccessResponse(result))
+		return c.JSON(presenter.UserSuccessResponse(result))
+	}
+}
+func GetUsers(service user.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		user, err := service.GetUsers()
+		if err != nil {
+			return c.JSON(presenter.UserErrorResponse(err))
+		}
+		return c.JSON(presenter.UsersSuccessResponse(user))
 	}
 }

@@ -8,16 +8,18 @@ import (
 )
 
 // Book is the presenter object which will be passed in the response by Handler
-type Book struct {
-	ID       uuid.UUID `json:"id"`
-	Email    string    `json:"email"`
-	Username string    `json:"username"`
+type User struct {
+	ID           uuid.UUID `json:"id"`
+	Email        string    `json:"email"`
+	Username     string    `json:"username"`
+	Image        string    `json:"image"`
+	Issuperadmin bool      `json:"issuperadmin" gorm:"default:false"`
 }
 
 // BookSuccessResponse is the singular SuccessResponse that will be passed in the response by
 // Handler
-func BookSuccessResponse(data *entities.Users) *fiber.Map {
-	book := Book{
+func UserSuccessResponse(data *entities.Users) *fiber.Map {
+	book := User{
 		ID:       data.ID,
 		Email:    data.Email,
 		Username: data.Username,
@@ -30,16 +32,25 @@ func BookSuccessResponse(data *entities.Users) *fiber.Map {
 }
 
 // BooksSuccessResponse is the list SuccessResponse that will be passed in the response by Handler
-func BooksSuccessResponse(data *[]Book) *fiber.Map {
+func UsersSuccessResponse(data *[]entities.Users) *fiber.Map {
+	var newData []User
+	for _, item := range *data {
+		newUser := User{
+			ID:       item.ID,
+			Email:    item.Email,
+			Username: item.Username,
+		}
+		newData = append(newData, newUser)
+	}
 	return &fiber.Map{
 		"status": true,
-		"data":   data,
+		"data":   newData,
 		"error":  nil,
 	}
 }
 
 // BookErrorResponse is the ErrorResponse that will be passed in the response by Handler
-func BookErrorResponse(err error) *fiber.Map {
+func UserErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
 		"status": false,
 		"data":   "",

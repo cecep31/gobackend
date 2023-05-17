@@ -23,7 +23,7 @@ type DefaultModel struct {
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 }
 
-func SetupDatabase() {
+func SetupDatabase() *gorm.DB {
 	username := os.Getenv("POSTGRES_USER")
 	password := os.Getenv("POSTGRES_PASSWORD")
 	dbName := os.Getenv("POSTGRES_DB")
@@ -47,6 +47,5 @@ func SetupDatabase() {
 		log.Fatal(err)
 		panic("Failed to connect database")
 	}
-
-	fmt.Println("Connection Opened to Database")
+	return DB
 }

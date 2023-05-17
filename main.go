@@ -5,6 +5,7 @@ import (
 
 	"gobackend/api"
 	"gobackend/database"
+	"gobackend/pkg/entities"
 	"gobackend/pkg/user"
 	"gobackend/server"
 	"gobackend/storage"
@@ -20,9 +21,13 @@ func main() {
 	// }
 	godotenv.Load()
 	// Server initialization
-	database.SetupDatabase()
+	db := database.SetupDatabase()
+	println("Migration...")
+	db.AutoMigrate(&entities.Books{}, &entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{}, &entities.Globalchat{})
+	// database.MigrateDB(db)
+
 	storage.InitFileStorage()
-	userrepo := user.NewRepo(database.DB)
+	userrepo := user.NewRepo(db)
 	userserivce := user.NewService(userrepo)
 	app := server.Create()
 
@@ -30,8 +35,6 @@ func main() {
 	api.UserRouter(v2, userserivce)
 
 	// Migrations
-	println("Migration...")
-	// database.DB.AutoMigrate(&entities.Books{}, &entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{}, &entities.Globalchat{})
 
 	// Api routes
 	api.Setup(app)
