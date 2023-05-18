@@ -10,4 +10,5 @@ import (
 func UserRouter(app fiber.Router, service user.Service) {
 	app.Post("/users", handlers.AddUser(service))
 	app.Get("/users", handlers.GetUsers(service))
+	app.Get("/users/:id", handlers.GetUser(service))
 }

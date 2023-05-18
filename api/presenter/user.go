@@ -20,9 +20,11 @@ type User struct {
 // Handler
 func UserSuccessResponse(data *entities.Users) *fiber.Map {
 	book := User{
-		ID:       data.ID,
-		Email:    data.Email,
-		Username: data.Username,
+		ID:           data.ID,
+		Email:        data.Email,
+		Username:     data.Username,
+		Image:        data.Image,
+		Issuperadmin: data.Issuperadmin,
 	}
 	return &fiber.Map{
 		"status": true,
@@ -36,9 +38,11 @@ func UsersSuccessResponse(data *[]entities.Users) *fiber.Map {
 	var newData []User
 	for _, item := range *data {
 		newUser := User{
-			ID:       item.ID,
-			Email:    item.Email,
-			Username: item.Username,
+			ID:           item.ID,
+			Email:        item.Email,
+			Username:     item.Username,
+			Image:        item.Image,
+			Issuperadmin: item.Issuperadmin,
 		}
 		newData = append(newData, newUser)
 	}

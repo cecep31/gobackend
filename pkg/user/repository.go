@@ -10,6 +10,7 @@ import (
 type Repository interface {
 	CreateUser(uer *entities.Users) (*entities.Users, error)
 	GetUsers() (*[]entities.Users, error)
+	GetUser(user *entities.Users) (*entities.Users, error)
 }
 
 type repository struct {
@@ -40,4 +41,12 @@ func (r *repository) GetUsers() (*[]entities.Users, error) {
 		return nil, err
 	}
 	return &users, nil
+}
+
+func (r *repository) GetUser(user *entities.Users) (*entities.Users, error) {
+	err := r.Db.First(user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

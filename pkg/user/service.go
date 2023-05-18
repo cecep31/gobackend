@@ -3,12 +3,14 @@ package user
 import (
 	"gobackend/pkg/entities"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Service interface {
 	InserUser(user *entities.Users) (*entities.Users, error)
 	GetUsers() (*[]entities.Users, error)
+	GetUser(id uuid.UUID) (*entities.Users, error)
 }
 
 type service struct {
@@ -37,4 +39,9 @@ func (s *service) InserUser(user *entities.Users) (*entities.Users, error) {
 }
 func (s *service) GetUsers() (*[]entities.Users, error) {
 	return s.repository.GetUsers()
+}
+func (s *service) GetUser(id uuid.UUID) (*entities.Users, error) {
+	var user entities.Users
+	user.ID = id
+	return s.repository.GetUser(&user)
 }
