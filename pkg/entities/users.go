@@ -7,7 +7,7 @@ type Users struct {
 	Username     string `json:"username" gorm:"uniqueIndex"`
 	Name         string `json:"name" gorm:"default:pilput"`
 	Email        string `json:"email" gorm:"uniqueIndex"`
-	Password     string `json:"-" gorm:"type:text"`
+	Password     string `json:"password" gorm:"type:text"`
 	Image        string `json:"image" gorm:"type:text"`
 	Issuperadmin bool   `json:"issuperadmin" gorm:"default:false"`
 }

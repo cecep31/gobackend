@@ -55,7 +55,7 @@ func Getyou(c *fiber.Ctx) error {
 }
 
 func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 4)
 	return string(bytes), err
 }
 
@@ -146,36 +146,6 @@ func UpdateUser(c *fiber.Ctx) error {
 }
 
 // deprecated
-func UploadAvatar(c *fiber.Ctx) error {
-	if form, err := c.MultipartForm(); err == nil {
-		files := form.File["image"]
-		if len(files) != 0 {
-			for _, file := range files {
-				maxFileSize := int64(1 * 1024 * 1024)
-				if file.Size > maxFileSize {
-					return c.Status(413).JSON(pkg.BadRequest("file not more than 1 mb"))
-				}
-				path := fmt.Sprintf("avatar/%02d%s", time.Now().Nanosecond(), file.Filename)
-				fmt.Println("sebelum save file")
-				if err := c.SaveFileToStorage(file, path, storage.Storage); err != nil {
-					return err
-				}
-				fmt.Println("sesudah save file")
-				user := c.Locals("datauser").(entities.Users)
-				db := database.DB
-				db.Model(user).Update("image", path)
-				c.Status(200).JSON(fiber.Map{
-					"file": user.Image,
-				})
-			}
-		} else {
-			return c.SendStatus(fiber.StatusBadRequest)
-		}
-		return c.SendStatus(fiber.StatusBadRequest)
-	} else {
-		return c.SendStatus(fiber.StatusBadRequest)
-	}
-}
 
 func UploadProfilePicture(c *fiber.Ctx) error {
 	file, err := c.FormFile("image")
@@ -222,16 +192,4 @@ func RemoveProfilePicture(c *fiber.Ctx) error {
 		return pkg.Unexpected(err.Error())
 	}
 	return c.SendStatus(fiber.StatusOK)
-}
-
-func RemoveAvatar(c *fiber.Ctx) error {
-	user := c.Locals("datauser").(entities.Users)
-	err := storage.Storage.Delete(user.Image)
-	if err != nil {
-		return c.Status(fiber.ErrNotFound.Code).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-	return c.SendStatus(fiber.StatusOK)
-
 }
