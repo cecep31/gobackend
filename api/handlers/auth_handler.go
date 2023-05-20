@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/oauth2"
@@ -15,8 +16,8 @@ var (
 
 func Googleapi() {
 	Googleoauth = &oauth2.Config{
-		ClientID:     "10345906756-nqkqh6o3k5ea7vbr4b4khee9ivjnf59f.apps.googleusercontent.com",
-		ClientSecret: "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",
+		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
+		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Scopes:       []string{"email", "profile"},
 		RedirectURL:  "https://api.pilput.dev/oauth/callback",
 		Endpoint:     google.Endpoint,
