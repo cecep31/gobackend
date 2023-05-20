@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"gobackend/api"
+	"gobackend/api/handlers"
 	"gobackend/database"
 	"gobackend/pkg/entities"
 	"gobackend/pkg/user"
@@ -19,12 +20,15 @@ func main() {
 	// if err != nil {
 	// 	fmt.Println("Error loading .env file")
 	// }
+
 	godotenv.Load()
 	// Server initialization
 	db := database.SetupDatabase()
 	println("Migration...")
 	db.AutoMigrate(&entities.Books{}, &entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{}, &entities.Globalchat{})
 	// database.MigrateDB(db)
+
+	handlers.Googleapi()
 
 	storage.InitFileStorage()
 	userrepo := user.NewRepo(db)
@@ -33,8 +37,7 @@ func main() {
 
 	v2 := app.Group("api/v2")
 	api.UserRouter(v2, userserivce)
-
-	// Migrations
+	api.AuthRouter(v2)
 
 	// Api routes
 	api.Setup(app)

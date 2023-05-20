@@ -12,3 +12,8 @@ func UserRouter(app fiber.Router, service user.Service) {
 	app.Get("/users", handlers.GetUsers(service))
 	app.Get("/users/:id", handlers.GetUser(service))
 }
+
+func AuthRouter(app fiber.Router) {
+	app.Get("/oauth", handlers.Loginoatuth)
+	app.Get("/oauth/callback", handlers.CallbackHandler)
+}
