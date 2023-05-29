@@ -19,7 +19,7 @@ func Googleapi() {
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Scopes:       []string{"email", "profile"},
-		RedirectURL:  "https://api.pilput.dev/oauth/callback",
+		RedirectURL:  "https://pilput.dev",
 		Endpoint:     google.Endpoint,
 	}
 }
