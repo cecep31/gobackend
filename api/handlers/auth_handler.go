@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +18,7 @@ func Googleapi() {
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Scopes:       []string{"email", "profile"},
-		RedirectURL:  "https://pilput.dev",
+		RedirectURL:  "https://api.pilput.dev/api/v2/oauth/callback",
 		Endpoint:     google.Endpoint,
 	}
 }
@@ -31,14 +30,16 @@ func Loginoatuth(c *fiber.Ctx) error {
 
 func CallbackHandler(c *fiber.Ctx) error {
 	code := c.Query("code")
+	fmt.Println(code)
 
 	token, err := Googleoauth.Exchange(c.Context(), code)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+
 	}
 	fmt.Println(token)
 
 	// Lakukan sesuatu dengan token akses
 
-	return c.SendString("tok")
+	return c.SendString("ok")
 }
