@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"gobackend/pkg/auth"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -21,7 +20,7 @@ func Googleapi() {
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
-		RedirectURL:  "http://localhost:8080/api/v2/oauth/callback",
+		RedirectURL:  "https://api.pilput.dev/api/v2/oauth/callback",
 		Endpoint:     google.Endpoint,
 	}
 }
