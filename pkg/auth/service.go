@@ -2,11 +2,12 @@ package auth
 
 import (
 	"fmt"
-	"github.com/goccy/go-json"
 	"gobackend/pkg/models"
 	"io"
 	"net/http"
 	"net/url"
+
+	"github.com/goccy/go-json"
 )
 
 type Service interface {
@@ -14,7 +15,7 @@ type Service interface {
 }
 
 type serivce struct {
-	repository repository
+	repository Repository
 }
 
 func NewService(r Repository) Service {
