@@ -20,8 +20,8 @@ func main() {
 	// if err != nil {
 	// 	fmt.Println("Error loading .env file")
 	// }
-
 	godotenv.Load()
+
 	// Server initialization
 	db := database.SetupDatabase()
 	println("Migration...")
