@@ -26,7 +26,7 @@ func Newpost(c *fiber.Ctx) error {
 	post.ID = uuid.New()
 	post.Title = validate.Title
 	post.Desc = validate.Desc
-	post.Created_by = user.ID
+	post.CreatedBy = user.ID
 
 	result := db.Create(&post).Error
 	if result != nil {

@@ -2,6 +2,8 @@ package api
 
 import (
 	"gobackend/api/handlers"
+	"gobackend/pkg/auth"
+	"gobackend/pkg/post"
 	"gobackend/pkg/user"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +15,13 @@ func UserRouter(app fiber.Router, service user.Service) {
 	app.Get("/users/:id", handlers.GetUser(service))
 }
 
-func AuthRouter(app fiber.Router) {
+func AuthRouter(app fiber.Router, service auth.Service) {
 	app.Get("/oauth", handlers.Loginoatuth)
-	app.Get("/oauth/callback", handlers.CallbackHandler)
+	app.Get("/oauth/callback", handlers.CallbackHandler(service))
+}
+
+func PostRouter(app fiber.Router, service post.Service) {
+	app.Get("/posts", handlers.GetPosts(service))
+	app.Get("/posts/:id", handlers.GetPost(service))
+	app.Post("/posts/:id", handlers.AddPost(service))
 }

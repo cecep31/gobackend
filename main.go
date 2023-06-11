@@ -1,12 +1,14 @@
 package main
 
 import (
+	"gobackend/pkg/auth"
 	"log"
 
 	"gobackend/api"
 	"gobackend/api/handlers"
 	"gobackend/database"
 	"gobackend/pkg/entities"
+	"gobackend/pkg/post"
 	"gobackend/pkg/user"
 	"gobackend/server"
 	"gobackend/storage"
@@ -31,13 +33,19 @@ func main() {
 	handlers.Googleapi()
 
 	storage.InitFileStorage()
+
 	userrepo := user.NewRepo(db)
 	userserivce := user.NewService(userrepo)
+	postrepo := post.NewRepo(db)
+	postservice := post.NewService(postrepo)
+	authrepo:= auth.NewRepository(db)
+	authservice := auth.NewService(authrepo)
 	app := server.Create()
 
 	v2 := app.Group("api/v2")
 	api.UserRouter(v2, userserivce)
-	api.AuthRouter(v2)
+	api.AuthRouter(v2,authservice)
+	api.PostRouter(v2, postservice)
 
 	// Api routes
 	api.Setup(app)
