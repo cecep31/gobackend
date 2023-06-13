@@ -123,13 +123,13 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	db := database.DB
 	id := c.Params("id")
-	err := db.First(&modeluser, id).Error
+	err := db.First(&modeluser, "id = ?", id).Error
 	// return c.JSON(user)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return pkg.EntityNotFound("No book found")
 	} else if err != nil {
 		// return pkg.Unexpected(err.Error())
-		return pkg.Unexpected("i dont know")
+		return pkg.Unexpected(err.Error())
 	}
 
 	if err := c.BodyParser(uservalidate); err != nil {
