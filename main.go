@@ -38,13 +38,13 @@ func main() {
 	userserivce := user.NewService(userrepo)
 	postrepo := post.NewRepo(db)
 	postservice := post.NewService(postrepo)
-	authrepo:= auth.NewRepository(db)
+	authrepo := auth.NewRepository(db)
 	authservice := auth.NewService(authrepo)
 	app := server.Create()
 
-	v2 := app.Group("api/v2")
+	v2 := app.Group("v2")
 	api.UserRouter(v2, userserivce)
-	api.AuthRouter(v2,authservice)
+	api.AuthRouter(v2, authservice)
 	api.PostRouter(v2, postservice)
 
 	// Api routes
