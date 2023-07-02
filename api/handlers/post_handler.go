@@ -4,20 +4,36 @@ import (
 	"gobackend/api/presenter"
 	"gobackend/pkg/entities"
 	"gobackend/pkg/post"
+	"gobackend/pkg/validator"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 )
 
 func AddPost(service post.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var requestBody entities.Posts
+		var requestBody post.Posts
 		err := c.BodyParser(&requestBody)
 		if err != nil {
-			c.Status(fiber.StatusBadRequest)
-			return c.JSON(presenter.UserErrorResponse(err))
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.PostErrorResponse(err.Error()))
 		}
-		result, err := service.InserPosts(&requestBody)
+
+		resulvalidate := validator.ValidateThis(requestBody)
+		if resulvalidate != nil {
+			return c.JSON(presenter.PostErrorResponse(resulvalidate))
+		}
+
+		userlocal := c.Locals("user").(*jwt.Token)
+		claims := userlocal.Claims.(jwt.MapClaims)
+		useridstring := claims["id"].(string)
+		userid, err := uuid.Parse(useridstring)
+		if err != nil {
+			return c.JSON(presenter.PostErrorResponse(err.Error()))
+		}
+
+		realpost := entities.Posts{Title: requestBody.Title, Body: requestBody.Body, CreatedBy: userid}
+		result, err := service.InserPosts(&realpost)
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
 		}

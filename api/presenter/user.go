@@ -11,7 +11,8 @@ import (
 type User struct {
 	ID           uuid.UUID `json:"id"`
 	Email        string    `json:"email"`
-	Username     string    `json:"username"`
+	FirstName    string    `json:"first_name"`
+	LastName     string    `json:"Last_name"`
 	Image        string    `json:"image"`
 	Issuperadmin bool      `json:"issuperadmin" gorm:"default:false"`
 	CreateAt     time.Time `json:"createAt"`
@@ -26,34 +27,44 @@ func UserSuccessResponse(data *entities.Users) *fiber.Map {
 		CreateAt:     data.CreatedAt,
 	}
 	return &fiber.Map{
-		"status": true,
-		"data":   user,
-		"error":  nil,
+		"success": true,
+		"data":    user,
+		"error":   nil,
 	}
 }
 
 func UsersSuccessResponse(data *[]entities.Users) *fiber.Map {
+	if len(*data) == 0 {
+		return &fiber.Map{
+			"success": true,
+			"data":    []User{},
+			"error":   nil,
+		}
+	}
 	var newData []User
 	for _, item := range *data {
 		newUser := User{
 			ID:           item.ID,
+			FirstName:    item.FirstName,
+			LastName:     item.LastName,
 			Email:        item.Email,
 			Image:        item.Image,
 			Issuperadmin: item.Issuperadmin,
 		}
 		newData = append(newData, newUser)
 	}
+
 	return &fiber.Map{
-		"status": true,
-		"data":   newData,
-		"error":  nil,
+		"success": true,
+		"data":    newData,
+		"error":   nil,
 	}
 }
 
 func UserErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
-		"status": false,
-		"data":   "",
-		"error":  err.Error(),
+		"success": false,
+		"data":    "",
+		"error":   err.Error(),
 	}
 }

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"gobackend/pkg/auth"
 	"log"
 	"os"
@@ -27,13 +26,11 @@ func Googleapi() {
 func Loginoatuth(c *fiber.Ctx) error {
 	// Create oauthState cookie
 	url := Googleoauth.AuthCodeURL("state")
-	fmt.Print(url)
 	return c.Redirect(url)
 }
 
 func CallbackHandler(service auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		fmt.Print("masuk callback")
 		code := c.Query("code")
 		//		fmt.Println(code)
 

@@ -3,6 +3,7 @@ package main
 import (
 	"gobackend/pkg/auth"
 	"log"
+	"os"
 
 	"gobackend/api"
 	"gobackend/api/handlers"
@@ -18,17 +19,14 @@ import (
 )
 
 func main() {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	fmt.Println("Error loading .env file")
-	// }
 	godotenv.Load()
 
 	// Server initialization
 	db := database.SetupDatabase()
-	println("Migration...")
-	db.AutoMigrate(&entities.Books{}, &entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{}, &entities.Globalchat{})
-	// database.MigrateDB(db)
+	if os.Getenv("DEBUG") != "" {
+		println("Migration...")
+		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{}, &entities.Globalchat{})
+	}
 
 	handlers.Googleapi()
 
@@ -42,7 +40,7 @@ func main() {
 	authservice := auth.NewService(authrepo)
 	app := server.Create()
 
-	v2 := app.Group("v2")
+	v2 := app.Group("api/v2")
 	api.UserRouter(v2, userserivce)
 	api.AuthRouter(v2, authservice)
 	api.PostRouter(v2, postservice)

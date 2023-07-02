@@ -3,7 +3,6 @@ package user
 import (
 	"gobackend/pkg/entities"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -24,7 +23,6 @@ func NewRepo(db *gorm.DB) Repository {
 }
 
 func (r *repository) CreateUser(user *entities.Users) (*entities.Users, error) {
-	user.ID = uuid.New()
 	err := r.Db.Create(&user).Error
 	if err != nil {
 		return nil, err

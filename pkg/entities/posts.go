@@ -9,8 +9,8 @@ import (
 type Posts struct {
 	database.DefaultModel
 	Title     string      `json:"title"`
-	Desc      string      `json:"desc"`
-	CreatedBy uuid.UUID   `json:"created_by"`
+	Body      string      `json:"body" gorm:"type=text"`
+	CreatedBy uuid.UUID   `json:"created_by" gorm:"type=uuid"`
 	User      Users       `gorm:"foreignKey:CreatedBy"`
 	Posttags  []*Posttags `gorm:"many2many:posts_posttags"`
 }

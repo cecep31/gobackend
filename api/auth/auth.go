@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"time"
 
@@ -11,7 +10,6 @@ import (
 	"gobackend/pkg/entities"
 	validate "gobackend/pkg/validator"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -45,13 +43,9 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
-	validate := validate.V
-	if errvalidate := validate.Struct(input); errvalidate != nil {
-		errMsgs := make(map[string]string)
-		for _, err := range errvalidate.(validator.ValidationErrors) {
-			errMsgs[err.Field()] = fmt.Sprintf("Field validation for '%s' failed on the '%s'", err.Field(), err.Tag())
-		}
-		return c.Status(fiber.StatusBadRequest).JSON(errMsgs)
+	resulvalidate := validate.ValidateThis(input)
+	if resulvalidate != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(resulvalidate)
 	}
 
 	email := input.Email
@@ -70,6 +64,7 @@ func Login(c *fiber.Ctx) error {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
+	claims["id"] = user.ID
 	claims["email"] = email
 	claims["issuperadmin"] = user.Issuperadmin
 	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
