@@ -171,7 +171,7 @@ func UploadProfilePicture(c *fiber.Ctx) error {
 	})
 
 	if err != nil {
-		return pkg.Unexpected("Failed to save file")
+		return pkg.Unexpected(err.Error())
 	}
 
 	user := c.Locals("datauser").(entities.Users)
