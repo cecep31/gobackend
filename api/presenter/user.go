@@ -14,18 +14,16 @@ type User struct {
 	Username     string    `json:"username"`
 	Image        string    `json:"image"`
 	Issuperadmin bool      `json:"issuperadmin" gorm:"default:false"`
-	CreateAt	time.Time `json:"createAt"`
+	CreateAt     time.Time `json:"createAt"`
 }
-
 
 func UserSuccessResponse(data *entities.Users) *fiber.Map {
 	user := User{
 		ID:           data.ID,
 		Email:        data.Email,
-		Username:     data.Username,
 		Image:        data.Image,
 		Issuperadmin: data.Issuperadmin,
-		CreateAt: data.CreatedAt,
+		CreateAt:     data.CreatedAt,
 	}
 	return &fiber.Map{
 		"status": true,
@@ -40,7 +38,6 @@ func UsersSuccessResponse(data *[]entities.Users) *fiber.Map {
 		newUser := User{
 			ID:           item.ID,
 			Email:        item.Email,
-			Username:     item.Username,
 			Image:        item.Image,
 			Issuperadmin: item.Issuperadmin,
 		}

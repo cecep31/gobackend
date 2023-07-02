@@ -20,10 +20,9 @@ import (
 
 type Users struct {
 	database.DefaultModel
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Role     string `json:"role"`
-	Image    string `json:"image" gorm:"type:text"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+	Image string `json:"image" gorm:"type:text"`
 }
 
 func CheckPasswordHash(password, hash string) bool {
@@ -34,7 +33,7 @@ func CheckPasswordHash(password, hash string) bool {
 func Login(c *fiber.Ctx) error {
 	db := database.DB
 	type LoginInput struct {
-		Username string `json:"username" validate:"required"`
+		Email    string `json:"Email" validate:"required"`
 		Password string `jsno:"password" validate:"required,min=8" `
 	}
 
@@ -50,13 +49,13 @@ func Login(c *fiber.Ctx) error {
 	if errvalidate := validate.Struct(input); errvalidate != nil {
 		errMsgs := make(map[string]string)
 		for _, err := range errvalidate.(validator.ValidationErrors) {
-			errMsgs[err.Field()] = fmt.Sprintf("Field validation for '%s' failed on the '%s' tag", err.Field(), err.Tag())
+			errMsgs[err.Field()] = fmt.Sprintf("Field validation for '%s' failed on the '%s'", err.Field(), err.Tag())
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(errMsgs)
 	}
 
-	username := input.Username
-	err := db.Where("username = ?", username).First(&user).Error
+	email := input.Email
+	err := db.Where("email = ?", email).First(&user).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
 	} else if err != nil {
@@ -71,7 +70,7 @@ func Login(c *fiber.Ctx) error {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = username
+	claims["email"] = email
 	claims["issuperadmin"] = user.Issuperadmin
 	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
 

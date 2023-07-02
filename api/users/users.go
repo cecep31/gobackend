@@ -115,7 +115,6 @@ func UpdateUser(c *fiber.Ctx) error {
 		database.DefaultModel
 		Username string `json:"username" gorm:"uniqueIndex"`
 		Email    string `json:"email" gorm:"uniqueIndex"`
-		Password string `json:"-" gorm:"type:text"`
 		Image    string `json:"image" gorm:"type:text"`
 	}
 	uservalidate := new(user)
@@ -136,7 +135,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		return pkg.BadRequest("invalid params")
 	}
 
-	err2 := db.Model(&modeluser).Updates(&entities.Users{Email: uservalidate.Email, Username: uservalidate.Username}).Error
+	err2 := db.Model(&modeluser).Updates(&entities.Users{Email: uservalidate.Email}).Error
 	if err2 == nil {
 		return pkg.BadRequest("Failed To Save User")
 	}
