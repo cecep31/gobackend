@@ -1,4 +1,4 @@
-package post
+package posts
 
 import (
 	"gobackend/pkg/entities"

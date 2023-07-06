@@ -1,4 +1,4 @@
-package post
+package posts
 
 import (
 	"gobackend/database"

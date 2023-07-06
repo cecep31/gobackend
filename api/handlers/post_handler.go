@@ -3,7 +3,7 @@ package handlers
 import (
 	"gobackend/api/presenter"
 	"gobackend/pkg/entities"
-	"gobackend/pkg/post"
+	"gobackend/pkg/posts"
 	"gobackend/pkg/validator"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 )
 
-func AddPost(service post.Service) fiber.Handler {
+func AddPost(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var requestBody post.Posts
+		var requestBody posts.Posts
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.PostErrorResponse(err.Error()))
@@ -40,7 +40,7 @@ func AddPost(service post.Service) fiber.Handler {
 		return c.JSON(presenter.PostSuccessResponse(result))
 	}
 }
-func GetPosts(service post.Service) fiber.Handler {
+func GetPosts(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		post, err := service.GetPosts()
 		if err != nil {
@@ -49,7 +49,7 @@ func GetPosts(service post.Service) fiber.Handler {
 		return c.JSON(presenter.PostsSuccessResponse(post))
 	}
 }
-func GetPost(service post.Service) fiber.Handler {
+func GetPost(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		idparam := c.Params("id")
 		id, err := uuid.Parse(idparam)

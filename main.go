@@ -9,7 +9,7 @@ import (
 	"gobackend/api/handlers"
 	"gobackend/database"
 	"gobackend/pkg/entities"
-	"gobackend/pkg/post"
+	"gobackend/pkg/posts"
 	"gobackend/pkg/user"
 	"gobackend/server"
 	"gobackend/storage"
@@ -34,8 +34,8 @@ func main() {
 
 	userrepo := user.NewRepo(db)
 	userserivce := user.NewService(userrepo)
-	postrepo := post.NewRepo(db)
-	postservice := post.NewService(postrepo)
+	postrepo := posts.NewRepo(db)
+	postservice := posts.NewService(postrepo)
 	authrepo := auth.NewRepository(db)
 	authservice := auth.NewService(authrepo)
 	app := server.Create()
