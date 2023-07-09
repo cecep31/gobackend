@@ -23,7 +23,7 @@ func main() {
 
 	// Server initialization
 	db := database.SetupDatabase()
-	if os.Getenv("DEBUG") != "" {
+	if os.Getenv("MIGRATE") != "" {
 		println("Migration...")
 		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{}, &entities.Globalchat{})
 	}
