@@ -2,6 +2,7 @@ package main
 
 import (
 	"gobackend/pkg/auth"
+	"gobackend/pkg/tasks"
 	"log"
 	"os"
 
@@ -38,12 +39,15 @@ func main() {
 	postservice := posts.NewService(postrepo)
 	authrepo := auth.NewRepository(db)
 	authservice := auth.NewService(authrepo)
+	taskrepo := tasks.NewRepository(db)
+	taskservice := tasks.NewService(taskrepo)
 	app := server.Create()
 
 	v2 := app.Group("api/v2")
 	api.UserRouter(v2, userserivce)
 	api.AuthRouter(v2, authservice)
 	api.PostRouter(v2, postservice)
+	api.TaskRouter(v2, taskservice)
 
 	// Api routes
 	api.Setup(app)

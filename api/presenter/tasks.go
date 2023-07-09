@@ -8,15 +8,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type post struct {
+type Posts struct {
 	database.DefaultModel
 	Title     string    `json:"title"`
 	Body      string    `json:"desc"`
 	CreatedBy uuid.UUID `json:"created_by"`
 }
 
-func PostSuccessResponse(data *entities.Posts) *fiber.Map {
-	newData := post{
+func TaskSuccessResponse(data *entities.Tasks) *fiber.Map {
+	newData := Posts{
 		Title:     data.Title,
 		Body:      data.Body,
 		CreatedBy: data.CreatedBy,
@@ -28,15 +28,15 @@ func PostSuccessResponse(data *entities.Posts) *fiber.Map {
 	}
 }
 
-func PostsSuccessResponse(data *[]entities.Posts) *fiber.Map {
+func TasksSuccessResponse(data *[]entities.Tasks) *fiber.Map {
 
-	// if len(*data) == 0 {
-	// 	return &fiber.Map{
-	// 		"success": true,
-	// 		"data":    []post{},
-	// 		"error":   nil,
-	// 	}
-	// }
+	if len(*data) == 0 {
+		return &fiber.Map{
+			"success": true,
+			"data":    []Posts{},
+			"error":   nil,
+		}
+	}
 	return &fiber.Map{
 		"success": true,
 		"data":    data,
@@ -44,7 +44,7 @@ func PostsSuccessResponse(data *[]entities.Posts) *fiber.Map {
 	}
 }
 
-func PostErrorResponse(err interface{}) *fiber.Map {
+func TaskErrorResponse(err interface{}) *fiber.Map {
 	return &fiber.Map{
 		"success": false,
 		"data":    "",

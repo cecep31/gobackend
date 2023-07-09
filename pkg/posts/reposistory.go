@@ -38,7 +38,7 @@ func (r *repository) GetPosts() (*[]entities.Posts, error) {
 	result := r.Db.Find(&posts)
 	err := result.Error
 	if err != nil {
-		return nil, err
+		return &[]entities.Posts{}, err
 	}
 	return &posts, nil
 }
