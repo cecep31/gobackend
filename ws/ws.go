@@ -7,8 +7,8 @@ import (
 	"log"
 
 	"github.com/goccy/go-json"
+	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/websocket/v2"
 	"github.com/google/uuid"
 )
 

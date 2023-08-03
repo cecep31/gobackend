@@ -6,14 +6,14 @@ import (
 	"gobackend/pkg/entities"
 	"os"
 
+	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
-	jwtware "github.com/gofiber/jwt/v2"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func Protectedws() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   []byte(os.Getenv("SIGNKEY")),
+		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("SIGNKEY"))},
 		ErrorHandler: jwtError,
 		TokenLookup:  "query:token",
 		AuthScheme:   "",
@@ -22,7 +22,7 @@ func Protectedws() func(*fiber.Ctx) error {
 
 func Protected() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   []byte(os.Getenv("SIGNKEY")),
+		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("SIGNKEY"))},
 		ErrorHandler: jwtError,
 	})
 }
