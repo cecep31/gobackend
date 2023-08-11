@@ -22,15 +22,13 @@ import (
 func main() {
 	godotenv.Load()
 
-	// Server initialization
 	db := database.SetupDatabase()
 	if os.Getenv("MIGRATE") != "" {
 		println("Migration...")
-		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Posttags{}, &entities.Globalchat{})
+		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Globalchat{})
 	}
 
 	handlers.Googleapi()
-
 	storage.InitFileStorage()
 
 	userrepo := user.NewRepo(db)

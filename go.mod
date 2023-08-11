@@ -1,25 +1,24 @@
 module gobackend
 
-go 1.18
+go 1.20
 
 require (
-	github.com/go-playground/validator/v10 v10.14.1
+	github.com/go-playground/validator/v10 v10.15.0
 	github.com/goccy/go-json v0.10.2
 	github.com/gofiber/contrib/jwt v1.0.4
-	github.com/gofiber/contrib/websocket v1.1.0
+	github.com/gofiber/contrib/websocket v1.2.0
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/helmet/v2 v2.2.26
-	github.com/gofiber/websocket/v2 v2.2.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.5.1
 	github.com/minio/minio-go/v7 v7.0.61
 	github.com/valyala/fasthttp v1.48.0
-	golang.org/x/crypto v0.11.0
-	golang.org/x/oauth2 v0.10.0
+	golang.org/x/crypto v0.12.0
+	golang.org/x/oauth2 v0.11.0
 	gorm.io/driver/postgres v1.5.2
-	gorm.io/gorm v1.25.2
+	gorm.io/gorm v1.25.3
 )
 
 require (
@@ -57,9 +56,9 @@ require (
 	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/net v0.12.0 // indirect
-	golang.org/x/sys v0.10.0 // indirect
-	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/net v0.14.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/text v0.12.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
