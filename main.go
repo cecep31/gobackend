@@ -25,7 +25,7 @@ func main() {
 	db := database.SetupDatabase()
 	if os.Getenv("MIGRATE") != "" {
 		println("Migration...")
-		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{}, &entities.Globalchat{})
+		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{})
 	}
 
 	handlers.Googleapi()
