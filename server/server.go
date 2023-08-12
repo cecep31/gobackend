@@ -7,7 +7,6 @@ import (
 	"github.com/goccy/go-json"
 
 	"gobackend/pkg"
-	validate "gobackend/pkg/validator"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -23,8 +22,7 @@ func setupMiddlewares(app *fiber.App) {
 	app.Use(helmet.New())
 	app.Use(recover.New())
 	app.Use(cors.New(cors.Config{
-		// AllowOrigins: "https://pilput.dev, https://pilput.test, http://pilput.test",
-		AllowOrigins: "*",
+		AllowOrigins: "https://pilput.dev, https://dash.pilput.dev, http://pilput.test, http://localhost:3000",
 	}))
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed, // 1
@@ -41,11 +39,7 @@ func setupMiddlewares(app *fiber.App) {
 }
 
 func Create() *fiber.App {
-
-	validate.SetupValidate()
-
 	app := fiber.New(fiber.Config{
-		// Override default error handler
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			if e, ok := err.(*pkg.Error); ok {
 				return ctx.Status(e.Status).JSON(e)
@@ -73,7 +67,6 @@ func Create() *fiber.App {
 }
 
 func Listen(app *fiber.App) error {
-
 	// 404 Handler
 	app.Use(func(c *fiber.Ctx) error {
 		return c.SendStatus(404)

@@ -16,6 +16,8 @@ import (
 	"gobackend/storage"
 	"gobackend/ws"
 
+	validate "gobackend/pkg/validator"
+
 	"github.com/joho/godotenv"
 )
 
@@ -24,13 +26,15 @@ func main() {
 
 	db := database.SetupDatabase()
 	if os.Getenv("MIGRATE") != "" {
-		println("Migration...")
+		log.Println("migration...")
 		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{})
 	}
 
 	handlers.Googleapi()
 	storage.InitFileStorage()
+	validate.SetupValidate()
 
+	log.Println("Initial repository & service")
 	userrepo := user.NewRepo(db)
 	userserivce := user.NewService(userrepo)
 	postrepo := posts.NewRepo(db)

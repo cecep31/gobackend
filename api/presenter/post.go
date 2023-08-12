@@ -30,13 +30,13 @@ func PostSuccessResponse(data *entities.Posts) *fiber.Map {
 
 func PostsSuccessResponse(data *[]entities.Posts) *fiber.Map {
 
-	// if len(*data) == 0 {
-	// 	return &fiber.Map{
-	// 		"success": true,
-	// 		"data":    []post{},
-	// 		"error":   nil,
-	// 	}
-	// }
+	if len(*data) == 0 {
+		return &fiber.Map{
+			"success": true,
+			"data":    []post{},
+			"error":   nil,
+		}
+	}
 	return &fiber.Map{
 		"success": true,
 		"data":    data,
