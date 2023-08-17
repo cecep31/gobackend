@@ -73,6 +73,5 @@ func Listen(app *fiber.App) error {
 	})
 
 	serverPort := os.Getenv("SERVER_PORT")
-	host := os.Getenv("SERVER_HOST")
-	return app.Listen(fmt.Sprintf("%s:%s", host, serverPort))
+	return app.Listen(fmt.Sprintf("%s:%s", "0.0.0.0", serverPort))
 }
