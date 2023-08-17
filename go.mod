@@ -3,13 +3,12 @@ module gobackend
 go 1.20
 
 require (
-	github.com/go-playground/validator/v10 v10.15.0
+	github.com/go-playground/validator/v10 v10.15.1
 	github.com/goccy/go-json v0.10.2
 	github.com/gofiber/contrib/jwt v1.0.4
 	github.com/gofiber/contrib/websocket v1.2.0
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/helmet/v2 v2.2.26
-	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.5.1
