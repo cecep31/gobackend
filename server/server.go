@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/goccy/go-json"
@@ -72,6 +71,16 @@ func Listen(app *fiber.App) error {
 		return c.SendStatus(404)
 	})
 
-	serverPort := os.Getenv("SERVER_PORT")
-	return app.Listen(fmt.Sprintf("%s:%s", "0.0.0.0", serverPort))
+	return app.Listen(getPort())
+}
+
+func getPort() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":8080"
+	} else {
+		port = ":" + port
+	}
+
+	return port
 }
