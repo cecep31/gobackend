@@ -18,8 +18,9 @@ func UserRouter(app fiber.Router, service user.Service) {
 }
 
 func AuthRouter(app fiber.Router, service auth.Service) {
-	app.Get("/oauth", handlers.Loginoatuth)
+	app.Post("/oauth", handlers.Loginoatuth)
 	app.Get("/oauth/callback", handlers.CallbackHandler(service))
+	app.Post("login", handlers.Login)
 }
 
 func PostRouter(app fiber.Router, service posts.Service) {

@@ -27,7 +27,7 @@ func main() {
 	db := database.SetupDatabase()
 	if os.Getenv("MIGRATE") != "" {
 		log.Println("migration...")
-		db.AutoMigrate(&entities.Items{}, &entities.Users{}, &entities.Tasks{}, &entities.Taskgorups{}, &entities.Posts{})
+		db.AutoMigrate(&entities.Users{}, &entities.Tasks{}, &entities.Posts{}, &entities.PostComments{})
 	}
 
 	handlers.Googleapi()
@@ -46,13 +46,13 @@ func main() {
 	app := server.Create()
 
 	v2 := app.Group("api/v2")
+	auth := app.Group("auth")
+	api.AuthRouter(auth, authservice)
 	api.UserRouter(v2, userserivce)
-	api.AuthRouter(v2, authservice)
 	api.PostRouter(v2, postservice)
 	api.TaskRouter(v2, taskservice)
 
 	// Api routes
-	api.Setup(app)
 	ws.WsSetup(app)
 
 	if err := server.Listen(app); err != nil {
