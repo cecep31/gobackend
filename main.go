@@ -26,8 +26,9 @@ func main() {
 
 	db := database.SetupDatabase()
 	if os.Getenv("MIGRATE") != "" {
-		log.Println("migration...")
+		log.Println("Migration...")
 		db.AutoMigrate(&entities.Users{}, &entities.Tasks{}, &entities.Posts{}, &entities.PostComments{})
+		log.Println("Migration Done")
 	}
 
 	handlers.Googleapi()
@@ -43,6 +44,7 @@ func main() {
 	authservice := auth.NewService(authrepo)
 	taskrepo := tasks.NewRepository(db)
 	taskservice := tasks.NewService(taskrepo)
+	log.Println("Initial repository & service Done")
 	app := server.Create()
 
 	v2 := app.Group("api/v2")

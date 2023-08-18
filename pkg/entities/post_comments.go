@@ -9,5 +9,5 @@ type PostComments struct {
 	Text             string `json:"text"`
 	PostId           string
 	ParrentCommentId string
-	ChildComment     []*PostComments `gorm:"foreignKey:id"`
+	replies     []*PostComments `gorm:"foreignKey:id"`
 }
