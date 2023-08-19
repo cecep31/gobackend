@@ -26,7 +26,7 @@ type googleResponse struct {
 
 type Service interface {
 	GetUserInfoGoogle(token string) (*googleResponse, error)
-	GetUserOrCreate(email string) (*entities.Users, error)
+	GetUserOrCreate(profile *googleResponse) (*entities.Users, error)
 	SetTokenJwt(user *entities.Users) (string, error)
 }
 
@@ -73,13 +73,15 @@ func (service *serivce) GetUserInfoGoogle(token string) (*googleResponse, error)
 	return &data, nil
 }
 
-func (s *serivce) GetUserOrCreate(email string) (*entities.Users, error) {
-	user, err := s.repository.GetUserByEmail(email)
+func (s *serivce) GetUserOrCreate(profile *googleResponse) (*entities.Users, error) {
+	user, err := s.repository.GetUserByEmail(profile.Email)
 	if err == nil {
 		return user, err
 	}
 	usercreate := new(entities.Users)
-	usercreate.Email = email
+	usercreate.Email = profile.Email
+	usercreate.FirstName = profile.Given_name
+	usercreate.LastName = profile.Family_name
 	newuser, err := s.userreposistory.CreateUser(usercreate)
 	if err != nil {
 		return nil, err

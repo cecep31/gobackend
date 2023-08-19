@@ -51,7 +51,7 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 		if err != nil {
 			return c.SendStatus(fiber.StatusInternalServerError)
 		}
-		user, err := service.GetUserOrCreate(profile.Email)
+		user, err := service.GetUserOrCreate(profile)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
