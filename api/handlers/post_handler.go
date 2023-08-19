@@ -52,12 +52,8 @@ func GetPosts(service posts.Service) fiber.Handler {
 }
 func GetPost(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		idparam := c.Params("id")
-		id, err := uuid.Parse(idparam)
-		if err != nil {
-			return c.SendStatus(fiber.StatusNotFound)
-		}
-		post, err := service.GetPost(id)
+		slug := c.Params("slug")
+		post, err := service.GetPost(slug)
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
 		}

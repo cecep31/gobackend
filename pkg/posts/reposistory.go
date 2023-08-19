@@ -11,6 +11,7 @@ type Repository interface {
 	CreatePost(post *entities.Posts) (*entities.Posts, error)
 	GetPosts() (*[]entities.Posts, error)
 	GetPost(user *entities.Posts) (*entities.Posts, error)
+	GetPostBySlug(slug string) (*entities.Posts, error)
 }
 
 type repository struct {
@@ -44,6 +45,15 @@ func (r *repository) GetPosts() (*[]entities.Posts, error) {
 }
 
 func (r *repository) GetPost(post *entities.Posts) (*entities.Posts, error) {
+	err := r.Db.First(post).Error
+	if err != nil {
+		return nil, err
+	}
+	return post, nil
+}
+
+func (r *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
+	post := new(entities.Posts)
 	err := r.Db.First(post).Error
 	if err != nil {
 		return nil, err

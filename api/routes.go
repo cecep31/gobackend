@@ -25,7 +25,7 @@ func AuthRouter(app fiber.Router, service auth.Service) {
 
 func PostRouter(app fiber.Router, service posts.Service) {
 	app.Get("/posts", handlers.GetPosts(service))
-	app.Get("/posts/:id", handlers.GetPost(service))
+	app.Get("/posts/:slug", handlers.GetPost(service))
 	app.Post("/posts", middleware.Protected(), handlers.AddPost(service))
 }
 

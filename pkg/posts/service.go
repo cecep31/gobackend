@@ -2,14 +2,12 @@ package posts
 
 import (
 	"gobackend/pkg/entities"
-
-	"github.com/google/uuid"
 )
 
 type Service interface {
 	InserPosts(user *entities.Posts) (*entities.Posts, error)
 	GetPosts() (*[]entities.Posts, error)
-	GetPost(id uuid.UUID) (*entities.Posts, error)
+	GetPost(slug string) (*entities.Posts, error)
 }
 
 type service struct {
@@ -28,8 +26,7 @@ func (s *service) InserPosts(user *entities.Posts) (*entities.Posts, error) {
 func (s *service) GetPosts() (*[]entities.Posts, error) {
 	return s.repository.GetPosts()
 }
-func (s *service) GetPost(id uuid.UUID) (*entities.Posts, error) {
-	var post entities.Posts
-	post.ID = id
-	return s.repository.GetPost(&post)
+
+func (s *service) GetPost(slug string) (*entities.Posts, error) {
+	return s.repository.GetPostBySlug(slug)
 }
