@@ -21,7 +21,7 @@ func AddUser(service user.Service) fiber.Handler {
 		if err != nil {
 			return c.JSON(presenter.UserErrorResponse(err))
 		}
-		return c.JSON(presenter.UserSuccessResponse(result))
+		return c.Status(fiber.StatusCreated).JSON(result)
 	}
 }
 func GetUsers(service user.Service) fiber.Handler {
@@ -30,7 +30,7 @@ func GetUsers(service user.Service) fiber.Handler {
 		if err != nil {
 			return c.JSON(presenter.UserErrorResponse(err))
 		}
-		return c.JSON(presenter.UsersSuccessResponse(user))
+		return c.JSON(user)
 	}
 }
 func GetUser(service user.Service) fiber.Handler {
@@ -44,6 +44,6 @@ func GetUser(service user.Service) fiber.Handler {
 		if err != nil {
 			return c.JSON(presenter.UserErrorResponse(err))
 		}
-		return c.JSON(presenter.UserSuccessResponse(user))
+		return c.JSON(user)
 	}
 }

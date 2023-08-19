@@ -35,7 +35,7 @@ func (r *repository) CreatePost(post *entities.Posts) (*entities.Posts, error) {
 }
 func (r *repository) GetPosts() (*[]entities.Posts, error) {
 	var posts []entities.Posts
-	result := r.Db.Find(&posts)
+	result := r.Db.Preload("Creator").Find(&posts)
 	err := result.Error
 	if err != nil {
 		return &[]entities.Posts{}, err

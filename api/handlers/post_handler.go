@@ -28,6 +28,7 @@ func AddPost(service posts.Service) fiber.Handler {
 		claims := userlocal.Claims.(jwt.MapClaims)
 		useridstring := claims["id"].(string)
 		userid, err := uuid.Parse(useridstring)
+
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err.Error()))
 		}
@@ -37,16 +38,16 @@ func AddPost(service posts.Service) fiber.Handler {
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
 		}
-		return c.JSON(presenter.PostSuccessResponse(result))
+		return c.Status(fiber.StatusCreated).JSON(result)
 	}
 }
 func GetPosts(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		post, err := service.GetPosts()
+		posts, err := service.GetPosts()
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
 		}
-		return c.JSON(presenter.PostsSuccessResponse(post))
+		return c.JSON(posts)
 	}
 }
 func GetPost(service posts.Service) fiber.Handler {
@@ -60,6 +61,6 @@ func GetPost(service posts.Service) fiber.Handler {
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
 		}
-		return c.JSON(presenter.PostSuccessResponse(post))
+		return c.JSON(post)
 	}
 }
