@@ -78,6 +78,7 @@ func (s *serivce) GetUserOrCreate(email string) (*entities.Users, error) {
 	if err == nil {
 		return user, err
 	}
+	user.Email = email
 	newuser, err := s.userreposistory.CreateUser(user)
 	if err != nil {
 		return nil, err

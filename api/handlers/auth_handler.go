@@ -48,7 +48,6 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).SendString("Failed to exchange token")
 		}
 		profile, err := service.GetUserInfoGoogle(token.AccessToken)
-		return c.JSON(profile)
 		if err != nil {
 			return c.SendStatus(fiber.StatusInternalServerError)
 		}
