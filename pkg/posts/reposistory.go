@@ -54,7 +54,7 @@ func (r *repository) GetPost(post *entities.Posts) (*entities.Posts, error) {
 
 func (r *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
 	post := new(entities.Posts)
-	err := r.Db.First(post).Error
+	err := r.Db.First(post, "slug = ?", slug).Error
 	if err != nil {
 		return nil, err
 	}
