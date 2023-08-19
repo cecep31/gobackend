@@ -75,8 +75,8 @@ func (service *serivce) GetUserInfoGoogle(token string) (*googleResponse, error)
 
 func (s *serivce) GetUserOrCreate(email string) (*entities.Users, error) {
 	user, err := s.repository.GetUserByEmail(email)
-	if err != nil {
-		return nil, err
+	if err == nil {
+		return user, err
 	}
 	newuser, err := s.userreposistory.CreateUser(user)
 	if err != nil {
