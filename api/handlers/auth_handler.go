@@ -64,9 +64,8 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 			Name:     "token",
 			Domain:   "." + domain,
 			Value:    jwttoken,
-			Expires:  time.Now().Add(time.Hour * 24), // Set expiration time
-			Secure:   true,                           // Set Secure flag for HTTPS only
-			HTTPOnly: true,                           // Set HTTPOnly flag to prevent JavaScript access
+			Expires:  time.Now().Add(time.Hour * 24),
+			SameSite: "strict",
 		}
 		c.Cookie(&cookie)
 		return c.Redirect("https://" + domain)
