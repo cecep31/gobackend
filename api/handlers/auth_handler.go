@@ -53,11 +53,11 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 		}
 		user, err := service.GetUserOrCreate(profile.Email)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString("Failed to Generate token jwt")
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 		jwttoken, err := service.SetTokenJwt(user)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString("Failed to Generate token jwt")
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 		domain := os.Getenv("DOMAIN")
 		cookie := fiber.Cookie{
