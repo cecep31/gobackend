@@ -2,6 +2,7 @@ package auth
 
 import (
 	"gobackend/pkg/entities"
+
 	"gorm.io/gorm"
 )
 
@@ -21,9 +22,9 @@ func NewRepository(db *gorm.DB) Repository {
 
 func (r *repository) GetUserByEmail(email string) (*entities.Users, error) {
 	var user entities.Users
-	err := r.Db.First(&user, "email = ?", email)
+	err := r.Db.First(&user, "email = ?", email).Error
 	if err != nil {
-		return nil, err.Error
+		return nil, err
 	}
 	return &user, nil
 }

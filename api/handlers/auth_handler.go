@@ -47,8 +47,29 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 			log.Println("Failed to exchange token:", err)
 			return c.Status(fiber.StatusInternalServerError).SendString("Failed to exchange token")
 		}
-		profile := service.GetUserInfoGoogle(token.AccessToken)
-		return c.JSON(profile)
+		profile, err := service.GetUserInfoGoogle(token.AccessToken)
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
+		user, err := service.GetUserOrCreate(profile.Email)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Failed to Generate token jwt")
+		}
+		jwttoken, err := service.SetTokenJwt(user)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Failed to Generate token jwt")
+		}
+		domain := os.Getenv("DOMAIN")
+		cookie := fiber.Cookie{
+			Name:     "token",
+			Domain:   "." + domain,
+			Value:    jwttoken,
+			Expires:  time.Now().Add(time.Hour * 24), // Set expiration time
+			Secure:   true,                           // Set Secure flag for HTTPS only
+			HTTPOnly: true,                           // Set HTTPOnly flag to prevent JavaScript access
+		}
+		c.Cookie(&cookie)
+		return c.Redirect("https://" + domain)
 	}
 }
 

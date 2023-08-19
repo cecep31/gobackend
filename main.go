@@ -41,7 +41,7 @@ func main() {
 	postrepo := posts.NewRepo(db)
 	postservice := posts.NewService(postrepo)
 	authrepo := auth.NewRepository(db)
-	authservice := auth.NewService(authrepo)
+	authservice := auth.NewService(authrepo, userrepo)
 	taskrepo := tasks.NewRepository(db)
 	taskservice := tasks.NewService(taskrepo)
 	log.Println("Initial repository & service Done")
