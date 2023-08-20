@@ -8,6 +8,7 @@ type Service interface {
 	InserPosts(user *entities.Posts) (*entities.Posts, error)
 	GetPosts() (*[]entities.Posts, error)
 	GetPost(slug string) (*entities.Posts, error)
+	GetPostsRandom() (*[]entities.Posts, error)
 }
 
 type service struct {
@@ -25,6 +26,10 @@ func (s *service) InserPosts(user *entities.Posts) (*entities.Posts, error) {
 }
 func (s *service) GetPosts() (*[]entities.Posts, error) {
 	return s.repository.GetPosts()
+}
+
+func (s *service) GetPostsRandom() (*[]entities.Posts, error) {
+	return s.repository.GetPostsRandom(10)
 }
 
 func (s *service) GetPost(slug string) (*entities.Posts, error) {

@@ -12,6 +12,7 @@ type Repository interface {
 	GetPosts() (*[]entities.Posts, error)
 	GetPost(user *entities.Posts) (*entities.Posts, error)
 	GetPostBySlug(slug string) (*entities.Posts, error)
+	GetPostsRandom(take int) (*[]entities.Posts, error)
 }
 
 type repository struct {
@@ -42,6 +43,16 @@ func (r *repository) GetPosts() (*[]entities.Posts, error) {
 		return &[]entities.Posts{}, err
 	}
 	return &posts, nil
+}
+
+func (r *repository) GetPostsRandom(take int) (*[]entities.Posts, error) {
+	posts := new([]entities.Posts)
+	result := r.Db.Preload("Creator").Order("RANDOM()").Take(take).Find(posts)
+	err := result.Error
+	if err != nil {
+		return &[]entities.Posts{}, err
+	}
+	return posts, nil
 }
 
 func (r *repository) GetPost(post *entities.Posts) (*entities.Posts, error) {

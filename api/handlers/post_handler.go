@@ -44,6 +44,14 @@ func AddPost(service posts.Service) fiber.Handler {
 }
 func GetPosts(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		random := c.Query("random")
+		if random == "true" {
+			posts, err := service.GetPostsRandom()
+			if err != nil {
+				return c.SendStatus(500)
+			}
+			return c.JSON(posts)
+		}
 		posts, err := service.GetPosts()
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
