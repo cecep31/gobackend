@@ -29,7 +29,7 @@ func (s *service) GetPosts() (*[]entities.Posts, error) {
 }
 
 func (s *service) GetPostsRandom() (*[]entities.Posts, error) {
-	return s.repository.GetPostsRandom(10)
+	return s.repository.GetPostsRandom(6)
 }
 
 func (s *service) GetPost(slug string) (*entities.Posts, error) {
