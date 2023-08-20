@@ -49,7 +49,7 @@ func GetPosts(service posts.Service) fiber.Handler {
 			posts, err := service.GetPostsRandom()
 			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error": err,
+					"error": err.Error(),
 				})
 			}
 			return c.JSON(posts)

@@ -47,7 +47,7 @@ func (r *repository) GetPosts() (*[]entities.Posts, error) {
 
 func (r *repository) GetPostsRandom(take int) (*[]entities.Posts, error) {
 	posts := new([]entities.Posts)
-	result := r.Db.Preload("Creator").Order("RANDOM()").Take(take).Find(posts)
+	result := r.Db.Preload("Creator").Order("RANDOM()").Limit(take).Find(posts)
 	err := result.Error
 	if err != nil {
 		return &[]entities.Posts{}, err
