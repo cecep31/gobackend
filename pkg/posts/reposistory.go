@@ -13,6 +13,8 @@ type Repository interface {
 	GetPost(user *entities.Posts) (*entities.Posts, error)
 	GetPostBySlug(slug string) (*entities.Posts, error)
 	GetPostsRandom(take int) (*[]entities.Posts, error)
+	Count() (int64, error)
+	FindPaginated(page int, perPage int) ([]entities.Posts, error)
 }
 
 type repository struct {
@@ -45,6 +47,16 @@ func (r *repository) GetPosts() (*[]entities.Posts, error) {
 	return &posts, nil
 }
 
+func (r *repository) FindPaginated(page int, perPage int) ([]entities.Posts, error) {
+	var posts []entities.Posts
+	offset := (page - 1) * perPage
+	result := r.Db.Offset(offset).Preload("Creator").Order("created_at desc").Limit(perPage).Find(&posts)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return posts, nil
+}
+
 func (r *repository) GetPostsRandom(take int) (*[]entities.Posts, error) {
 	posts := new([]entities.Posts)
 	result := r.Db.Preload("Creator").Order("RANDOM()").Limit(take).Find(posts)
@@ -70,4 +82,13 @@ func (r *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
 		return nil, err
 	}
 	return post, nil
+}
+
+func (r *repository) Count() (int64, error) {
+	var count int64
+	result := r.Db.Model(&entities.Posts{}).Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return count, nil
 }

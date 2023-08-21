@@ -9,6 +9,8 @@ type Service interface {
 	GetPosts() (*[]entities.Posts, error)
 	GetPost(slug string) (*entities.Posts, error)
 	GetPostsRandom() (*[]entities.Posts, error)
+	GetTotalPosts() (int64, error)
+	GetPostsPaginated(page int, perPage int) ([]entities.Posts, error)
 }
 
 type service struct {
@@ -34,4 +36,12 @@ func (s *service) GetPostsRandom() (*[]entities.Posts, error) {
 
 func (s *service) GetPost(slug string) (*entities.Posts, error) {
 	return s.repository.GetPostBySlug(slug)
+}
+
+func (s *service) GetTotalPosts() (int64, error) {
+	return s.repository.Count()
+}
+
+func (s *service) GetPostsPaginated(page int, perPage int) ([]entities.Posts, error) {
+	return s.repository.FindPaginated(page, perPage)
 }

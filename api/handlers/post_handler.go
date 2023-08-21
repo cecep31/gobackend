@@ -6,6 +6,7 @@ import (
 	"gobackend/pkg/posts"
 	"gobackend/pkg/validator"
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
@@ -54,11 +55,29 @@ func GetPosts(service posts.Service) fiber.Handler {
 			}
 			return c.JSON(posts)
 		}
-		posts, err := service.GetPosts()
+		page := c.Query("page", "1")
+		itemsPerPage := c.Query("per_page", "5")
+
+		// Convert query parameters to integers
+		pageInt, _ := strconv.Atoi(page)
+		perPageInt, _ := strconv.Atoi(itemsPerPage)
+
+		totalPosts, err := service.GetTotalPosts()
 		if err != nil {
-			return c.JSON(presenter.PostErrorResponse(err))
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
-		return c.JSON(posts)
+
+		posts, err := service.GetPostsPaginated(pageInt, perPageInt)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		response := fiber.Map{
+			"total": totalPosts,
+			"page":  pageInt,
+			"data":  posts,
+		}
+		return c.JSON(response)
 	}
 }
 func GetPost(service posts.Service) fiber.Handler {
