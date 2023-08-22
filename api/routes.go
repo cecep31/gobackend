@@ -15,12 +15,14 @@ func UserRouter(app fiber.Router, service user.Service) {
 	app.Post("/users", handlers.AddUser(service))
 	app.Get("/users", handlers.GetUsers(service))
 	app.Get("/users/:id", handlers.GetUser(service))
+
 }
 
 func AuthRouter(app fiber.Router, service auth.Service) {
 	app.Get("/oauth", handlers.Loginoatuth)
 	app.Get("/oauth/callback", handlers.CallbackHandler(service))
 	app.Post("login", handlers.Login)
+	app.Get("profile", middleware.Protected(), handlers.Profile(service))
 }
 
 func PostRouter(app fiber.Router, service posts.Service) {

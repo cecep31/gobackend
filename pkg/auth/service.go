@@ -28,6 +28,7 @@ type Service interface {
 	GetUserInfoGoogle(token string) (*googleResponse, error)
 	GetUserOrCreate(profile *googleResponse) (*entities.Users, error)
 	SetTokenJwt(user *entities.Users) (string, error)
+	GetProfile(id string) (*entities.Users, error)
 }
 
 type serivce struct {
@@ -102,4 +103,9 @@ func (s *serivce) SetTokenJwt(user *entities.Users) (string, error) {
 		return "", err
 	}
 	return t, nil
+}
+
+func (s *serivce) GetProfile(id string) (*entities.Users, error) {
+	profile := new(entities.Users)
+	return s.userreposistory.GetUser(profile)
 }

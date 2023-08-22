@@ -18,7 +18,7 @@ type User struct {
 	CreateAt     time.Time `json:"createAt"`
 }
 
-func UserSuccessResponse(data *entities.Users) *fiber.Map {
+func UserSuccessResponse(data *entities.Users) interface{} {
 	user := User{
 		ID:           data.ID,
 		Email:        data.Email,
@@ -26,14 +26,10 @@ func UserSuccessResponse(data *entities.Users) *fiber.Map {
 		Issuperadmin: data.Issuperadmin,
 		CreateAt:     data.CreatedAt,
 	}
-	return &fiber.Map{
-		"success": true,
-		"data":    user,
-		"error":   nil,
-	}
+	return user
 }
 
-func UsersSuccessResponse(data *[]entities.Users) *fiber.Map {
+func UsersSuccessResponse(data *[]entities.Users) interface{} {
 	if len(*data) == 0 {
 		return &fiber.Map{
 			"success": true,
@@ -54,11 +50,7 @@ func UsersSuccessResponse(data *[]entities.Users) *fiber.Map {
 		newData = append(newData, newUser)
 	}
 
-	return &fiber.Map{
-		"success": true,
-		"data":    newData,
-		"error":   nil,
-	}
+	return newData
 }
 
 func UserErrorResponse(err error) *fiber.Map {

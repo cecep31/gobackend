@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"gobackend/api/presenter"
 	"gobackend/database"
 	"gobackend/pkg"
 	"gobackend/pkg/auth"
@@ -126,4 +127,19 @@ func Login(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"access_token": t,
 	})
+}
+
+func Profile(service auth.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userlocal := c.Locals("user").(*jwt.Token)
+		claims := userlocal.Claims.(jwt.MapClaims)
+		id := claims["id"].(string)
+		profile, err := service.GetProfile(id)
+		if err != nil {
+			return c.Status(500).JSON(&fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		return c.JSON(presenter.UserSuccessResponse(profile))
+	}
 }
