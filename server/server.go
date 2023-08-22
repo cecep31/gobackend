@@ -20,9 +20,13 @@ import (
 func setupMiddlewares(app *fiber.App) {
 	app.Use(helmet.New())
 	app.Use(recover.New())
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "https://pilput.dev, https://dash.pilput.dev, http://pilput.test, http://localhost:3000",
-	}))
+	if os.Getenv("ALLOW_ORIGIN") != "" {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: "https://pilput.dev, https://dash.pilput.dev, http://pilput.test, http://localhost:3000",
+		}))
+	} else {
+		app.Use(cors.New(cors.Config{}))
+	}
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed, // 1
 	}))
@@ -31,9 +35,7 @@ func setupMiddlewares(app *fiber.App) {
 	if os.Getenv("ENABLE_LIMITER") != "" {
 		app.Use(limiter.New())
 	}
-	if os.Getenv("ENABLE_LOGGER") != "" {
-		app.Use(logger.New())
-	}
+	app.Use(logger.New())
 
 }
 
