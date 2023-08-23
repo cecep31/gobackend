@@ -11,4 +11,5 @@ type Posts struct {
 	Title     string    `json:"title" validate:"required"`
 	Body      string    `json:"body" validate:"required"`
 	CreatedBy uuid.UUID `json:"created_by"`
+	Slug      string    `json:"slug"`
 }
