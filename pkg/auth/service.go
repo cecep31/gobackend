@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/goccy/go-json"
+	"github.com/bytedance/sonic"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -67,7 +67,7 @@ func (service *serivce) GetUserInfoGoogle(token string) (*googleResponse, error)
 	}
 	var data googleResponse
 
-	err = json.Unmarshal(body, &data)
+	err = sonic.Unmarshal(body, &data)
 	if err != nil {
 		return nil, err
 	}

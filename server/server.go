@@ -3,7 +3,8 @@ package server
 import (
 	"os"
 
-	"github.com/goccy/go-json"
+	// "github.com/goccy/go-json"
+	"github.com/bytedance/sonic"
 
 	"gobackend/pkg"
 
@@ -51,8 +52,8 @@ func Create() *fiber.App {
 			}
 		},
 		AppName:     "pilput-turbo",
-		JSONEncoder: json.Marshal,
-		JSONDecoder: json.Unmarshal,
+		JSONEncoder: sonic.Marshal,
+		JSONDecoder: sonic.Unmarshal,
 	})
 
 	setupMiddlewares(app)

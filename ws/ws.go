@@ -5,7 +5,7 @@ import (
 	"gobackend/pkg/entities"
 	"log"
 
-	"github.com/goccy/go-json"
+	"github.com/bytedance/sonic"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 )
@@ -34,7 +34,7 @@ func WsSetup(app *fiber.App) {
 				break
 			}
 
-			h, errjson := json.Marshal(&fiber.Map{"msg": string(message), "userID": user.ID})
+			h, errjson := sonic.Marshal(&fiber.Map{"msg": string(message), "userID": user.ID})
 			if errjson != nil {
 				return
 			}
