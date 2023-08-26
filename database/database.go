@@ -42,7 +42,9 @@ func SetupDatabase() *gorm.DB {
 		}
 	}
 
-	DB, err = gorm.Open(postgres.Open(dsn), &config)
+	DB, err = gorm.Open(postgres.New(postgres.Config{
+		DSN: dsn, PreferSimpleProtocol: true,
+	}), &config)
 
 	if err != nil {
 		log.Fatal(err)
