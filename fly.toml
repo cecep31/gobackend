@@ -1,0 +1,27 @@
+# fly.toml app configuration file generated for gobackend on 2023-08-27T22:23:36+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "gobackend"
+primary_region = "sin"
+
+[env]
+  S3_ENDPOINT="s3.ap-southeast-1.amazonaws.com"
+  S3_BUCKET='pilput-storage'
+  S3_REGION='ap-southeast-1'
+  POSTGRES_DB='gobackend'
+  POSTGRES_HOST='gobackend-db.internal'
+  POSTGRES_PORT=5433
+  DOMAIN="pilput.dev"
+  ENABLE_LIMITER="true"
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
