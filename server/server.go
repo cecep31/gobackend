@@ -34,7 +34,9 @@ func setupMiddlewares(app *fiber.App) {
 
 	app.Use(etag.New())
 	if os.Getenv("ENABLE_LIMITER") != "" {
-		app.Use(limiter.New())
+		app.Use(limiter.New(limiter.Config{
+			Max: 20,
+		}))
 	}
 	app.Use(logger.New())
 
