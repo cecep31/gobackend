@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"gobackend/api/presenter"
-	"gobackend/pkg/entities"
 	"gobackend/pkg/user"
+	"gobackend/pkg/validator"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -11,12 +11,17 @@ import (
 
 func AddUser(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var requestBody entities.Users
+		var requestBody user.Users
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			c.Status(fiber.StatusBadRequest)
 			return c.JSON(presenter.UserErrorResponse(err))
 		}
+		resultevalidate := validator.ValidateThis(requestBody)
+		if resultevalidate != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(resultevalidate))
+		}
+
 		result, err := service.InserUser(&requestBody)
 		if err != nil {
 			return c.JSON(presenter.UserErrorResponse(err))

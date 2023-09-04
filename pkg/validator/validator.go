@@ -13,12 +13,24 @@ func SetupValidate() {
 }
 
 func ValidateThis(data interface{}) map[string]string {
-	if errvalidate := Valid.Struct(data); errvalidate != nil {
+	if err := Valid.Struct(data); err != nil {
 		errMsgs := make(map[string]string)
-		for _, err := range errvalidate.(validator.ValidationErrors) {
-			errMsgs[err.Field()] = fmt.Sprintf("Field validation for '%s' failed on the '%s'", err.Field(), err.Tag())
-		}
+		for _, err := range err.(validator.ValidationErrors) {
+			field := err.Field()
+			tag := err.Tag()
 
+			var errMsg string
+			switch tag {
+			case "required":
+				errMsg = fmt.Sprintf("The field '%s' is required.", field)
+			case "min":
+				errMsg = fmt.Sprintf("The value of '%s' must be greater than or equal to %s.", field, err.Param())
+			default:
+				errMsg = fmt.Sprintf("Validation failed on field '%s' with tag '%s'.", field, tag)
+			}
+
+			errMsgs[field] = errMsg
+		}
 		return errMsgs
 	}
 	return nil

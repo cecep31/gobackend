@@ -8,7 +8,7 @@ import (
 )
 
 type Service interface {
-	InserUser(user *entities.Users) (*entities.Users, error)
+	InserUser(user *Users) (*Users, error)
 	GetUsers() (*[]entities.Users, error)
 	GetUser(id uuid.UUID) (*entities.Users, error)
 }
@@ -28,7 +28,7 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func (s *service) InserUser(user *entities.Users) (*entities.Users, error) {
+func (s *service) InserUser(user *Users) (*Users, error) {
 	pass := user.Password
 	hashpass, err := HashPassword(pass)
 	if err != nil {

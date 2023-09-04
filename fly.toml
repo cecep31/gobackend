@@ -15,6 +15,7 @@ primary_region = "sin"
   POSTGRES_PORT=5433
   DOMAIN="pilput.dev"
   ENABLE_LIMITER="true"
+  MIGRATE=true
 
 [build]
 

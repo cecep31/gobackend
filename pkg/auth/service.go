@@ -83,7 +83,7 @@ func (s *serivce) GetUserOrCreate(profile *googleResponse) (*entities.Users, err
 	usercreate.Email = profile.Email
 	usercreate.FirstName = profile.Given_name
 	usercreate.LastName = profile.Family_name
-	newuser, err := s.userreposistory.CreateUser(usercreate)
+	newuser, err := s.userreposistory.CreateUserWithOutValidate(usercreate)
 	if err != nil {
 		return nil, err
 	}

@@ -23,7 +23,7 @@ func AddPost(service posts.Service) fiber.Handler {
 
 		resulvalidate := validator.ValidateThis(requestBody)
 		if resulvalidate != nil {
-			return c.JSON(presenter.PostErrorResponse(resulvalidate))
+			return c.JSON(presenter.ErrorResponse(resulvalidate))
 		}
 
 		userlocal := c.Locals("user").(*jwt.Token)

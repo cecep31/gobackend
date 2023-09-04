@@ -8,6 +8,5 @@ import (
 )
 
 func WsPostRouter(app fiber.Router, service posts.Service) {
-	app.Get("/post", handlers.Comments(service))
-
+	app.Get("/posts/:slug", handlers.Comments(service))
 }
