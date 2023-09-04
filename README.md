@@ -1,6 +1,6 @@
 # gobackend
 
-example Frontend: pilput-forntend
+Docker registry cecep31/gobackend
 
 # to run
 
