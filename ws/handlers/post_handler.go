@@ -12,11 +12,24 @@ import (
 type client struct {
 	isClosing bool
 	mu        sync.Mutex
+	email     string
+}
+
+type registeremail struct {
+	email      string
+	connection *websocket.Conn
+}
+
+type sendt struct {
+	email   string
+	message string
 }
 
 var clients = make(map[*websocket.Conn]*client) // Note: although large maps with pointer-like types (e.g. strings) as keys are slow, using pointers themselves as keys is acceptable and fast
 var register = make(chan *websocket.Conn)
+var emailregister = make(chan *registeremail)
 var broadcast = make(chan string)
+var sendtarget = make(chan *sendt)
 var unregister = make(chan *websocket.Conn)
 
 func RunHub() {
@@ -25,6 +38,9 @@ func RunHub() {
 		case connection := <-register:
 			clients[connection] = &client{}
 			log.Println("connection registered")
+
+		case connection := <-emailregister:
+			clients[connection.connection] = &client{email: connection.email}
 
 		case message := <-broadcast:
 			log.Println("message received:", message)
@@ -45,6 +61,28 @@ func RunHub() {
 						unregister <- connection
 					}
 				}(connection, c)
+			}
+
+		case target := <-sendtarget:
+			for connection, c := range clients {
+				if c.email == target.email {
+
+					go func(connection *websocket.Conn, c *client) { // send to each client in parallel so we don't block on a slow client
+						c.mu.Lock()
+						defer c.mu.Unlock()
+						if c.isClosing {
+							return
+						}
+						if err := connection.WriteMessage(websocket.TextMessage, []byte(target.message)); err != nil {
+							c.isClosing = true
+							log.Println("write error:", err)
+
+							connection.WriteMessage(websocket.CloseMessage, []byte{})
+							connection.Close()
+							unregister <- connection
+						}
+					}(connection, c)
+				}
 			}
 
 		case connection := <-unregister:
