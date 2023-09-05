@@ -3,21 +3,21 @@ module gobackend
 go 1.20
 
 require (
-	github.com/go-playground/validator/v10 v10.15.1
-	github.com/gofiber/contrib/jwt v1.0.4
+	github.com/bytedance/sonic v1.10.0
+	github.com/go-playground/validator/v10 v10.15.3
+	github.com/gofiber/contrib/jwt v1.0.5
 	github.com/gofiber/contrib/websocket v1.2.0
-	github.com/gofiber/fiber/v2 v2.48.0
+	github.com/gofiber/fiber/v2 v2.49.1
 	github.com/gofiber/helmet/v2 v2.2.26
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.3.1
 	github.com/joho/godotenv v1.5.1
-	github.com/minio/minio-go/v7 v7.0.62
-	github.com/valyala/fasthttp v1.48.0
+	github.com/minio/minio-go/v7 v7.0.63
+	github.com/valyala/fasthttp v1.49.0
 	golang.org/x/crypto v0.12.0
 	golang.org/x/oauth2 v0.11.0
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.4
-	github.com/bytedance/sonic v1.10.0
 )
 
 require (
