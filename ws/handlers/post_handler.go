@@ -23,13 +23,14 @@ type registeremail struct {
 type sendt struct {
 	email   string
 	message string
+	sender  string
 }
 
 var clients = make(map[*websocket.Conn]*client) // Note: although large maps with pointer-like types (e.g. strings) as keys are slow, using pointers themselves as keys is acceptable and fast
 var register = make(chan *websocket.Conn)
 var emailregister = make(chan *registeremail)
 var broadcast = make(chan string)
-var sendtarget = make(chan *sendt)
+var sendtarget = make(chan sendt)
 var unregister = make(chan *websocket.Conn)
 
 func RunHub() {
@@ -116,6 +117,7 @@ func Comments(service posts.Service) fiber.Handler {
 			if messageType == websocket.TextMessage {
 				// Broadcast the received message
 				broadcast <- string(message)
+				sendtarget <- sendt{email: "pilput31@gmail.com", sender: "pilput31@gmail.com"}
 			} else {
 				log.Println("websocket message received of type", messageType)
 			}

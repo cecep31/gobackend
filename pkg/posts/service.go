@@ -5,12 +5,13 @@ import (
 )
 
 type Service interface {
-	InserPosts(user *entities.Posts) (*entities.Posts, error)
+	InserPosts(post *entities.Posts) (*entities.Posts, error)
 	GetPosts() (*[]entities.Posts, error)
 	GetPost(slug string) (*entities.Posts, error)
 	GetPostsRandom() (*[]entities.Posts, error)
 	GetTotalPosts() (int64, error)
 	GetPostsPaginated(page int, perPage int) ([]entities.Posts, error)
+	UpdatePost(post *Posts) error
 }
 
 type service struct {
@@ -23,8 +24,11 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) InserPosts(user *entities.Posts) (*entities.Posts, error) {
-	return s.repository.CreatePost(user)
+func (s *service) UpdatePost(post *Posts) error {
+	return s.repository.UpdatePost(post)
+}
+func (s *service) InserPosts(post *entities.Posts) (*entities.Posts, error) {
+	return s.repository.CreatePost(post)
 }
 func (s *service) GetPosts() (*[]entities.Posts, error) {
 	return s.repository.GetPosts()

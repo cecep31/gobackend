@@ -43,6 +43,33 @@ func AddPost(service posts.Service) fiber.Handler {
 		return c.Status(fiber.StatusCreated).JSON(result)
 	}
 }
+
+func UpdatePost(service posts.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		param_post_id := c.Params("id")
+		var requestBody posts.Posts
+		err := c.BodyParser(&requestBody)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(presenter.PostErrorResponse(err.Error()))
+		}
+		post_id, _ := uuid.Parse(param_post_id)
+		requestBody.ID = post_id
+
+		resulvalidate := validator.ValidateThis(requestBody)
+		if resulvalidate != nil {
+			return c.JSON(presenter.ErrorResponse(resulvalidate))
+		}
+
+		if err != nil {
+			return c.JSON(presenter.PostErrorResponse(err.Error()))
+		}
+		errrepo := service.UpdatePost(&requestBody)
+		if errrepo != nil {
+			return c.JSON(presenter.PostErrorResponse(err))
+		}
+		return c.Status(fiber.StatusCreated).JSON(&requestBody)
+	}
+}
 func GetPosts(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		random := c.Query("random")

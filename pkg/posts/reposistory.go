@@ -15,6 +15,7 @@ type Repository interface {
 	GetPostsRandom(take int) (*[]entities.Posts, error)
 	Count() (int64, error)
 	FindPaginated(page int, perPage int) ([]entities.Posts, error)
+	UpdatePost(post *Posts) error
 }
 
 type repository struct {
@@ -36,6 +37,9 @@ func (r *repository) CreatePost(post *entities.Posts) (*entities.Posts, error) {
 		return post, nil
 	}
 
+}
+func (r *repository) UpdatePost(post *Posts) error {
+	return r.Db.Model(post).Updates(entities.Posts{Title: post.Title, Slug: post.Slug, Body: post.Body}).Error
 }
 func (r *repository) GetPosts() (*[]entities.Posts, error) {
 	var posts []entities.Posts
