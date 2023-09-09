@@ -14,8 +14,8 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/minio/minio-go/v7 v7.0.63
 	github.com/valyala/fasthttp v1.49.0
-	golang.org/x/crypto v0.12.0
-	golang.org/x/oauth2 v0.11.0
+	golang.org/x/crypto v0.13.0
+	golang.org/x/oauth2 v0.12.0
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.4
 )
@@ -59,9 +59,9 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/arch v0.4.0 // indirect
-	golang.org/x/net v0.14.0 // indirect
-	golang.org/x/sys v0.11.0 // indirect
-	golang.org/x/text v0.12.0 // indirect
+	golang.org/x/net v0.15.0 // indirect
+	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
