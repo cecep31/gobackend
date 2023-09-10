@@ -7,6 +7,7 @@ import (
 	"gobackend/pkg"
 	"gobackend/pkg/auth"
 	"gobackend/pkg/entities"
+	"gobackend/pkg/validator"
 	"log"
 	"os"
 	"time"
@@ -141,5 +142,39 @@ func Profile(service auth.Service) fiber.Handler {
 			})
 		}
 		return c.JSON(presenter.UserSuccessResponse(profile))
+	}
+}
+
+func UpdateProfile(service auth.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		userlocal := c.Locals("user").(*jwt.Token)
+		claims := userlocal.Claims.(jwt.MapClaims)
+		id := claims["id"].(string)
+
+		var requestBody entities.Users
+
+		if err := c.BodyParser(&requestBody); err != nil {
+			return err
+		}
+
+		resulvalidate := validator.ValidateThis(requestBody)
+		if resulvalidate != nil {
+			return c.JSON(presenter.ErrorResponse(resulvalidate))
+		}
+
+		user, err := service.GetProfile(id)
+		if err != nil {
+			return c.Status(404).JSON(presenter.ErrorResponse(err))
+		}
+
+		user.FirstName = requestBody.FirstName
+		user.LastName = requestBody.LastName
+		user.Image = requestBody.Image
+
+		error := service.UpdateProfile(user)
+		if error != nil {
+			return c.Status(404).JSON(presenter.ErrorResponse(error))
+		}
+		return c.Status(200).JSON(user)
 	}
 }

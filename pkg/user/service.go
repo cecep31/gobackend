@@ -11,6 +11,7 @@ type Service interface {
 	InserUser(user *Users) (*Users, error)
 	GetUsers() (*[]entities.Users, error)
 	GetUser(id uuid.UUID) (*entities.Users, error)
+	DeleteUser(user *entities.Users) error
 }
 
 type service struct {
@@ -44,4 +45,7 @@ func (s *service) GetUser(id uuid.UUID) (*entities.Users, error) {
 	var user entities.Users
 	user.ID = id
 	return s.repository.GetUser(&user)
+}
+func (s *service) DeleteUser(user *entities.Users) error {
+	return s.repository.DeleteUser(user)
 }

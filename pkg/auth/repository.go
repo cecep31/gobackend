@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	GetUserByEmail(email string) (*entities.Users, error)
+	UpdateUser(user *entities.Users) error
 }
 
 type repository struct {
@@ -27,4 +28,11 @@ func (r *repository) GetUserByEmail(email string) (*entities.Users, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+func (r *repository) UpdateUser(user *entities.Users) error {
+	err := r.Db.Save(user).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

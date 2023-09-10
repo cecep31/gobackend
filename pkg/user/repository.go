@@ -11,6 +11,8 @@ type Repository interface {
 	GetUsers() (*[]entities.Users, error)
 	GetUser(user *entities.Users) (*entities.Users, error)
 	CreateUserWithOutValidate(user *entities.Users) (*entities.Users, error)
+	UpdateUser(user *entities.Users) error
+	DeleteUser(user *entities.Users) error
 }
 
 type repository struct {
@@ -58,4 +60,19 @@ func (r *repository) GetUser(user *entities.Users) (*entities.Users, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (r *repository) UpdateUser(user *entities.Users) error {
+	err := r.Db.Save(user).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (r *repository) DeleteUser(user *entities.Users) error {
+	err := r.Db.Delete(user).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

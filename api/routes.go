@@ -15,9 +15,10 @@ func UserRouter(app fiber.Router, service user.Service) {
 	app.Post("users", handlers.AddUser(service))
 	app.Get("users", handlers.GetUsers(service))
 	app.Get("users/:id", handlers.GetUser(service))
-	app.Put("users/:id", func(c *fiber.Ctx) error {
-		return c.SendString("not available")
+	app.Put("users/:id", middleware.Protected(), middleware.IsSuperAdmin, func(c *fiber.Ctx) error {
+		return c.SendStatus(fiber.StatusServiceUnavailable)
 	})
+	app.Delete("users/:id", middleware.Protected(), middleware.IsSuperAdmin, handlers.DeletUser(service))
 
 }
 
@@ -26,6 +27,7 @@ func AuthRouter(app fiber.Router, service auth.Service) {
 	app.Get("oauth/callback", handlers.CallbackHandler(service))
 	app.Post("login", handlers.Login)
 	app.Get("profile", middleware.Protected(), handlers.Profile(service))
+	app.Put("profile", middleware.Protected(), handlers.UpdateProfile(service))
 }
 
 func PostRouter(app fiber.Router, service posts.Service) {
