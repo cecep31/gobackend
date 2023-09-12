@@ -23,7 +23,10 @@ import (
 )
 
 func main() {
-	godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("dotenv not found")
+	}
 
 	db := database.SetupDatabase()
 	if os.Getenv("MIGRATE") != "" {
@@ -46,6 +49,7 @@ func main() {
 	taskrepo := tasks.NewRepository(db)
 	taskservice := tasks.NewService(taskrepo)
 	fmt.Println("Initial repository & service Done")
+
 	app := server.Create()
 
 	v2 := app.Group("api/v2")
@@ -55,7 +59,6 @@ func main() {
 	api.PostRouter(v2, postservice)
 	api.TaskRouter(v2, taskservice)
 
-	// Api routes
 	ws.WsSetup(app)
 
 	if err := server.Listen(app); err != nil {
