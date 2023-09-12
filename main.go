@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gobackend/pkg/auth"
 	"gobackend/pkg/tasks"
 	"log"
@@ -26,16 +27,16 @@ func main() {
 
 	db := database.SetupDatabase()
 	if os.Getenv("MIGRATE") != "" {
-		log.Println("Migration...")
+		fmt.Println("Migration...")
 		db.AutoMigrate(&entities.Users{}, &entities.Tasks{}, &entities.Posts{}, &entities.PostComments{})
-		log.Println("Migration Done")
+		fmt.Println("Migration Done")
 	}
 
 	handlers.Googleapi()
 	storage.InitFileStorage()
 	validate.SetupValidate()
 
-	log.Println("Initial repository & service")
+	fmt.Println("Initial repository & service")
 	userrepo := user.NewRepo(db)
 	userserivce := user.NewService(userrepo)
 	postrepo := posts.NewRepo(db)
@@ -44,7 +45,7 @@ func main() {
 	authservice := auth.NewService(authrepo, userrepo)
 	taskrepo := tasks.NewRepository(db)
 	taskservice := tasks.NewService(taskrepo)
-	log.Println("Initial repository & service Done")
+	fmt.Println("Initial repository & service Done")
 	app := server.Create()
 
 	v2 := app.Group("api/v2")
