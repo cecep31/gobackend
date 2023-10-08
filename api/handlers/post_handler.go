@@ -118,3 +118,18 @@ func GetPost(service posts.Service) fiber.Handler {
 		return c.JSON(post)
 	}
 }
+
+func DeletePost(service posts.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		id := c.Params("id")
+		_, err := service.GetPostByid(id)
+		if err != nil {
+			return c.Status(404).JSON(presenter.ErrorResponse("Post not Found"))
+		}
+		errd := service.DeletePost(id)
+		if errd != nil {
+			return c.Status(500).JSON(presenter.ErrorResponse(errd.Error()))
+		}
+		return c.SendStatus(200)
+	}
+}

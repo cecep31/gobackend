@@ -16,6 +16,7 @@ type Repository interface {
 	Count() (int64, error)
 	FindPaginated(page int, perPage int) ([]entities.Posts, error)
 	UpdatePost(post *Posts) error
+	DeletePostById(post *entities.Posts) error
 }
 
 type repository struct {
@@ -41,6 +42,7 @@ func (r *repository) CreatePost(post *entities.Posts) (*entities.Posts, error) {
 func (r *repository) UpdatePost(post *Posts) error {
 	return r.Db.Model(post).Updates(entities.Posts{Title: post.Title, Slug: post.Slug, Body: post.Body}).Error
 }
+
 func (r *repository) GetPosts() (*[]entities.Posts, error) {
 	var posts []entities.Posts
 	result := r.Db.Preload("Creator").Order("created_at DESC").Find(&posts)
@@ -86,6 +88,14 @@ func (r *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
 		return nil, err
 	}
 	return post, nil
+}
+
+func (r *repository) DeletePostById(post *entities.Posts) error {
+	err := r.Db.Delete(post).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *repository) Count() (int64, error) {

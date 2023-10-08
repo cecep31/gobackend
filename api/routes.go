@@ -35,6 +35,8 @@ func PostRouter(app fiber.Router, service posts.Service) {
 	app.Get("posts/:slug", handlers.GetPost(service))
 	app.Post("posts", middleware.Protected(), middleware.IsSuperAdmin, handlers.AddPost(service))
 	app.Put("posts/:id", middleware.Protected(), middleware.IsSuperAdmin, handlers.UpdatePost(service))
+	app.Delete("posts/:id", middleware.Protected(), middleware.IsSuperAdmin, handlers.DeletePost(service))
+
 }
 
 func TaskRouter(app fiber.Router, service tasks.Service) {

@@ -2,6 +2,8 @@ package posts
 
 import (
 	"gobackend/pkg/entities"
+
+	"github.com/google/uuid"
 )
 
 type Service interface {
@@ -12,6 +14,8 @@ type Service interface {
 	GetTotalPosts() (int64, error)
 	GetPostsPaginated(page int, perPage int) ([]entities.Posts, error)
 	UpdatePost(post *Posts) error
+	GetPostByid(id string) (*entities.Posts, error)
+	DeletePost(id string) error
 }
 
 type service struct {
@@ -41,6 +45,12 @@ func (s *service) GetPostsRandom() (*[]entities.Posts, error) {
 func (s *service) GetPost(slug string) (*entities.Posts, error) {
 	return s.repository.GetPostBySlug(slug)
 }
+func (s *service) GetPostByid(id string) (*entities.Posts, error) {
+	post := new(entities.Posts)
+	id_uuid, _ := uuid.Parse(id)
+	post.ID = id_uuid
+	return s.repository.GetPost(post)
+}
 
 func (s *service) GetTotalPosts() (int64, error) {
 	return s.repository.Count()
@@ -48,4 +58,10 @@ func (s *service) GetTotalPosts() (int64, error) {
 
 func (s *service) GetPostsPaginated(page int, perPage int) ([]entities.Posts, error) {
 	return s.repository.FindPaginated(page, perPage)
+}
+func (s *service) DeletePost(id string) error {
+	id_uuid, _ := uuid.Parse(id)
+	post := new(entities.Posts)
+	post.ID = id_uuid
+	return s.repository.DeletePostById(post)
 }
