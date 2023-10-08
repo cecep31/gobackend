@@ -10,7 +10,7 @@ import (
 type Repository interface {
 	CreatePost(post *entities.Posts) (*entities.Posts, error)
 	GetPosts() (*[]entities.Posts, error)
-	GetPost(user *entities.Posts) (*entities.Posts, error)
+	GetPost(id string, post *entities.Posts) (*entities.Posts, error)
 	GetPostBySlug(slug string) (*entities.Posts, error)
 	GetPostsRandom(take int) (*[]entities.Posts, error)
 	Count() (int64, error)
@@ -73,8 +73,8 @@ func (r *repository) GetPostsRandom(take int) (*[]entities.Posts, error) {
 	return posts, nil
 }
 
-func (r *repository) GetPost(post *entities.Posts) (*entities.Posts, error) {
-	err := r.Db.First(post).Error
+func (r *repository) GetPost(id string, post *entities.Posts) (*entities.Posts, error) {
+	err := r.Db.Where("id = ?", id).First(post).Error
 	if err != nil {
 		return nil, err
 	}

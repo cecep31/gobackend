@@ -49,7 +49,7 @@ func (s *service) GetPostByid(id string) (*entities.Posts, error) {
 	post := new(entities.Posts)
 	id_uuid, _ := uuid.Parse(id)
 	post.ID = id_uuid
-	return s.repository.GetPost(post)
+	return s.repository.GetPost(id, post)
 }
 
 func (s *service) GetTotalPosts() (int64, error) {
@@ -60,8 +60,12 @@ func (s *service) GetPostsPaginated(page int, perPage int) ([]entities.Posts, er
 	return s.repository.FindPaginated(page, perPage)
 }
 func (s *service) DeletePost(id string) error {
-	id_uuid, _ := uuid.Parse(id)
+	id_uuid, err := uuid.Parse(id)
+	if err != nil {
+		return err
+	}
 	post := new(entities.Posts)
 	post.ID = id_uuid
+
 	return s.repository.DeletePostById(post)
 }
