@@ -35,7 +35,8 @@ func (s *service) InserPosts(post *entities.Posts) (*entities.Posts, error) {
 	return s.repository.CreatePost(post)
 }
 func (s *service) GetPosts() (*[]entities.Posts, error) {
-	return s.repository.GetPosts()
+	var posts []entities.Posts
+	return s.repository.GetPosts(&posts)
 }
 
 func (s *service) GetPostsRandom() (*[]entities.Posts, error) {
