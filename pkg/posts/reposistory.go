@@ -9,7 +9,7 @@ import (
 
 type Repository interface {
 	CreatePost(post *entities.Posts) (*entities.Posts, error)
-	GetPosts() (*[]entities.Posts, error)
+	GetPosts(posts *[]entities.Posts) (*[]entities.Posts, error)
 	GetPost(id string, post *entities.Posts) (*entities.Posts, error)
 	GetPostBySlug(slug string) (*entities.Posts, error)
 	GetPostsRandom(take int) (*[]entities.Posts, error)
@@ -39,18 +39,19 @@ func (r *repository) CreatePost(post *entities.Posts) (*entities.Posts, error) {
 	}
 
 }
+
 func (r *repository) UpdatePost(post *Posts) error {
 	return r.Db.Model(post).Updates(entities.Posts{Title: post.Title, Slug: post.Slug, Body: post.Body}).Error
 }
 
-func (r *repository) GetPosts() (*[]entities.Posts, error) {
-	var posts []entities.Posts
-	result := r.Db.Preload("Creator").Order("created_at DESC").Find(&posts)
+func (r *repository) GetPosts(posts *[]entities.Posts) (*[]entities.Posts, error) {
+	// var posts []entities.Posts
+	result := r.Db.Preload("Creator").Order("created_at DESC").Find(posts)
 	err := result.Error
 	if err != nil {
 		return &[]entities.Posts{}, err
 	}
-	return &posts, nil
+	return posts, nil
 }
 
 func (r *repository) FindPaginated(page int, perPage int) ([]entities.Posts, error) {
