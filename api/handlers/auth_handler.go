@@ -36,8 +36,8 @@ func Googleapi() {
 	}
 }
 func Loginoatuth(c *fiber.Ctx) error {
-	// Create oauthState cookie
-	url := Googleoauth.AuthCodeURL("state")
+	var stateStringVar = "state"
+	url := Googleoauth.AuthCodeURL(stateStringVar)
 	return c.Redirect(url)
 }
 
