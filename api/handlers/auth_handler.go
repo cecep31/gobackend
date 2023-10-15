@@ -36,10 +36,8 @@ func Googleapi() {
 	}
 }
 
-var stateStringVar = "state"
-
 func Loginoatuth(c *fiber.Ctx) error {
-	url := Googleoauth.AuthCodeURL(stateStringVar)
+	url := Googleoauth.AuthCodeURL("state")
 	return c.Redirect(url)
 }
 
