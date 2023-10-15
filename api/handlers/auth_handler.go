@@ -45,7 +45,7 @@ func Loginoatuth(c *fiber.Ctx) error {
 
 func CallbackHandler(service auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		code := c.Query("code")
+		code := c.FormValue("code")
 		fmt.Println("seharusnya di bawah ini")
 		fmt.Println(code)
 		fmt.Println("seharusnya di atas ini")
