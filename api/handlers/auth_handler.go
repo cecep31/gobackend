@@ -39,13 +39,16 @@ func Googleapi() {
 
 func Loginoatuth(c *fiber.Ctx) error {
 	url := Googleoauth.AuthCodeURL("state", oauth2.AccessTypeOffline)
-	fmt.Print(url)
+	// fmt.Print(url)
 	return c.Redirect(url)
 }
 
 func CallbackHandler(service auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		code := c.Query("code")
+		fmt.Println("seharusnya di bawah ini")
+		fmt.Println(code)
+		fmt.Println("seharusnya di atas ini")
 		token, err := Googleoauth.Exchange(c.Context(), code)
 		if err != nil {
 			log.Println("Failed to exchange token:", err)
