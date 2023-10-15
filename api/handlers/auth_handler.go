@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"gobackend/api/presenter"
 	"gobackend/database"
 	"gobackend/pkg"
@@ -37,7 +38,8 @@ func Googleapi() {
 }
 
 func Loginoatuth(c *fiber.Ctx) error {
-	url := Googleoauth.AuthCodeURL("state")
+	url := Googleoauth.AuthCodeURL("state", oauth2.AccessTypeOffline)
+	fmt.Print(url)
 	return c.Redirect(url)
 }
 
@@ -47,7 +49,7 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 		token, err := Googleoauth.Exchange(c.Context(), code)
 		if err != nil {
 			log.Println("Failed to exchange token:", err)
-			return c.Status(fiber.StatusInternalServerError).SendString("Failed to exchange token")
+			return c.Status(fiber.StatusInternalServerError).SendString("Failed to exchange token" + err.Error())
 		}
 		profile, err := service.GetUserInfoGoogle(token.AccessToken)
 		if err != nil {
