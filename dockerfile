@@ -14,14 +14,3 @@ WORKDIR /app
 COPY --from=build /app/gobackend .
 EXPOSE 8080
 CMD ["./gobackend"]
-
-
-
-# for fly.io
-# FROM golang:1.20-alpine
-# WORKDIR /app
-# COPY . .
-# RUN go mod download
-# RUN go build -o gobackend
-# EXPOSE 8080
-# CMD ["./gobackend"]

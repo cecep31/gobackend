@@ -46,11 +46,10 @@ func jwtError(c *fiber.Ctx, err error) error {
 
 func IsSuperAdmin(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jwt.Token)
-	// println(c.Locals("user").(*jwt.Token))
 	claims := user.Claims.(jwt.MapClaims)
 	issuperadmin := claims["issuperadmin"].(bool)
 	if !issuperadmin {
-		return pkg.CredentionProtect("Need as super_admin")
+		return pkg.CredentionProtect("Action Need as super admin")
 	} else {
 		return c.Next()
 	}

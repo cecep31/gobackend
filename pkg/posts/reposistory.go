@@ -75,7 +75,7 @@ func (r *repository) GetPostsRandom(take int) (*[]entities.Posts, error) {
 }
 
 func (r *repository) GetPost(id string, post *entities.Posts) (*entities.Posts, error) {
-	err := r.Db.Where("id = ?", id).First(post).Error
+	err := r.Db.Preload("Creator").Where("id = ?", id).First(post).Error
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (r *repository) GetPost(id string, post *entities.Posts) (*entities.Posts, 
 
 func (r *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
 	post := new(entities.Posts)
-	err := r.Db.First(post, "slug = ?", slug).Error
+	err := r.Db.Preload("Creator").First(post, "slug = ?", slug).Error
 	if err != nil {
 		return nil, err
 	}
