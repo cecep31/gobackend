@@ -7,15 +7,15 @@ require (
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/gofiber/contrib/jwt v1.0.7
 	github.com/gofiber/contrib/websocket v1.2.2
-	github.com/gofiber/fiber/v2 v2.50.0
+	github.com/gofiber/fiber/v2 v2.51.0
 	github.com/gofiber/helmet/v2 v2.2.26
-	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/golang-jwt/jwt/v5 v5.1.0
 	github.com/google/uuid v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/minio/minio-go/v7 v7.0.63
 	github.com/valyala/fasthttp v1.50.0
-	golang.org/x/crypto v0.14.0
-	golang.org/x/oauth2 v0.13.0
+	golang.org/x/crypto v0.15.0
+	golang.org/x/oauth2 v0.14.0
 	gorm.io/driver/postgres v1.5.4
 	gorm.io/gorm v1.25.5
 )
@@ -62,7 +62,7 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/arch v0.6.0 // indirect
 	golang.org/x/mod v0.13.0 // indirect
-	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/net v0.18.0 // indirect
 	golang.org/x/sync v0.4.0 // indirect
 	golang.org/x/sys v0.14.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
