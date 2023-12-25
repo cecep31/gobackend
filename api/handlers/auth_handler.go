@@ -7,16 +7,13 @@ import (
 	"gobackend/pkg"
 	"gobackend/pkg/auth"
 	"gobackend/pkg/entities"
-	"gobackend/pkg/validator"
+	"gobackend/pkg/utils"
 	"log"
 	"os"
 	"time"
 
-	validate "gobackend/pkg/validator"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"gorm.io/gorm"
@@ -74,11 +71,6 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 	}
 }
 
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
-}
-
 func Login(c *fiber.Ctx) error {
 	db := database.DB
 	type LoginInput struct {
@@ -94,7 +86,7 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
-	resulvalidate := validate.ValidateThis(input)
+	resulvalidate := utils.ValidateThis(input)
 	if resulvalidate != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(resulvalidate)
 	}
@@ -109,7 +101,7 @@ func Login(c *fiber.Ctx) error {
 
 	pass := input.Password
 
-	if !CheckPasswordHash(pass, user.Password) {
+	if !utils.CheckPasswordHash(pass, user.Password) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
 	}
 
@@ -157,7 +149,7 @@ func UpdateProfile(service auth.Service) fiber.Handler {
 			return err
 		}
 
-		resulvalidate := validator.ValidateThis(requestBody)
+		resulvalidate := utils.ValidateThis(requestBody)
 		if resulvalidate != nil {
 			return c.JSON(presenter.ErrorResponse(resulvalidate))
 		}

@@ -48,7 +48,7 @@ func SetupDatabase() *gorm.DB {
 
 	if err != nil {
 		log.Fatal(err)
-		panic("Failed to connect database")
+		panic(err.Error())
 	}
 	return DB
 }

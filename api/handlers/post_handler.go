@@ -4,7 +4,7 @@ import (
 	"gobackend/api/presenter"
 	"gobackend/pkg/entities"
 	"gobackend/pkg/posts"
-	"gobackend/pkg/validator"
+	"gobackend/pkg/utils"
 	"log"
 	"strconv"
 
@@ -21,7 +21,7 @@ func AddPost(service posts.Service) fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.PostErrorResponse(err.Error()))
 		}
 
-		resulvalidate := validator.ValidateThis(requestBody)
+		resulvalidate := utils.ValidateThis(requestBody)
 		if resulvalidate != nil {
 			return c.JSON(presenter.ErrorResponse(resulvalidate))
 		}
@@ -55,7 +55,7 @@ func UpdatePost(service posts.Service) fiber.Handler {
 		post_id, _ := uuid.Parse(param_post_id)
 		requestBody.ID = post_id
 
-		resulvalidate := validator.ValidateThis(requestBody)
+		resulvalidate := utils.ValidateThis(requestBody)
 		if resulvalidate != nil {
 			return c.JSON(presenter.ErrorResponse(resulvalidate))
 		}

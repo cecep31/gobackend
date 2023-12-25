@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gobackend/pkg/auth"
 	"gobackend/pkg/tasks"
+	"gobackend/pkg/utils"
 	"log"
 	"os"
 
@@ -16,8 +17,6 @@ import (
 	"gobackend/server"
 	"gobackend/storage"
 	"gobackend/ws"
-
-	validate "gobackend/pkg/validator"
 
 	"github.com/joho/godotenv"
 )
@@ -37,7 +36,7 @@ func main() {
 
 	handlers.Googleapi()
 	storage.InitFileStorage()
-	validate.SetupValidate()
+	utils.SetupValidate()
 
 	fmt.Println("Initial repository & service")
 	userrepo := user.NewRepo(db)
