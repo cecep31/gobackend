@@ -2,6 +2,7 @@ package server
 
 import (
 	"os"
+	"strconv"
 
 	// "github.com/goccy/go-json"
 	"github.com/bytedance/sonic"
@@ -33,9 +34,10 @@ func setupMiddlewares(app *fiber.App) {
 	}))
 
 	app.Use(etag.New())
-	if os.Getenv("ENABLE_LIMITER") != "" {
+	if os.Getenv("LIMITER") != "" {
+		max, _ := strconv.Atoi(os.Getenv("LIMITER"))
 		app.Use(limiter.New(limiter.Config{
-			Max: 30,
+			Max: max,
 		}))
 	}
 	app.Use(logger.New())
