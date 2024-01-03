@@ -22,6 +22,12 @@ type DefaultModel struct {
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 }
+type SecondDefaultModel struct {
+	ID        uint64     `json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
+}
 
 func SetupDatabase() *gorm.DB {
 	username := os.Getenv("POSTGRES_USER")

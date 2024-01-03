@@ -13,5 +13,5 @@ type Posts struct {
 	Body         string         `json:"body" gorm:"type=text"`
 	CreatedBy    uuid.UUID      `json:"created_by"`
 	Creator      Users          `gorm:"foreignKey:CreatedBy"`
-	PostComments []PostComments `gorm:"foreignKey:PostId"`
+	PostComments []PostComments `gorm:"foreignKey:PostId;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
