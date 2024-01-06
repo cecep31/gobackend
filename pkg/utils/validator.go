@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -16,7 +17,7 @@ func ValidateThis(data interface{}) map[string]string {
 	if err := Valid.Struct(data); err != nil {
 		errMsgs := make(map[string]string)
 		for _, err := range err.(validator.ValidationErrors) {
-			field := err.Field()
+			field := strings.ToLower(err.Field())
 			tag := err.Tag()
 			var errMsg string
 			switch tag {

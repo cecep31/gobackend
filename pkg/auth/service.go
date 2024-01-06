@@ -31,6 +31,7 @@ type Service interface {
 	GetProfile(id string) (*entities.Users, error)
 	UpdateProfile(user *entities.Users) error
 	GetUserByEmail(email string) (*entities.Users, error)
+	GenerateToken(user *entities.Users) (string, error)
 }
 
 type serivce struct {
@@ -118,4 +119,16 @@ func (s *serivce) UpdateProfile(user *entities.Users) error {
 
 func (s *serivce) GetUserByEmail(email string) (*entities.Users, error) {
 	return s.userreposistory.GetUserByEmail(email)
+}
+
+func (service *serivce) GenerateToken(user *entities.Users) (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["id"] = user.ID
+	claims["email"] = user.Email
+	claims["issuperadmin"] = user.Issuperadmin
+	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
+
+	t, err := token.SignedString([]byte(os.Getenv("SIGNKEY")))
+	return t, err
 }
