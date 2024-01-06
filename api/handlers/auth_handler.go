@@ -3,7 +3,6 @@ package handlers
 import (
 	"errors"
 	"gobackend/api/presenter"
-	"gobackend/database"
 	"gobackend/pkg"
 	"gobackend/pkg/auth"
 	"gobackend/pkg/entities"
@@ -71,56 +70,96 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 	}
 }
 
-func Login(c *fiber.Ctx) error {
-	db := database.DB
-	type LoginInput struct {
-		Email    string `json:"Email" validate:"required"`
-		Password string `jsno:"password" validate:"required,min=8" `
+func LoginHandler(authservice auth.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+
+		var logininput auth.LoginInput
+
+		if err := c.BodyParser(&logininput); err != nil {
+			return c.SendStatus(fiber.StatusBadRequest)
+		}
+		resulvalidate := utils.ValidateThis(logininput)
+		if resulvalidate != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(resulvalidate)
+		}
+		email := logininput.Email
+		user, err := authservice.GetUserByEmail(email)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
+			} else if err != nil {
+				return pkg.Unexpected(err.Error())
+			}
+		}
+		pass := logininput.Password
+
+		if !utils.CheckPasswordHash(pass, user.Password) {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
+		}
+		token := jwt.New(jwt.SigningMethodHS256)
+		claims := token.Claims.(jwt.MapClaims)
+		claims["id"] = user.ID
+		claims["email"] = email
+		claims["issuperadmin"] = user.Issuperadmin
+		claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
+
+		t, err := token.SignedString([]byte(os.Getenv("SIGNKEY")))
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
+
+		return c.JSON(fiber.Map{
+			"access_token": t,
+		})
+
 	}
-
-	var user entities.Users
-
-	var input LoginInput
-
-	if err := c.BodyParser(&input); err != nil {
-		return c.SendStatus(fiber.StatusUnauthorized)
-	}
-
-	resulvalidate := utils.ValidateThis(input)
-	if resulvalidate != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(resulvalidate)
-	}
-
-	email := input.Email
-	err := db.Where("email = ?", email).First(&user).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
-	} else if err != nil {
-		return pkg.Unexpected(err.Error())
-	}
-
-	pass := input.Password
-
-	if !utils.CheckPasswordHash(pass, user.Password) {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
-	}
-
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["id"] = user.ID
-	claims["email"] = email
-	claims["issuperadmin"] = user.Issuperadmin
-	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
-
-	t, err := token.SignedString([]byte(os.Getenv("SIGNKEY")))
-	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	return c.JSON(fiber.Map{
-		"access_token": t,
-	})
 }
+
+// func Login(c *fiber.Ctx) error {
+
+// 	var user entities.Users
+
+// 	var logininput auth.LoginInput
+
+// 	if err := c.BodyParser(&logininput); err != nil {
+// 		return c.SendStatus(fiber.StatusBadRequest)
+// 	}
+
+// 	resulvalidate := utils.ValidateThis(logininput)
+// 	if resulvalidate != nil {
+// 		return c.Status(fiber.StatusBadRequest).JSON(resulvalidate)
+// 	}
+
+// 	email := logininput.Email
+// 	err := db.Where("email = ?", email).First(&user).Error
+// 	if errors.Is(err, gorm.ErrRecordNotFound) {
+// 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
+// 	} else if err != nil {
+// 		return pkg.Unexpected(err.Error())
+// 	}
+
+// 	pass := logininput.Password
+
+// 	if !utils.CheckPasswordHash(pass, user.Password) {
+// 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
+// 	}
+
+// 	token := jwt.New(jwt.SigningMethodHS256)
+// 	claims := token.Claims.(jwt.MapClaims)
+// 	claims["id"] = user.ID
+// 	claims["email"] = email
+// 	claims["issuperadmin"] = user.Issuperadmin
+// 	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
+
+// 	t, err := token.SignedString([]byte(os.Getenv("SIGNKEY")))
+// 	if err != nil {
+// 		return c.SendStatus(fiber.StatusInternalServerError)
+// 	}
+
+// 	return c.JSON(fiber.Map{
+// 		"access_token": t,
+// 	})
+// }
 
 func Profile(service auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {

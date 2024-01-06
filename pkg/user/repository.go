@@ -13,6 +13,7 @@ type Repository interface {
 	CreateUserWithOutValidate(user *entities.Users) (*entities.Users, error)
 	UpdateUser(user *entities.Users) error
 	DeleteUser(user *entities.Users) error
+	GetUserByEmail(email string) (*entities.Users, error)
 }
 
 type repository struct {
@@ -60,6 +61,15 @@ func (r *repository) GetUser(user *entities.Users) (*entities.Users, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (r *repository) GetUserByEmail(email string) (*entities.Users, error) {
+	var user entities.Users
+	err := r.Db.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (r *repository) UpdateUser(user *entities.Users) error {

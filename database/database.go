@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -15,19 +13,6 @@ import (
 var (
 	DB *gorm.DB
 )
-
-type DefaultModel struct {
-	ID        uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
-}
-type SecondDefaultModel struct {
-	ID        uint64     `json:"id"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
-}
 
 func SetupDatabase() *gorm.DB {
 	username := os.Getenv("POSTGRES_USER")

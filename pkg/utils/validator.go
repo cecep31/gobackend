@@ -18,7 +18,6 @@ func ValidateThis(data interface{}) map[string]string {
 		for _, err := range err.(validator.ValidationErrors) {
 			field := err.Field()
 			tag := err.Tag()
-
 			var errMsg string
 			switch tag {
 			case "required":
@@ -28,7 +27,6 @@ func ValidateThis(data interface{}) map[string]string {
 			default:
 				errMsg = fmt.Sprintf("Validation failed on field '%s' with tag '%s'.", field, tag)
 			}
-
 			errMsgs[field] = errMsg
 		}
 		return errMsgs

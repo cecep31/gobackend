@@ -30,16 +30,17 @@ type Service interface {
 	SetTokenJwt(user *entities.Users) (string, error)
 	GetProfile(id string) (*entities.Users, error)
 	UpdateProfile(user *entities.Users) error
+	GetUserByEmail(email string) (*entities.Users, error)
 }
 
 type serivce struct {
-	repository      Repository
+	authrepository  Repository
 	userreposistory user.Repository
 }
 
-func NewService(r Repository, userrepo user.Repository) Service {
+func NewService(authrepository Repository, userrepo user.Repository) Service {
 	return &serivce{
-		repository:      r,
+		authrepository:  authrepository,
 		userreposistory: userrepo,
 	}
 }
@@ -76,7 +77,7 @@ func (service *serivce) GetUserInfoGoogle(token string) (*googleResponse, error)
 }
 
 func (s *serivce) GetUserOrCreate(profile *googleResponse) (*entities.Users, error) {
-	user, err := s.repository.GetUserByEmail(profile.Email)
+	user, err := s.authrepository.GetUserByEmail(profile.Email)
 	if err == nil {
 		return user, err
 	}
@@ -113,4 +114,8 @@ func (s *serivce) GetProfile(id string) (*entities.Users, error) {
 
 func (s *serivce) UpdateProfile(user *entities.Users) error {
 	return s.userreposistory.UpdateUser(user)
+}
+
+func (s *serivce) GetUserByEmail(email string) (*entities.Users, error) {
+	return s.userreposistory.GetUserByEmail(email)
 }

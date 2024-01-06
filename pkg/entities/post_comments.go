@@ -5,9 +5,9 @@ import (
 )
 
 type PostComments struct {
-	database.SecondDefaultModel
+	database.DefaultModel
 	Text             string `json:"text"`
 	PostId           string
 	ParrentCommentId uint64
-	replies          []*PostComments `gorm:"foreignKey:id"`
+	replies          []*PostComments `gorm:"foreignKey:ID"`
 }

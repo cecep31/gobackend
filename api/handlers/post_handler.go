@@ -23,7 +23,7 @@ func AddPost(service posts.Service) fiber.Handler {
 
 		resulvalidate := utils.ValidateThis(requestBody)
 		if resulvalidate != nil {
-			return c.JSON(presenter.ErrorResponse(resulvalidate))
+			return c.Status(422).JSON(presenter.ErrorResponse(resulvalidate, "data is not valite"))
 		}
 
 		userlocal := c.Locals("user").(*jwt.Token)
