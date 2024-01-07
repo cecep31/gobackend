@@ -9,7 +9,7 @@ import (
 )
 
 type Repository interface {
-	UploadFile(ctx *fasthttp.RequestCtx, filename string, file *multipart.FileHeader) error
+	UploadFile(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) error
 }
 
 type repository struct {
@@ -22,14 +22,19 @@ func NewRepo(minioclient *minio.Client) Repository {
 	}
 }
 
-func (r *repository) UploadFile(ctx *fasthttp.RequestCtx, filename string, file *multipart.FileHeader) error {
+func (r *repository) UploadFile(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) error {
 	srcFile, err := file.Open()
 	if err != nil {
 		return err
 	}
-	r.minio.PutObject(ctx, os.Getenv("S3_BUCKET"), filename, srcFile, file.Size, minio.PutObjectOptions{
+	bucketname := os.Getenv("S3_BUCKET")
+
+	_, errput := r.minio.PutObject(ctx, bucketname, objectname, srcFile, file.Size, minio.PutObjectOptions{
 		ContentType: file.Header.Get("Content-Type"),
 	})
+	if errput != nil {
+		return errput
+	}
 	return nil
 
 }

@@ -2,8 +2,11 @@ package posts
 
 import (
 	"gobackend/pkg/entities"
+	"gobackend/pkg/storage"
+	"mime/multipart"
 
 	"github.com/google/uuid"
+	"github.com/valyala/fasthttp"
 )
 
 type Service interface {
@@ -16,15 +19,18 @@ type Service interface {
 	UpdatePost(post *Posts) error
 	GetPostByid(id string) (*entities.Posts, error)
 	DeletePost(id string) error
+	putObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error)
 }
 
 type service struct {
 	repository Repository
+	miniorepo  storage.Repository
 }
 
-func NewService(r Repository) Service {
+func NewService(r Repository, miniorepo storage.Repository) Service {
 	return &service{
 		repository: r,
+		miniorepo:  miniorepo,
 	}
 }
 
@@ -69,4 +75,13 @@ func (s *service) DeletePost(id string) error {
 	post.ID = id_uuid
 
 	return s.repository.DeletePostById(post)
+}
+
+func (s *service) putObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error) {
+	newobjcetname := "post_photo/" + objectname
+	err := s.miniorepo.UploadFile(ctx, newobjcetname, file)
+	if err != nil {
+		return "", err
+	}
+	return newobjcetname, nil
 }

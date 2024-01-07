@@ -133,3 +133,9 @@ func DeletePost(service posts.Service) fiber.Handler {
 		return c.SendStatus(200)
 	}
 }
+
+func UploadPhotoHandler(service posts.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		return c.JSON("walawe")
+	}
+}

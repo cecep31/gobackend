@@ -13,9 +13,10 @@ import (
 	"gobackend/database"
 	"gobackend/pkg/entities"
 	"gobackend/pkg/posts"
+	"gobackend/pkg/storage"
 	"gobackend/pkg/user"
 	"gobackend/server"
-	"gobackend/storage"
+	initstorage "gobackend/storage"
 	"gobackend/ws"
 
 	"github.com/joho/godotenv"
@@ -28,6 +29,8 @@ func main() {
 	}
 
 	db := database.SetupDatabase()
+	minio := initstorage.InitFileStorage()
+
 	if os.Getenv("MIGRATE") != "" {
 		fmt.Println("Migration...")
 		db.AutoMigrate(&entities.Users{}, &entities.Tasks{}, &entities.Posts{}, &entities.PostComments{})
@@ -35,14 +38,14 @@ func main() {
 	}
 
 	handlers.Googleapi()
-	storage.InitFileStorage()
 	utils.SetupValidate()
 
 	fmt.Println("Initial repository & service")
+	miniorepo := storage.NewRepo(minio)
 	userrepo := user.NewRepo(db)
 	userserivce := user.NewService(userrepo)
 	postrepo := posts.NewRepo(db)
-	postservice := posts.NewService(postrepo)
+	postservice := posts.NewService(postrepo, miniorepo)
 	authrepo := auth.NewRepository(db)
 	authservice := auth.NewService(authrepo, userrepo)
 	taskrepo := tasks.NewRepository(db)

@@ -9,6 +9,7 @@ import (
 type Posts struct {
 	database.DefaultModel
 	Title        string         `json:"title"`
+	Image_url    string         `json:"image" gorm:"type:text"`
 	Slug         string         `json:"slug" gorm:"unique"`
 	Body         string         `json:"body" gorm:"type=text"`
 	CreatedBy    uuid.UUID      `json:"created_by"`
