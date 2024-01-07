@@ -6,6 +6,7 @@ import (
 	"gobackend/pkg/posts"
 	"gobackend/pkg/utils"
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -136,6 +137,27 @@ func DeletePost(service posts.Service) fiber.Handler {
 
 func UploadPhotoHandler(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		return c.JSON("walawe")
+		if form, err := c.MultipartForm(); err == nil {
+			// => *multipart.Form
+
+			// Get all files from "documents" key:
+			files := form.File["image"]
+			if len(files) != 1 {
+				return c.Status(fiber.StatusBadRequest).SendString("Only one file allowed")
+			}
+			file := files[0]
+			allowedExtensions := []string{".jpg", ".jpeg", ".png"}
+			if !service.ValidFileExtension(file.Filename, allowedExtensions) {
+				return c.Status(fiber.StatusBadRequest).SendString("Invalid file extension")
+			}
+			filename, errput := service.PutObjectPhoto(c.Context(), "post_photo/"+file.Filename, file)
+			if errput != nil {
+				return c.Status(500).JSON(presenter.ErrorResponse(errput.Error()))
+			}
+			return c.JSON(fiber.Map{
+				"photo_url": os.Getenv("STORAGE_URL") + filename,
+			})
+		}
+		return c.Status(500).JSON(presenter.ErrorResponse("not form"))
 	}
 }

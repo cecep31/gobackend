@@ -4,6 +4,7 @@ import (
 	"gobackend/pkg/entities"
 	"gobackend/pkg/storage"
 	"mime/multipart"
+	"path/filepath"
 
 	"github.com/google/uuid"
 	"github.com/valyala/fasthttp"
@@ -19,7 +20,8 @@ type Service interface {
 	UpdatePost(post *Posts) error
 	GetPostByid(id string) (*entities.Posts, error)
 	DeletePost(id string) error
-	putObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error)
+	PutObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error)
+	ValidFileExtension(filename string, allowedExtensions []string) bool
 }
 
 type service struct {
@@ -77,11 +79,21 @@ func (s *service) DeletePost(id string) error {
 	return s.repository.DeletePostById(post)
 }
 
-func (s *service) putObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error) {
+func (s *service) PutObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error) {
 	newobjcetname := "post_photo/" + objectname
 	err := s.miniorepo.UploadFile(ctx, newobjcetname, file)
 	if err != nil {
 		return "", err
 	}
 	return newobjcetname, nil
+}
+
+func (s *service) ValidFileExtension(filename string, allowedExtensions []string) bool {
+	ext := filepath.Ext(filename)
+	for _, validExt := range allowedExtensions {
+		if ext == validExt {
+			return true
+		}
+	}
+	return false
 }

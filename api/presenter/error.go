@@ -3,12 +3,15 @@ package presenter
 import "github.com/gofiber/fiber/v2"
 
 func ErrorResponse(error interface{}, message ...string) *fiber.Map {
-	if len(message) == 0 {
-		message = append(message, "_") // Default value
+	var msg string
+	if len(message) > 0 {
+		msg = message[0]
+	} else {
+		msg = "_"
 	}
 	return &fiber.Map{
 		"success": false,
-		"message": message,
+		"message": msg,
 		"error":   error,
 	}
 }

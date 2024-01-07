@@ -36,6 +36,7 @@ func PostRouter(app fiber.Router, service posts.Service) {
 	app.Post("posts", middleware.Protected(), handlers.AddPost(service))
 	app.Put("posts/:id", middleware.Protected(), handlers.UpdatePost(service))
 	app.Delete("posts/:id", middleware.Protected(), handlers.DeletePost(service))
+	app.Post("posts/image", middleware.Protected(), handlers.UploadPhotoHandler(service))
 
 }
 
