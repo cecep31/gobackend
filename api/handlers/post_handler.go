@@ -155,7 +155,7 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 				return c.Status(500).JSON(presenter.ErrorResponse(errput.Error()))
 			}
 			return c.JSON(fiber.Map{
-				"photo_url": os.Getenv("STORAGE_URL") + filename,
+				"photo_url": os.Getenv("STORAGE_URL") + "/" + filename,
 			})
 		}
 		return c.Status(500).JSON(presenter.ErrorResponse("not form"))
