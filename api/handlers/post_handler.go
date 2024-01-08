@@ -143,7 +143,8 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 			// Get all files from "documents" key:
 			files := form.File["image"]
 			if len(files) != 1 {
-				return c.Status(fiber.StatusBadRequest).SendString("Only one file allowed")
+
+				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "Only one file allowed"}))
 			}
 			file := files[0]
 			allowedExtensions := []string{".jpg", ".jpeg", ".png"}
