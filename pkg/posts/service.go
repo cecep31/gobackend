@@ -3,6 +3,7 @@ package posts
 import (
 	"gobackend/pkg/entities"
 	"gobackend/pkg/storage"
+	"gobackend/pkg/utils"
 	"mime/multipart"
 	"path/filepath"
 
@@ -80,7 +81,8 @@ func (s *service) DeletePost(id string) error {
 }
 
 func (s *service) PutObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error) {
-	newobjcetname := "post_photo/" + objectname
+
+	newobjcetname := "post_photo/" + utils.GenerateRandomFilename(objectname)
 	err := s.miniorepo.UploadFile(ctx, newobjcetname, file)
 	if err != nil {
 		return "", err

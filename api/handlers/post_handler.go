@@ -149,9 +149,12 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 			file := files[0]
 			allowedExtensions := []string{".jpg", ".jpeg", ".png"}
 			if !service.ValidFileExtension(file.Filename, allowedExtensions) {
-				return c.Status(fiber.StatusBadRequest).SendString("Invalid file extension")
+				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "Invalid file extention"}))
 			}
-			filename, errput := service.PutObjectPhoto(c.Context(), "post_photo/"+file.Filename, file)
+			if file.Size > 1<<20 {
+				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "File size exceeds the limit (1MB)"}))
+			}
+			filename, errput := service.PutObjectPhoto(c.Context(), file.Filename, file)
 			if errput != nil {
 				return c.Status(500).JSON(presenter.ErrorResponse(errput.Error()))
 			}

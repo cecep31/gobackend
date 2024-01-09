@@ -57,6 +57,7 @@ func Create() *fiber.App {
 		AppName:     "pilput-turbo",
 		JSONEncoder: sonic.Marshal,
 		JSONDecoder: sonic.Unmarshal,
+		BodyLimit:   100 * 1024 * 1024,
 	})
 
 	setupMiddlewares(app)
