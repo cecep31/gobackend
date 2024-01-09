@@ -36,7 +36,7 @@ func AddPost(service posts.Service) fiber.Handler {
 			return c.JSON(presenter.PostErrorResponse(err.Error()))
 		}
 
-		realpost := entities.Posts{Title: requestBody.Title, Body: requestBody.Body, CreatedBy: userid}
+		realpost := entities.Posts{Title: requestBody.Title, Body: requestBody.Body, CreatedBy: userid, Slug: requestBody.Slug, Photo_url: requestBody.Photo_url}
 		result, err := service.InserPosts(&realpost)
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
