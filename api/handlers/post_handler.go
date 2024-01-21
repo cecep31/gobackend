@@ -75,13 +75,13 @@ func GetPosts(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		random := c.Query("random")
 		if random == "true" {
-			posts, err := service.GetPostsRandom()
+			postsdata, err := service.GetPostsRandom()
 			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error": err.Error(),
 				})
 			}
-			return c.JSON(posts)
+			return c.JSON(postsdata)
 		}
 		page := c.Query("page", "1")
 		itemsPerPage := c.Query("per_page", "5")
@@ -95,7 +95,7 @@ func GetPosts(service posts.Service) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
 
-		posts, err := service.GetPostsPaginated(pageInt, perPageInt)
+		postsdata, err := service.GetPostsPaginated(pageInt, perPageInt)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
@@ -103,7 +103,7 @@ func GetPosts(service posts.Service) fiber.Handler {
 		response := fiber.Map{
 			"total": totalPosts,
 			"page":  pageInt,
-			"data":  posts,
+			"data":  postsdata,
 		}
 		return c.JSON(response)
 	}
@@ -151,8 +151,8 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 			if !service.ValidFileExtension(file.Filename, allowedExtensions) {
 				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "Invalid file extention"}))
 			}
-			if file.Size > 1<<20 {
-				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "File size exceeds the limit (1MB)"}))
+			if file.Size > 2<<20 {
+				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "File size exceeds the limit (2MB)"}))
 			}
 			filename, errput := service.PutObjectPhoto(c.Context(), file.Filename, file)
 			if errput != nil {
