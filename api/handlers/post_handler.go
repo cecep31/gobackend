@@ -16,13 +16,13 @@ import (
 
 func AddPost(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var requestBody posts.Posts
+		var requestBody posts.PostCreate
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.PostErrorResponse(err.Error()))
 		}
 
-		resulvalidate := utils.ValidateThis(requestBody)
+		resulvalidate := utils.ValidateThis(&requestBody)
 		if resulvalidate != nil {
 			return c.Status(422).JSON(presenter.ErrorResponse(resulvalidate, "data is not valite"))
 		}
@@ -48,7 +48,7 @@ func AddPost(service posts.Service) fiber.Handler {
 func UpdatePost(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		param_post_id := c.Params("id")
-		var requestBody posts.Posts
+		var requestBody posts.PostUpdate
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.PostErrorResponse(err.Error()))
@@ -60,10 +60,10 @@ func UpdatePost(service posts.Service) fiber.Handler {
 		if resulvalidate != nil {
 			return c.JSON(presenter.ErrorResponse(resulvalidate))
 		}
-
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err.Error()))
 		}
+		// newpost := entities.Posts{Title: requestBody.Title, Body: requestBody.Body, CreatedBy: requestBody.CreatedBy, Slug: requestBody.Slug, Photo_url: requestBody.Photo_url}
 		errrepo := service.UpdatePost(&requestBody)
 		if errrepo != nil {
 			return c.JSON(presenter.PostErrorResponse(err))

@@ -18,7 +18,7 @@ type Service interface {
 	GetPostsRandom() (*[]entities.Posts, error)
 	GetTotalPosts() (int64, error)
 	GetPostsPaginated(page int, perPage int) ([]entities.Posts, error)
-	UpdatePost(post *Posts) error
+	UpdatePost(post *PostUpdate) error
 	GetPostByid(id string) (*entities.Posts, error)
 	DeletePost(id string) error
 	PutObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error)
@@ -37,7 +37,7 @@ func NewService(r Repository, miniorepo storage.Repository) Service {
 	}
 }
 
-func (s *service) UpdatePost(post *Posts) error {
+func (s *service) UpdatePost(post *PostUpdate) error {
 	return s.repository.UpdatePost(post)
 }
 func (s *service) InserPosts(post *entities.Posts) (*entities.Posts, error) {
