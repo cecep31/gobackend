@@ -6,7 +6,6 @@ import (
 	"gobackend/pkg/posts"
 	"gobackend/pkg/utils"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -63,7 +62,7 @@ func UpdatePost(service posts.Service) fiber.Handler {
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err.Error()))
 		}
-		// newpost := entities.Posts{Title: requestBody.Title, Body: requestBody.Body, CreatedBy: requestBody.CreatedBy, Slug: requestBody.Slug, Photo_url: requestBody.Photo_url}
+
 		errrepo := service.UpdatePost(&requestBody)
 		if errrepo != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
@@ -159,7 +158,7 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 				return c.Status(500).JSON(presenter.ErrorResponse(errput.Error()))
 			}
 			return c.JSON(fiber.Map{
-				"photo_url": os.Getenv("STORAGE_URL") + "/" + filename,
+				"photo_url": filename,
 			})
 		}
 		return c.Status(500).JSON(presenter.ErrorResponse("not form"))

@@ -38,7 +38,8 @@ func NewService(r Repository, miniorepo storage.Repository) Service {
 }
 
 func (s *service) UpdatePost(post *PostUpdate) error {
-	return s.repository.UpdatePost(post)
+	newpost := entities.Posts{Title: post.Title, Body: post.Body, CreatedBy: post.CreatedBy, Slug: post.Slug, Photo_url: post.Photo_url}
+	return s.repository.UpdatePost(&newpost)
 }
 func (s *service) InserPosts(post *entities.Posts) (*entities.Posts, error) {
 	return s.repository.CreatePost(post)
