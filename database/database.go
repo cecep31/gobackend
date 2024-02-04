@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -23,7 +24,7 @@ func SetupDatabase() *gorm.DB {
 
 	var err error
 	var config gorm.Config
-	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%s sslmode=prefer password=%s", dbHost, username, dbName, dbport, password)
+	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%s sslmode=require password=%s", dbHost, username, dbName, dbport, password)
 
 	if os.Getenv("ENABLE_GORM_LOGGER") != "" {
 		config = gorm.Config{}
@@ -34,7 +35,7 @@ func SetupDatabase() *gorm.DB {
 	}
 
 	DB, err = gorm.Open(postgres.New(postgres.Config{
-		DSN: dsn, PreferSimpleProtocol: true,
+		DSN: dsn, PreferSimpleProtocol: true, DriverName: "postgres",
 	}), &config)
 
 	if err != nil {
