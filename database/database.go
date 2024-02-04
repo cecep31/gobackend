@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -35,7 +34,7 @@ func SetupDatabase() *gorm.DB {
 	}
 
 	DB, err = gorm.Open(postgres.New(postgres.Config{
-		DSN: dsn, PreferSimpleProtocol: true, DriverName: "postgres",
+		DSN: dsn, PreferSimpleProtocol: true,
 	}), &config)
 
 	if err != nil {
