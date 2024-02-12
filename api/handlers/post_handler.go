@@ -5,7 +5,6 @@ import (
 	"gobackend/pkg/entities"
 	"gobackend/pkg/posts"
 	"gobackend/pkg/utils"
-	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -110,7 +109,6 @@ func GetPosts(service posts.Service) fiber.Handler {
 func GetPost(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		slug := c.Params("slug")
-		log.Println(slug)
 		post, err := service.GetPost(slug)
 		if err != nil {
 			return c.JSON(presenter.PostErrorResponse(err))
