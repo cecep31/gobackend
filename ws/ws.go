@@ -13,7 +13,7 @@ import (
 var connections []*websocket.Conn
 
 func WsSetup(app *fiber.App) {
-	app.Get("/ws/global", middleware.Protectedws(), middleware.GetUser, websocket.New(func(c *websocket.Conn) {
+	app.Get("/ws/global", middleware.Protectedws(), websocket.New(func(c *websocket.Conn) {
 		user := c.Locals("datauser").(entities.Users)
 
 		connections = append(connections, c)

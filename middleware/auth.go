@@ -1,9 +1,7 @@
 package middleware
 
 import (
-	"gobackend/database"
 	"gobackend/pkg"
-	"gobackend/pkg/entities"
 	"os"
 
 	jwtware "github.com/gofiber/contrib/jwt"
@@ -27,13 +25,6 @@ func Protected() func(*fiber.Ctx) error {
 	})
 }
 
-// func ProtectedSuperAdmin() func(*fiber.Ctx) error {
-// 	return jwtware.New(jwtware.Config{
-// 		SigningKey:   []byte(os.Getenv("SIGNKEY")),
-// 		ErrorHandler: jwtErrorSuperAdmin,
-// 	})
-// }
-
 func jwtError(c *fiber.Ctx, err error) error {
 	if err.Error() == "Missing or malformed JWT" {
 		c.Status(fiber.StatusBadRequest)
@@ -53,15 +44,4 @@ func IsSuperAdmin(c *fiber.Ctx) error {
 	} else {
 		return c.Next()
 	}
-}
-
-func GetUser(c *fiber.Ctx) error {
-	userlocal := c.Locals("user").(*jwt.Token)
-	claims := userlocal.Claims.(jwt.MapClaims)
-	id := claims["id"].(string)
-	db := database.DB
-	var userdata entities.Users
-	db.Where("id = ?", id).First(&userdata)
-	c.Locals("datauser", userdata)
-	return c.Next()
 }

@@ -14,19 +14,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type googleResponse struct {
-	ID          string `json:"id"`
-	Email       string `json:"email"`
-	Verified    bool   `json:"verified_email"`
-	Picture     string `json:"picture"`
-	Name        string `json:"name"`
-	Given_name  string `json:"given_name"`
-	Family_name string `json:"family_name"`
-}
-
 type Service interface {
-	GetUserInfoGoogle(token string) (*googleResponse, error)
-	GetUserOrCreate(profile *googleResponse) (*entities.Users, error)
+	GetUserInfoGoogle(token string) (*GoogleResponse, error)
+	GetUserOrCreate(profile *GoogleResponse) (*entities.Users, error)
 	SetTokenJwt(user *entities.Users) (string, error)
 	GetProfile(id string) (*entities.Users, error)
 	UpdateProfile(user *entities.Users) error
@@ -45,7 +35,7 @@ func NewService(authrepository Repository, userrepo user.Repository) Service {
 		userreposistory: userrepo,
 	}
 }
-func (service *serivce) GetUserInfoGoogle(token string) (*googleResponse, error) {
+func (service *serivce) GetUserInfoGoogle(token string) (*GoogleResponse, error) {
 	reqURL, err := url.Parse("https://www.googleapis.com/oauth2/v1/userinfo")
 	if err != nil {
 		panic(err)
@@ -68,7 +58,7 @@ func (service *serivce) GetUserInfoGoogle(token string) (*googleResponse, error)
 	if err != nil {
 		return nil, err
 	}
-	var data googleResponse
+	var data GoogleResponse
 
 	err = sonic.Unmarshal(body, &data)
 	if err != nil {
@@ -77,7 +67,7 @@ func (service *serivce) GetUserInfoGoogle(token string) (*googleResponse, error)
 	return &data, nil
 }
 
-func (s *serivce) GetUserOrCreate(profile *googleResponse) (*entities.Users, error) {
+func (s *serivce) GetUserOrCreate(profile *GoogleResponse) (*entities.Users, error) {
 	user, err := s.authrepository.GetUserByEmail(profile.Email)
 	if err == nil {
 		return user, err

@@ -45,7 +45,6 @@ func (r *repository) UpdatePost(post *entities.Posts) error {
 }
 
 func (r *repository) GetPosts(posts *[]entities.Posts) (*[]entities.Posts, error) {
-	// var posts []entities.Posts
 	result := r.Db.Preload("Creator").Order("created_at DESC").Find(posts)
 	err := result.Error
 	if err != nil {
