@@ -88,7 +88,7 @@ func (s *service) PutObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, fi
 	if err != nil {
 		return "", err
 	}
-	return newobjcetname, nil
+	return "/" + newobjcetname, nil
 }
 
 func (s *service) ValidFileExtension(filename string, allowedExtensions []string) bool {
