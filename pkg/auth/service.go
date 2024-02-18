@@ -76,6 +76,7 @@ func (s *serivce) GetUserOrCreate(profile *GoogleResponse) (*entities.Users, err
 	usercreate.Email = profile.Email
 	usercreate.FirstName = profile.Given_name
 	usercreate.LastName = profile.Family_name
+	usercreate.Image = profile.Picture
 	newuser, err := s.userreposistory.CreateUserWithOutValidate(usercreate)
 	if err != nil {
 		return nil, err
