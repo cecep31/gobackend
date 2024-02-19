@@ -3,7 +3,7 @@ module gobackend
 go 1.20
 
 require (
-	github.com/bytedance/sonic v1.10.2
+	github.com/bytedance/sonic v1.11.0
 	github.com/go-playground/validator/v10 v10.18.0
 	github.com/gofiber/contrib/jwt v1.0.8
 	github.com/gofiber/contrib/websocket v1.3.0
