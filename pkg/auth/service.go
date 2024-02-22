@@ -12,6 +12,7 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type Service interface {
@@ -101,6 +102,11 @@ func (s *serivce) SetTokenJwt(user *entities.Users) (string, error) {
 
 func (s *serivce) GetProfile(id string) (*entities.Users, error) {
 	profile := new(entities.Users)
+	id_uuid, err := uuid.Parse(id)
+	if err != nil {
+		return nil, err
+	}
+	profile.ID = id_uuid
 	return s.userreposistory.GetUser(profile)
 }
 

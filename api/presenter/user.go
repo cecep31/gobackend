@@ -12,7 +12,7 @@ type User struct {
 	ID           uuid.UUID `json:"id"`
 	Email        string    `json:"email"`
 	FirstName    string    `json:"first_name"`
-	LastName     string    `json:"Last_name"`
+	LastName     string    `json:"last_name"`
 	Image        string    `json:"image"`
 	Issuperadmin bool      `json:"issuperadmin" gorm:"default:false"`
 	CreateAt     time.Time `json:"createAt"`
@@ -21,6 +21,8 @@ type User struct {
 func UserSuccessResponse(data *entities.Users) interface{} {
 	user := User{
 		ID:           data.ID,
+		FirstName:    data.FirstName,
+		LastName:     data.LastName,
 		Email:        data.Email,
 		Image:        data.Image,
 		Issuperadmin: data.Issuperadmin,
