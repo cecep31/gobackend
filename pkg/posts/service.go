@@ -77,7 +77,6 @@ func (s *service) DeletePost(id string) error {
 	}
 	post := new(entities.Posts)
 	post.ID = id_uuid
-
 	return s.repository.DeletePostById(post)
 }
 

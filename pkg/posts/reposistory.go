@@ -37,7 +37,6 @@ func (r *repository) CreatePost(post *entities.Posts) (*entities.Posts, error) {
 	} else {
 		return post, nil
 	}
-
 }
 
 func (r *repository) UpdatePost(post *entities.Posts) error {
