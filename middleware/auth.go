@@ -22,7 +22,6 @@ func Protected() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
 		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("SIGNKEY"))},
 		ErrorHandler: jwtError,
-		TokenLookup:  "cookie:token",
 	})
 }
 
