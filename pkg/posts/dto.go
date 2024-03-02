@@ -1,13 +1,13 @@
 package posts
 
 import (
-	"gobackend/database"
+	"gobackend/database/template"
 
 	"github.com/google/uuid"
 )
 
 type PostCreate struct {
-	database.DefaultModel
+	template.DefaultModel
 	Title     string    `json:"title" validate:"required,min=8"`
 	Photo_url string    `json:"photo_url" validate:"required"`
 	Body      string    `json:"body" validate:"required,min=100"`
@@ -15,7 +15,7 @@ type PostCreate struct {
 	Slug      string    `json:"slug" validate:"required"`
 }
 type PostUpdate struct {
-	database.DefaultModel
+	template.DefaultModel
 	Title     string    `json:"title" validate:"required,min=8"`
 	Photo_url string    `json:"photo_url" validate:"required"`
 	Body      string    `json:"body" validate:"required,min=100"`

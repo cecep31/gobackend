@@ -6,12 +6,10 @@ import (
 	"gobackend/pkg/tasks"
 	"gobackend/pkg/utils"
 	"log"
-	"os"
 
 	"gobackend/api"
 	"gobackend/api/handlers"
 	"gobackend/database"
-	"gobackend/pkg/entities"
 	"gobackend/pkg/posts"
 	"gobackend/pkg/storage"
 	"gobackend/pkg/user"
@@ -28,14 +26,11 @@ func main() {
 		fmt.Println("dotenv not found")
 	}
 
-	db := database.SetupDatabase()
+	database.SetupDatabase()
+	db := database.DB
 	minio := initstorage.InitFileStorage()
 
-	if os.Getenv("MIGRATE") != "" {
-		fmt.Println("Migration...")
-		db.AutoMigrate(&entities.Users{}, &entities.Tasks{}, &entities.Posts{}, &entities.PostComments{})
-		fmt.Println("Migration Done")
-	}
+	database.MigrationDB()
 
 	handlers.Googleapi()
 	utils.SetupValidate()

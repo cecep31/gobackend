@@ -1,13 +1,13 @@
 package entities
 
 import (
-	"gobackend/database"
+	"gobackend/database/template"
 
 	"github.com/google/uuid"
 )
 
 type PostComments struct {
-	database.DefaultModel
+	template.DefaultModel
 	Text             string `json:"text"`
 	PostId           string
 	ParrentCommentId uint64

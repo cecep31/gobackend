@@ -1,13 +1,13 @@
 package entities
 
 import (
-	"gobackend/database"
+	"gobackend/database/template"
 
 	"github.com/google/uuid"
 )
 
 type Posts struct {
-	database.DefaultModel
+	template.DefaultModel
 	Title        string         `json:"title"`
 	Photo_url    string         `json:"photo_url" gorm:"type:text"`
 	Slug         string         `json:"slug" gorm:"unique"`

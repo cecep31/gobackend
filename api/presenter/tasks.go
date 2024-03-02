@@ -1,7 +1,7 @@
 package presenter
 
 import (
-	"gobackend/database"
+	"gobackend/database/template"
 	"gobackend/pkg/entities"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,7 +9,7 @@ import (
 )
 
 type Posts struct {
-	database.DefaultModel
+	template.DefaultModel
 	Title     string    `json:"title"`
 	Body      string    `json:"desc"`
 	CreatedBy uuid.UUID `json:"created_by"`

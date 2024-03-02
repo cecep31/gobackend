@@ -1,9 +1,9 @@
 package entities
 
-import "gobackend/database"
+import "gobackend/database/template"
 
 type Users struct {
-	database.DefaultModel
+	template.DefaultModel
 	FirstName    string `json:"first_name" gorm:"default:pilput"`
 	LastName     string `json:"last_name" gorm:"default:admin"`
 	Email        string `json:"email" gorm:"uniqueIndex; not null"`
