@@ -104,15 +104,15 @@ func LoginHandler(authservice auth.Service) fiber.Handler {
 			return c.SendStatus(fiber.StatusInternalServerError)
 		}
 
-		c.Cookie(&fiber.Cookie{
-			Name:     "token",
-			Value:    t,
-			Domain:   "." + os.Getenv("DOMAIN"),
-			Path:     "/",
-			Expires:  time.Now().Add(time.Hour * 168),
-			Secure:   false,
-			HTTPOnly: true,
-		})
+		// c.Cookie(&fiber.Cookie{
+		// 	Name:     "token",
+		// 	Value:    t,
+		// 	Domain:   "." + os.Getenv("DOMAIN"),
+		// 	Path:     "/",
+		// 	Expires:  time.Now().Add(time.Hour * 168),
+		// 	Secure:   false,
+		// 	HTTPOnly: true,
+		// })
 
 		return c.JSON(fiber.Map{
 			"access_token": t,
