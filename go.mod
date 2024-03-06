@@ -2,8 +2,6 @@ module gobackend
 
 go 1.21
 
-toolchain go1.22.0
-
 require (
 	github.com/bytedance/sonic v1.11.2
 	github.com/go-playground/validator/v10 v10.19.0
