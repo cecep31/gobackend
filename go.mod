@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/bytedance/sonic v1.11.2
 	github.com/go-playground/validator/v10 v10.19.0
-	github.com/gofiber/contrib/fiberzerolog v1.0.0
+	github.com/gofiber/contrib/fiberzap/v2 v2.1.2
 	github.com/gofiber/contrib/jwt v1.0.8
 	github.com/gofiber/contrib/websocket v1.3.0
 	github.com/gofiber/fiber/v2 v2.52.2
@@ -14,8 +14,8 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/minio/minio-go/v7 v7.0.68
-	github.com/rs/zerolog v1.32.0
 	github.com/valyala/fasthttp v1.52.0
+	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.21.0
 	golang.org/x/oauth2 v0.18.0
 	gorm.io/driver/postgres v1.5.7
@@ -34,7 +34,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/gofiber/contrib/fiberzap/v2 v2.1.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
@@ -62,7 +61,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/arch v0.6.0 // indirect
 	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
