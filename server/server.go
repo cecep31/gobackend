@@ -8,14 +8,15 @@ import (
 
 	"gobackend/pkg"
 
+	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/helmet/v2"
+	"github.com/rs/zerolog"
 )
 
 func setupMiddlewares(app *fiber.App) {
@@ -23,7 +24,7 @@ func setupMiddlewares(app *fiber.App) {
 	app.Use(recover.New())
 	if os.Getenv("ALLOW_ORIGIN") != "" {
 		app.Use(cors.New(cors.Config{
-			AllowOrigins: "https://pilput.dev, https://dash.pilput.dev, http://pilput.test, http://localhost:3000",
+			AllowOrigins: "https://pilput.dev, https://dash.pilput.dev, http://pilput.test, http://localhost:3000, http://localhost:5432",
 		}))
 	} else {
 		app.Use(cors.New(cors.Config{}))
@@ -39,7 +40,10 @@ func setupMiddlewares(app *fiber.App) {
 			Max: max,
 		}))
 	}
-	app.Use(logger.New())
+	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+	app.Use(fiberzerolog.New(fiberzerolog.Config{
+		Logger: &logger,
+	}))
 
 }
 
