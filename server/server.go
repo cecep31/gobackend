@@ -8,7 +8,7 @@ import (
 
 	"gobackend/pkg"
 
-	"github.com/gofiber/contrib/fiberzerolog"
+	"github.com/gofiber/contrib/fiberzap/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -16,7 +16,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/helmet/v2"
-	"github.com/rs/zerolog"
+	"go.uber.org/zap"
 )
 
 func setupMiddlewares(app *fiber.App) {
@@ -40,9 +40,9 @@ func setupMiddlewares(app *fiber.App) {
 			Max: max,
 		}))
 	}
-	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
-	app.Use(fiberzerolog.New(fiberzerolog.Config{
-		Logger: &logger,
+	logger, _ := zap.NewProduction()
+	app.Use(fiberzap.New(fiberzap.Config{
+		Logger: logger,
 	}))
 
 }
