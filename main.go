@@ -28,7 +28,10 @@ func main() {
 
 	database.SetupDatabase()
 	db := database.DB
-	minio := initstorage.InitFileStorage()
+	minio, errstore := initstorage.NewFileStorageClient()
+	if errstore != nil {
+		log.Fatal(errstore)
+	}
 
 	database.MigrationDB()
 
@@ -51,7 +54,7 @@ func main() {
 
 	v2 := app.Group("api/v2")
 	auth := app.Group("auth")
-	api.AuthRouter(auth, authservice)
+	api.SetupAuthRoutes(auth, authservice)
 	api.UserRouter(v2, userserivce)
 	api.PostRouter(v2, postservice)
 	api.TaskRouter(v2, taskservice)

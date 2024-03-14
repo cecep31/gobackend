@@ -1,26 +1,22 @@
 package storage
 
 import (
-	"log"
 	"os"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
-func InitFileStorage() *minio.Client {
+func NewFileStorageClient() (*minio.Client, error) {
 	endpoint := os.Getenv("S3_ENDPOINT")
-	accessKeyID := os.Getenv("S3_ACCESS_KEY")
-	secretAccessKey := os.Getenv("S3_SECRET_KEY")
+	accessKey := os.Getenv("S3_ACCESS_KEY")
+	secretKey := os.Getenv("S3_SECRET_KEY")
 
-	minioClient, err := minio.New(endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
-		Secure: true,
-	})
+	creds := credentials.NewStaticV4(accessKey, secretKey, "")
+	client, err := minio.New(endpoint, &minio.Options{Creds: creds, Secure: true})
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
-	return minioClient
-
+	return client, nil
 }

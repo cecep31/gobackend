@@ -32,12 +32,12 @@ func Googleapi() {
 	}
 }
 
-func Loginoatuth(c *fiber.Ctx) error {
-	url := Googleoauth.AuthCodeURL("state")
-	return c.Redirect(url)
+func LoginWithOAuth(ctx *fiber.Ctx) error {
+	authURL := Googleoauth.AuthCodeURL("state")
+	return ctx.Redirect(authURL)
 }
 
-func CallbackHandler(service auth.Service) fiber.Handler {
+func HandleOAuthCallback(service auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		code := c.FormValue("code")
 		token, err := Googleoauth.Exchange(c.Context(), code)
@@ -70,7 +70,7 @@ func CallbackHandler(service auth.Service) fiber.Handler {
 	}
 }
 
-func LoginHandler(authservice auth.Service) fiber.Handler {
+func HandleLogin(authservice auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
 		var logininput auth.LoginInput
@@ -121,7 +121,7 @@ func LoginHandler(authservice auth.Service) fiber.Handler {
 	}
 }
 
-func Profile(service auth.Service) fiber.Handler {
+func GetUserProfile(service auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		userlocal := c.Locals("user").(*jwt.Token)
 		claims := userlocal.Claims.(jwt.MapClaims)
@@ -136,7 +136,7 @@ func Profile(service auth.Service) fiber.Handler {
 	}
 }
 
-func UpdateProfile(service auth.Service) fiber.Handler {
+func UpdateUserProfile(service auth.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		userlocal := c.Locals("user").(*jwt.Token)
 		claims := userlocal.Claims.(jwt.MapClaims)

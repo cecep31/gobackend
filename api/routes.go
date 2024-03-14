@@ -22,12 +22,12 @@ func UserRouter(app fiber.Router, service user.Service) {
 
 }
 
-func AuthRouter(app fiber.Router, service auth.Service) {
-	app.Get("oauth", handlers.Loginoatuth)
-	app.Get("oauth/callback", handlers.CallbackHandler(service))
-	app.Post("login", handlers.LoginHandler(service))
-	app.Get("profile", middleware.Protected(), handlers.Profile(service))
-	app.Put("profile", middleware.Protected(), handlers.UpdateProfile(service))
+func SetupAuthRoutes(app fiber.Router, service auth.Service) {
+	app.Get("/oauth", handlers.LoginWithOAuth)
+	app.Get("/oauth/callback", handlers.HandleOAuthCallback(service))
+	app.Post("/login", handlers.HandleLogin(service))
+	app.Get("/profile", middleware.Protected(), handlers.GetUserProfile(service))
+	app.Put("/profile", middleware.Protected(), handlers.UpdateUserProfile(service))
 }
 
 func PostRouter(app fiber.Router, service posts.Service) {

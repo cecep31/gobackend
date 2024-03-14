@@ -3,6 +3,7 @@ package server
 import (
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/bytedance/sonic"
 
@@ -77,21 +78,16 @@ func Create() *fiber.App {
 }
 
 func Listen(app *fiber.App) error {
-	// 404 Handler
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(404)
-	})
-
+	app.Use(handleNotFound)
 	return app.Listen(getPort())
 }
 
-func getPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = ":8080"
-	} else {
-		port = ":" + port
-	}
+func handleNotFound(c *fiber.Ctx) error {
+	return c.SendStatus(fiber.StatusNotFound)
+}
 
-	return port
+func getPort() string {
+	envPort := os.Getenv("PORT")
+	defaultPort := ":8080"
+	return ":" + strings.TrimPrefix(envPort, ":") + defaultPort[1:]
 }
