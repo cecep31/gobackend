@@ -87,7 +87,9 @@ func handleNotFound(c *fiber.Ctx) error {
 }
 
 func getPort() string {
-	envPort := os.Getenv("PORT")
-	defaultPort := ":8080"
-	return ":" + strings.TrimPrefix(envPort, ":") + defaultPort[1:]
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	return ":" + strings.TrimPrefix(port, ":")
 }
