@@ -14,23 +14,25 @@ func SetupValidate() {
 }
 
 func ValidateThis(data interface{}) map[string]string {
+	errors := make(map[string]string)
 	if err := Valid.Struct(data); err != nil {
-		errMsgs := make(map[string]string)
-		for _, err := range err.(validator.ValidationErrors) {
-			field := strings.ToLower(err.Field())
-			tag := err.Tag()
-			var errMsg string
-			switch tag {
-			case "required":
-				errMsg = fmt.Sprintf("The field '%s' is required.", field)
-			case "min":
-				errMsg = fmt.Sprintf("The value of '%s' must be greater than or equal to %s.", field, err.Param())
-			default:
-				errMsg = fmt.Sprintf("Validation failed on field '%s' with tag '%s'.", field, tag)
-			}
-			errMsgs[field] = errMsg
+		validationErrors := err.(validator.ValidationErrors)
+		for _, validationErr := range validationErrors {
+			field := strings.ToLower(validationErr.Field())
+			errorMsg := buildErrorMessage(field, validationErr.Tag(), validationErr.Param())
+			errors[field] = errorMsg
 		}
-		return errMsgs
 	}
-	return nil
+	return errors
+}
+
+func buildErrorMessage(field, tag, param string) string {
+	switch tag {
+	case "required":
+		return fmt.Sprintf("The '%s' field is required.", field)
+	case "min":
+		return fmt.Sprintf("The '%s' field must have a minimum value of %s.", field, param)
+	default:
+		return fmt.Sprintf("Validation failed on '%s' field with '%s' tag.", field, tag)
+	}
 }

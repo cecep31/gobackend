@@ -22,17 +22,12 @@ func NewRepository(db *gorm.DB) Repository {
 }
 
 func (r *repository) GetUserByEmail(email string) (*entities.Users, error) {
-	var user entities.Users
-	err := r.Db.First(&user, "email = ?", email).Error
-	if err != nil {
+	user := new(entities.Users)
+	if err := r.Db.Where("email = ?", email).First(user).Error; err != nil {
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }
-func (r *repository) UpdateUser(user *entities.Users) error {
-	err := r.Db.Save(user).Error
-	if err != nil {
-		return err
-	}
-	return nil
+func (repo *repository) UpdateUser(user *entities.Users) error {
+	return repo.Db.Save(user).Error
 }

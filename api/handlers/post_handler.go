@@ -151,7 +151,7 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 			if file.Size > 2<<20 {
 				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "File size exceeds the limit (2MB)"}))
 			}
-			filename, errput := service.PutObjectPhoto(c.Context(), file.Filename, file)
+			filename, errput := service.UploadPhoto(c.Context(), file.Filename, file)
 			if errput != nil {
 				return c.Status(500).JSON(presenter.ErrorResponse(errput.Error()))
 			}

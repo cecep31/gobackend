@@ -22,19 +22,20 @@ func NewRepo(minioclient *minio.Client) Repository {
 	}
 }
 
-func (r *repository) UploadFile(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) error {
-	srcFile, err := file.Open()
+func (repo *repository) UploadFile(ctx *fasthttp.RequestCtx, objectName string, file *multipart.FileHeader) error {
+	src, err := file.Open()
 	if err != nil {
 		return err
 	}
-	bucketname := os.Getenv("S3_BUCKET")
+	defer src.Close()
 
-	_, errput := r.minio.PutObject(ctx, bucketname, objectname, srcFile, file.Size, minio.PutObjectOptions{
+	bucket := os.Getenv("S3_BUCKET")
+
+	_, err = repo.minio.PutObject(ctx, bucket, objectName, src, file.Size, minio.PutObjectOptions{
 		ContentType: file.Header.Get("Content-Type"),
 	})
-	if errput != nil {
-		return errput
+	if err != nil {
+		return err
 	}
 	return nil
-
 }

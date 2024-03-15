@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"fmt"
 	"gobackend/pkg/entities"
 	"gobackend/pkg/storage"
 	"gobackend/pkg/utils"
@@ -21,19 +22,19 @@ type Service interface {
 	UpdatePost(post *PostUpdate) error
 	GetPostByid(id string) (*entities.Posts, error)
 	DeletePost(id string) error
-	PutObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error)
+	UploadPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error)
 	ValidFileExtension(filename string, allowedExtensions []string) bool
 }
 
 type service struct {
-	repository Repository
-	miniorepo  storage.Repository
+	repository      Repository
+	minioRepository storage.Repository
 }
 
 func NewService(r Repository, miniorepo storage.Repository) Service {
 	return &service{
-		repository: r,
-		miniorepo:  miniorepo,
+		repository:      r,
+		minioRepository: miniorepo,
 	}
 }
 
@@ -64,7 +65,7 @@ func (s *service) GetPostByid(id string) (*entities.Posts, error) {
 }
 
 func (s *service) GetTotalPosts() (int64, error) {
-	return s.repository.Count()
+	return s.repository.CountPosts()
 }
 
 func (s *service) GetPostsPaginated(page int, perPage int) ([]entities.Posts, error) {
@@ -80,14 +81,12 @@ func (s *service) DeletePost(id string) error {
 	return s.repository.DeletePostById(post)
 }
 
-func (s *service) PutObjectPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error) {
-
-	newobjcetname := "post_photo/" + utils.GenerateRandomFilename(objectname)
-	err := s.miniorepo.UploadFile(ctx, newobjcetname, file)
-	if err != nil {
+func (s *service) UploadPhoto(ctx *fasthttp.RequestCtx, filename string, file *multipart.FileHeader) (string, error) {
+	uploadFilename := fmt.Sprintf("post_photo/%s", utils.GenerateRandomFilename(filename))
+	if err := s.minioRepository.UploadFile(ctx, uploadFilename, file); err != nil {
 		return "", err
 	}
-	return "/" + newobjcetname, nil
+	return "/" + uploadFilename, nil
 }
 
 func (s *service) ValidFileExtension(filename string, allowedExtensions []string) bool {

@@ -13,7 +13,7 @@ type Repository interface {
 	GetPost(id string, post *entities.Posts) (*entities.Posts, error)
 	GetPostBySlug(slug string) (*entities.Posts, error)
 	GetPostsRandom(take int) (*[]entities.Posts, error)
-	Count() (int64, error)
+	CountPosts() (int64, error)
 	FindPaginated(page int, perPage int) ([]entities.Posts, error)
 	UpdatePost(post *entities.Posts) error
 	DeletePostById(post *entities.Posts) error
@@ -80,10 +80,9 @@ func (r *repository) GetPost(id string, post *entities.Posts) (*entities.Posts, 
 	return post, nil
 }
 
-func (r *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
+func (repo *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
 	post := new(entities.Posts)
-	err := r.Db.Preload("Creator").First(post, "slug = ?", slug).Error
-	if err != nil {
+	if err := repo.Db.Preload("Creator").Where("slug = ?", slug).First(post).Error; err != nil {
 		return nil, err
 	}
 	return post, nil
@@ -97,11 +96,8 @@ func (r *repository) DeletePostById(post *entities.Posts) error {
 	return nil
 }
 
-func (r *repository) Count() (int64, error) {
-	var count int64
-	result := r.Db.Model(&entities.Posts{}).Count(&count)
-	if result.Error != nil {
-		return 0, result.Error
-	}
-	return count, nil
+func (r *repository) CountPosts() (int64, error) {
+	var postCount int64
+	result := r.Db.Model(&entities.Posts{}).Count(&postCount)
+	return postCount, result.Error
 }
