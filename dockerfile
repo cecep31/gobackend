@@ -1,15 +1,13 @@
-FROM golang:1.20-alpine AS dependencies
+
+# Stage 1: Build the application
+FROM golang:1.20-alpine AS build
 WORKDIR /app
 COPY go.mod go.sum ./
-RUN go mod download
+COPY *.go ./
+RUN go mod download && go build -o gobackend
 
-# Build the application
-FROM dependencies AS build
-COPY . .
-RUN go build -o gobackend
-
-# Create a smaller runtime image
-FROM alpine
+# Stage 2: Create a smaller runtime image
+FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/gobackend .
 EXPOSE 8080
