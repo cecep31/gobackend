@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"gobackend/pkg/auth"
-	"gobackend/pkg/tasks"
 	"gobackend/pkg/utils"
 	"log"
 
@@ -45,8 +44,6 @@ func main() {
 	postservice := posts.NewService(postrepo, miniorepo)
 	authrepo := auth.NewRepository(db)
 	authservice := auth.NewService(authrepo, userrepo)
-	taskrepo := tasks.NewRepository(db)
-	taskservice := tasks.NewService(taskrepo)
 	fmt.Println("Initial repository & service Done")
 
 	app := server.Create()
@@ -56,7 +53,6 @@ func main() {
 	api.SetupAuthRoutes(auth, authservice)
 	api.UserRouter(v2, userserivce)
 	api.PostRouter(v2, postservice)
-	api.TaskRouter(v2, taskservice)
 
 	if err := server.Listen(app); err != nil {
 		log.Panic(err)

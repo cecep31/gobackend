@@ -5,7 +5,6 @@ import (
 	"gobackend/middleware"
 	"gobackend/pkg/auth"
 	"gobackend/pkg/posts"
-	"gobackend/pkg/tasks"
 	"gobackend/pkg/user"
 
 	"github.com/gofiber/fiber/v2"
@@ -37,9 +36,4 @@ func PostRouter(app fiber.Router, service posts.Service) {
 	app.Put("posts/:id", middleware.Protected(), handlers.UpdatePost(service))
 	app.Delete("posts/:id", middleware.Protected(), handlers.DeletePost(service))
 	app.Post("posts/image", middleware.Protected(), handlers.UploadPhotoHandler(service))
-
-}
-
-func TaskRouter(app fiber.Router, service tasks.Service) {
-	app.Get("tasks", handlers.GetTasks(service))
 }
