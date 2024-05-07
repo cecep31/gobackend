@@ -22,3 +22,5 @@
 **\tmp
 **\.env
 fly.toml
+
+.github

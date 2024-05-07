@@ -15,7 +15,6 @@ import (
 	"gobackend/pkg/user"
 	"gobackend/server"
 	initstorage "gobackend/storage"
-	"gobackend/ws"
 
 	"github.com/joho/godotenv"
 )
@@ -58,8 +57,6 @@ func main() {
 	api.UserRouter(v2, userserivce)
 	api.PostRouter(v2, postservice)
 	api.TaskRouter(v2, taskservice)
-
-	ws.WsSetup(app)
 
 	if err := server.Listen(app); err != nil {
 		log.Panic(err)
