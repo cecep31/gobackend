@@ -1,7 +1,7 @@
 package auth
 
 type LoginInput struct {
-	Email    string `json:"Email" validate:"required,email"`
+	Email    string `json:"email" validate:"required,email"`
 	Password string `jsno:"password" validate:"required,min=5" `
 }
 type GoogleResponse struct {

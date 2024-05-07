@@ -18,7 +18,7 @@ func AddUser(service user.Service) fiber.Handler {
 			return c.JSON(presenter.UserErrorResponse(err))
 		}
 		resultevalidate := utils.ValidateThis(requestBody)
-		if resultevalidate != nil {
+		if len(resultevalidate) > 0 {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(resultevalidate))
 		}
 

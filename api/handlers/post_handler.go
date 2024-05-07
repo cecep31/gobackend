@@ -21,7 +21,7 @@ func AddPost(service posts.Service) fiber.Handler {
 		}
 
 		resulvalidate := utils.ValidateThis(&requestBody)
-		if resulvalidate != nil {
+		if len(resulvalidate) > 0 {
 			return c.Status(422).JSON(presenter.ErrorResponse(resulvalidate, "data is not valite"))
 		}
 
@@ -55,13 +55,9 @@ func UpdatePost(service posts.Service) fiber.Handler {
 		requestBody.ID = post_id
 
 		resulvalidate := utils.ValidateThis(requestBody)
-		if resulvalidate != nil {
+		if len(resulvalidate) > 0 {
 			return c.JSON(presenter.ErrorResponse(resulvalidate))
 		}
-		if err != nil {
-			return c.JSON(presenter.PostErrorResponse(err.Error()))
-		}
-
 		errrepo := service.UpdatePost(&requestBody)
 		if errrepo != nil {
 			return c.JSON(presenter.PostErrorResponse(err))

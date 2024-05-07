@@ -81,7 +81,7 @@ func HandleLogin(authservice auth.Service) fiber.Handler {
 
 		resulvalidate := utils.ValidateThis(logininput)
 
-		if resulvalidate != nil {
+		if len(resulvalidate) > 0 {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(resulvalidate))
 		}
 
@@ -90,7 +90,7 @@ func HandleLogin(authservice auth.Service) fiber.Handler {
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
-			} else if err != nil {
+			} else {
 				return pkg.Unexpected(err.Error())
 			}
 		}
@@ -149,7 +149,7 @@ func UpdateUserProfile(service auth.Service) fiber.Handler {
 		}
 
 		resulvalidate := utils.ValidateThis(requestBody)
-		if resulvalidate != nil {
+		if len(resulvalidate) > 0 {
 			return c.JSON(presenter.ErrorResponse(resulvalidate))
 		}
 
