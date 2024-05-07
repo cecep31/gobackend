@@ -89,14 +89,14 @@ func HandleLogin(authservice auth.Service) fiber.Handler {
 
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
+				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid email or password", "data": nil})
 			} else {
 				return pkg.Unexpected(err.Error())
 			}
 		}
 
 		if !utils.CheckPasswordHash(logininput.Password, user.Password) {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid email or password", "data": nil})
 		}
 
 		t, err := authservice.GenerateToken(user)
