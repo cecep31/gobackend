@@ -11,7 +11,7 @@ import (
 
 func Protectedws() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("SIGNKEY"))},
+		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("JWT_KEY"))},
 		ErrorHandler: jwtError,
 		TokenLookup:  "query:token",
 		AuthScheme:   "",
@@ -20,7 +20,7 @@ func Protectedws() func(*fiber.Ctx) error {
 
 func Protected() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("SIGNKEY"))},
+		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("JWT_KEY"))},
 		ErrorHandler: jwtError,
 	})
 }
