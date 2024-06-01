@@ -3,7 +3,7 @@ module gobackend
 go 1.21
 
 require (
-	github.com/bytedance/sonic v1.11.6
+	github.com/bytedance/sonic v1.11.8
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/gofiber/contrib/fiberzerolog v1.0.1
 	github.com/gofiber/contrib/jwt v1.0.9
@@ -13,7 +13,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/minio/minio-go/v7 v7.0.70
-	github.com/rs/zerolog v1.32.0
+	github.com/rs/zerolog v1.33.0
 	github.com/valyala/fasthttp v1.52.0
 	golang.org/x/crypto v0.23.0
 	golang.org/x/oauth2 v0.20.0

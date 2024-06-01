@@ -18,7 +18,7 @@ type Service interface {
 	GetPost(slug string) (*entities.Posts, error)
 	GetPostsRandom() (*[]entities.Posts, error)
 	GetTotalPosts() (int64, error)
-	GetPostsPaginated(page int, perPage int) ([]entities.Posts, error)
+	GetPostsPaginated(offset int, Limit int) ([]entities.Posts, error)
 	UpdatePost(post *PostUpdate) error
 	GetPostByid(id string) (*entities.Posts, error)
 	DeletePost(id string) error
@@ -68,8 +68,8 @@ func (s *service) GetTotalPosts() (int64, error) {
 	return s.repository.CountPosts()
 }
 
-func (s *service) GetPostsPaginated(page int, perPage int) ([]entities.Posts, error) {
-	return s.repository.FindPaginated(page, perPage)
+func (s *service) GetPostsPaginated(offset int, Limit int) ([]entities.Posts, error) {
+	return s.repository.FindPaginated(offset, Limit)
 }
 func (s *service) DeletePost(id string) error {
 	id_uuid, err := uuid.Parse(id)

@@ -14,7 +14,7 @@ type Repository interface {
 	GetPostBySlug(slug string) (*entities.Posts, error)
 	GetPostsRandom(take int) (*[]entities.Posts, error)
 	CountPosts() (int64, error)
-	FindPaginated(page int, perPage int) ([]entities.Posts, error)
+	FindPaginated(offset int, Limit int) ([]entities.Posts, error)
 	UpdatePost(post *entities.Posts) error
 	DeletePostById(post *entities.Posts) error
 }
@@ -52,10 +52,9 @@ func (r *repository) GetPosts(posts *[]entities.Posts) (*[]entities.Posts, error
 	return posts, nil
 }
 
-func (r *repository) FindPaginated(page int, perPage int) ([]entities.Posts, error) {
+func (r *repository) FindPaginated(offset int, Limit int) ([]entities.Posts, error) {
 	var posts []entities.Posts
-	offset := (page - 1) * perPage
-	result := r.Db.Offset(offset).Preload("Creator").Order("created_at desc").Limit(perPage).Find(&posts)
+	result := r.Db.Offset(offset).Preload("Creator").Order("created_at desc").Limit(Limit).Find(&posts)
 	if result.Error != nil {
 		return nil, result.Error
 	}

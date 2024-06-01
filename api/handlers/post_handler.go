@@ -77,26 +77,25 @@ func GetPosts(service posts.Service) fiber.Handler {
 			}
 			return c.JSON(postsdata)
 		}
-		page := c.Query("page", "1")
-		itemsPerPage := c.Query("per_page", "5")
+		offset := c.Query("offset", "0")
+		limit := c.Query("limit", "100")
 
 		// Convert query parameters to integers
-		pageInt, _ := strconv.Atoi(page)
-		perPageInt, _ := strconv.Atoi(itemsPerPage)
+		offsetInt, _ := strconv.Atoi(offset)
+		limitInt, _ := strconv.Atoi(limit)
 
 		totalPosts, err := service.GetTotalPosts()
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
 
-		postsdata, err := service.GetPostsPaginated(pageInt, perPageInt)
+		postsdata, err := service.GetPostsPaginated(offsetInt, limitInt)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
 
 		response := fiber.Map{
 			"total": totalPosts,
-			"page":  pageInt,
 			"data":  postsdata,
 		}
 		return c.JSON(response)
