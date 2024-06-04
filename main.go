@@ -24,14 +24,11 @@ func main() {
 		fmt.Println("dotenv not found")
 	}
 
-	database.SetupDatabase()
-	db := database.DB
+	db := database.SetupDatabase()
 	minio, errstore := initstorage.NewFileStorageClient()
 	if errstore != nil {
 		log.Fatal(errstore)
 	}
-
-	database.MigrationDB()
 
 	handlers.Googleapi()
 	utils.SetupValidate()

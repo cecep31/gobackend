@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"gobackend/pkg/entities"
 	"os"
+
+	"gorm.io/gorm"
 )
 
-func MigrationDB() {
+func MigrationDB(db *gorm.DB) {
 	if os.Getenv("MIGRATE") != "" {
 		fmt.Println("Migration...")
-		DB.AutoMigrate(&entities.Users{}, &entities.Tasks{}, &entities.Posts{}, &entities.PostComments{})
+		db.AutoMigrate(&entities.Users{}, &entities.Tasks{}, &entities.Posts{}, &entities.PostComments{})
 		fmt.Println("Migration Done")
 	}
 }

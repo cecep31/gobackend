@@ -10,9 +10,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var DB *gorm.DB
-
-func SetupDatabase() {
+func SetupDatabase() *gorm.DB {
 	username := os.Getenv("POSTGRES_USER")
 	password := os.Getenv("POSTGRES_PASSWORD")
 	dbName := os.Getenv("POSTGRES_DB")
@@ -31,7 +29,7 @@ func SetupDatabase() {
 		}
 	}
 
-	DB, err = gorm.Open(postgres.New(postgres.Config{
+	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: dsn, PreferSimpleProtocol: true,
 	}), &config)
 
@@ -39,4 +37,6 @@ func SetupDatabase() {
 		log.Fatal(err)
 		panic(err.Error())
 	}
+
+	return db
 }
