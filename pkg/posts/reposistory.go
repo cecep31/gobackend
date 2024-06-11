@@ -54,7 +54,7 @@ func (r *repository) GetPosts(posts *[]entities.Posts) (*[]entities.Posts, error
 
 func (r *repository) FindPaginated(offset int, Limit int) ([]entities.Posts, error) {
 	var posts []entities.Posts
-	result := r.Db.Offset(offset).Preload("Creator").Order("created_at desc").Limit(Limit).Find(&posts)
+	result := r.Db.Offset(offset).Preload("Tags").Preload("Creator").Order("created_at desc").Limit(Limit).Find(&posts)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -63,7 +63,7 @@ func (r *repository) FindPaginated(offset int, Limit int) ([]entities.Posts, err
 
 func (r *repository) GetPostsRandom(take int) (*[]entities.Posts, error) {
 	posts := new([]entities.Posts)
-	result := r.Db.Preload("Creator").Order("RANDOM()").Limit(take).Find(posts)
+	result := r.Db.Preload("Creator").Preload("Tags").Order("RANDOM()").Limit(take).Find(posts)
 	err := result.Error
 	if err != nil {
 		return &[]entities.Posts{}, err

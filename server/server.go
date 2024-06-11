@@ -71,8 +71,7 @@ func Create() *fiber.App {
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
-			"status":  "success",
-			"message": "server ready",
+			"message": "Hello, World!",
 		})
 	})
 
