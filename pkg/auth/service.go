@@ -92,7 +92,7 @@ func (s *serivce) SetTokenJwt(user *entities.Users) (string, error) {
 	claims["id"] = user.ID
 	claims["email"] = user.Email
 	claims["issuperadmin"] = user.Issuperadmin
-	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 5).Unix()
 	t, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
 		return "", err
@@ -124,7 +124,7 @@ func (service *serivce) GenerateToken(user *entities.Users) (string, error) {
 	claims["id"] = user.ID
 	claims["email"] = user.Email
 	claims["issuperadmin"] = user.Issuperadmin
-	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 5).Unix()
 
 	t, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	return t, err
