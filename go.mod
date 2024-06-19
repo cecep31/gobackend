@@ -3,8 +3,8 @@ module gobackend
 go 1.21
 
 require (
-	github.com/bytedance/sonic v1.11.8
-	github.com/go-playground/validator/v10 v10.21.0
+	github.com/bytedance/sonic v1.11.9
+	github.com/go-playground/validator/v10 v10.22.0
 	github.com/gofiber/contrib/fiberzerolog v1.0.1
 	github.com/gofiber/contrib/jwt v1.0.9
 	github.com/gofiber/fiber/v2 v2.52.4
@@ -17,7 +17,7 @@ require (
 	github.com/valyala/fasthttp v1.52.0
 	golang.org/x/crypto v0.24.0
 	golang.org/x/oauth2 v0.21.0
-	gorm.io/driver/postgres v1.5.7
+	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.10
 )
 
@@ -36,7 +36,7 @@ require (
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
-	github.com/jackc/pgx/v5 v5.5.3 // indirect
+	github.com/jackc/pgx/v5 v5.5.5 // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
