@@ -82,9 +82,13 @@ func (s *service) DeletePost(id string) error {
 }
 
 func (s *service) UploadPhoto(ctx *fasthttp.RequestCtx, filename string, file *multipart.FileHeader) (string, error) {
-	uploadFilename := fmt.Sprintf("post_photo/%s", utils.GenerateRandomFilename(filename))
+	generatedfilename := utils.GenerateRandomFilename(filename)
+	uploadFilename := fmt.Sprintf("post_photo/%s", generatedfilename)
 	if err := s.minioRepository.UploadFile(ctx, uploadFilename, file); err != nil {
 		return "", err
+	}
+	if s.minioRepository.AddFileRecord(generatedfilename, uploadFilename, file.Size, file.Header.Get("Content-Type")) != nil {
+		return "/" + uploadFilename, nil
 	}
 	return "/" + uploadFilename, nil
 }
