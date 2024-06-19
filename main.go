@@ -34,7 +34,7 @@ func main() {
 	utils.SetupValidate()
 
 	fmt.Println("Initial repository & service")
-	miniorepo := storage.NewRepo(minio)
+	miniorepo := storage.NewRepo(minio, db)
 	userrepo := user.NewRepo(db)
 	userserivce := user.NewService(userrepo)
 	postrepo := posts.NewRepo(db)

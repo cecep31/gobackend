@@ -21,9 +21,10 @@ type repository struct {
 	db    *gorm.DB
 }
 
-func NewRepo(minioclient *minio.Client) Repository {
+func NewRepo(minioclient *minio.Client, db *gorm.DB) Repository {
 	return &repository{
 		minio: minioclient,
+		db:    db,
 	}
 }
 
