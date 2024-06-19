@@ -135,7 +135,6 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 			// Get all files from "documents" key:
 			files := form.File["image"]
 			if len(files) != 1 {
-
 				return c.Status(fiber.StatusBadRequest).JSON(presenter.ErrorResponse(fiber.Map{"image": "Only one file allowed"}))
 			}
 			file := files[0]
@@ -152,7 +151,7 @@ func UploadPhotoHandler(service posts.Service) fiber.Handler {
 			useridstring := claims["id"].(string)
 			userid, _ := uuid.Parse(useridstring)
 
-			filename, errput := service.UploadPhoto(c.Context(), file.Filename, file, userid)
+			filename, errput := service.UploadPhoto(c.Context(), file, userid)
 			if errput != nil {
 				return c.Status(500).JSON(presenter.ErrorResponse(errput.Error()))
 			}
