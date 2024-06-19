@@ -22,7 +22,7 @@ type Service interface {
 	UpdatePost(post *PostUpdate) error
 	GetPostByid(id string) (*entities.Posts, error)
 	DeletePost(id string) error
-	UploadPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader) (string, error)
+	UploadPhoto(ctx *fasthttp.RequestCtx, objectname string, file *multipart.FileHeader, uploader uuid.UUID) (string, error)
 	ValidFileExtension(filename string, allowedExtensions []string) bool
 }
 
@@ -81,13 +81,13 @@ func (s *service) DeletePost(id string) error {
 	return s.repository.DeletePostById(post)
 }
 
-func (s *service) UploadPhoto(ctx *fasthttp.RequestCtx, filename string, file *multipart.FileHeader) (string, error) {
+func (s *service) UploadPhoto(ctx *fasthttp.RequestCtx, filename string, file *multipart.FileHeader, uploader uuid.UUID) (string, error) {
 	generatedfilename := utils.GenerateRandomFilename(filename)
 	uploadFilename := fmt.Sprintf("post_photo/%s", generatedfilename)
 	if err := s.minioRepository.UploadFile(ctx, uploadFilename, file); err != nil {
 		return "", err
 	}
-	if s.minioRepository.AddFileRecord(generatedfilename, uploadFilename, file.Size, file.Header.Get("Content-Type")) != nil {
+	if s.minioRepository.AddFileRecord(generatedfilename, uploadFilename, file.Size, file.Header.Get("Content-Type"), uploader) != nil {
 		return "/" + uploadFilename, nil
 	}
 	return "/" + uploadFilename, nil
