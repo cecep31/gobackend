@@ -12,13 +12,14 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
-	github.com/minio/minio-go/v7 v7.0.71
+	github.com/minio/minio-go/v7 v7.0.72
 	github.com/rs/zerolog v1.33.0
 	github.com/valyala/fasthttp v1.52.0
 	golang.org/x/crypto v0.24.0
 	golang.org/x/oauth2 v0.21.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.10
+	github.com/oklog/ulid/v2 v2.1.0
 )
 
 require (
@@ -47,7 +48,6 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
-	github.com/oklog/ulid/v2 v2.1.0 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/xid v1.5.0 // indirect
