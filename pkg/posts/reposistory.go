@@ -54,7 +54,7 @@ func (r *repository) GetPosts(posts *[]entities.Posts) (*[]entities.Posts, error
 
 func (r *repository) FindPaginated(offset int, Limit int) ([]entities.Posts, error) {
 	var posts []entities.Posts
-	result := r.Db.Offset(offset).Preload("Tags").Preload("Creator").Order("created_at desc").Limit(Limit).Find(&posts)
+	result := r.Db.Offset(offset).Preload("Tags").Preload("Creator").Preload("Likes").Order("created_at desc").Limit(Limit).Find(&posts)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -72,7 +72,7 @@ func (r *repository) GetPostsRandom(take int) (*[]entities.Posts, error) {
 }
 
 func (r *repository) GetPost(id string, post *entities.Posts) (*entities.Posts, error) {
-	err := r.Db.Preload("Creator").Preload("Tags").Where("id = ?", id).First(post).Error
+	err := r.Db.Preload("Creator").Preload("Tags").Preload("Likes").Where("id = ?", id).First(post).Error
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (r *repository) GetPost(id string, post *entities.Posts) (*entities.Posts, 
 
 func (repo *repository) GetPostBySlug(slug string) (*entities.Posts, error) {
 	post := new(entities.Posts)
-	if err := repo.Db.Preload("Creator").Preload("Tags").Where("slug = ?", slug).First(post).Error; err != nil {
+	if err := repo.Db.Preload("Creator").Preload("Tags").Preload("Likes").Where("slug = ?", slug).First(post).Error; err != nil {
 		return nil, err
 	}
 	return post, nil
