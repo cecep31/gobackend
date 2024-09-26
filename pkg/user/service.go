@@ -12,6 +12,7 @@ type Service interface {
 	GetUsers() (*[]entities.Users, error)
 	GetUser(id uuid.UUID) (*entities.Users, error)
 	DeleteUser(user *entities.Users) error
+	GetWriter() (interface{}, error)
 }
 
 type service struct {
@@ -48,4 +49,8 @@ func (s *service) GetUser(id uuid.UUID) (*entities.Users, error) {
 }
 func (s *service) DeleteUser(user *entities.Users) error {
 	return s.repository.DeleteUser(user)
+}
+
+func (s *service) GetWriter() (interface{}, error) {
+	return s.repository.GetWriter()
 }

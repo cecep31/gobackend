@@ -14,6 +14,7 @@ type Repository interface {
 	UpdateUser(user *entities.Users) error
 	DeleteUser(user *entities.Users) error
 	GetUserByEmail(email string) (*entities.Users, error)
+	GetWriter() (interface{}, error)
 }
 
 type repository struct {
@@ -79,6 +80,17 @@ func (r *repository) UpdateUser(user *entities.Users) error {
 	}
 	return nil
 }
+
+func (r *repository) GetWriter() (interface{}, error) {
+	result := []map[string]interface{}{}
+	err := r.Db.Table("users").Find(&result).Error
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
+
 func (r *repository) DeleteUser(user *entities.Users) error {
 	err := r.Db.Delete(user).Error
 	if err != nil {

@@ -50,6 +50,7 @@ func main() {
 	api.SetupAuthRoutes(auth, authservice)
 	api.UserRouter(v2, userserivce)
 	api.PostRouter(v2, postservice)
+	api.WriterRouter(v2, userserivce)
 
 	if err := server.Listen(app); err != nil {
 		log.Panic(err)
