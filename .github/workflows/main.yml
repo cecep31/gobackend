@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:    
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -29,7 +29,7 @@ jobs:
           tags: cecep31/gobackend:latest
 
   deploy:
-    needs: docker
+    needs: build
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
