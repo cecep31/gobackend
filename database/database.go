@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -11,16 +10,9 @@ import (
 )
 
 func SetupDatabase() *gorm.DB {
-	username := os.Getenv("POSTGRES_USER")
-	password := os.Getenv("POSTGRES_PASSWORD")
-	dbName := os.Getenv("POSTGRES_DB")
-	dbHost := os.Getenv("POSTGRES_HOST")
-	dbport := os.Getenv("POSTGRES_PORT")
+	dsn := os.Getenv("DATABASE_URL")
 
-	var err error
 	var config gorm.Config
-	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%s sslmode=prefer password=%s", dbHost, username, dbName, dbport, password)
-
 	if os.Getenv("ENABLE_GORM_LOGGER") != "" {
 		config = gorm.Config{}
 	} else {
@@ -35,7 +27,7 @@ func SetupDatabase() *gorm.DB {
 
 	if err != nil {
 		log.Fatal(err)
-		panic(err.Error())
+		panic(err.Error()) // Note: This line is redundant after log.Fatal
 	}
 
 	return db

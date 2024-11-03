@@ -1,31 +1,31 @@
-# fly.toml app configuration file generated for gobackend on 2023-08-27T22:23:36+07:00
+# fly.toml app configuration file generated for gobackend on 2024-11-03T09:05:47+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "gobackend"
-primary_region = "sin"
-
-[env]
-  S3_ENDPOINT="s3.ap-southeast-1.amazonaws.com"
-  S3_BUCKET='pilput-storage'
-  S3_REGION='ap-southeast-1'
-  DOMAIN="pilput.dev"
-  ENABLE_LIMITER="true"
-  MIGRATE=true
+app = 'gobackend'
+primary_region = 'sin'
 
 [build]
-  image = "cecep31/gobackend:latest"
+  image = 'cecep31/gobackend:latest'
+
+[env]
+  DOMAIN = 'pilput.dev'
+  ENABLE_LIMITER = 'true'
+  MIGRATE = 'true'
+  S3_BUCKET = 'pilput-storage'
+  S3_ENDPOINT = 's3.ap-southeast-1.amazonaws.com'
+  S3_REGION = 'ap-southeast-1'
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 1
-  processes = ["app"]
+  processes = ['app']
 
 [[vm]]
-  memory = '256mb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256
