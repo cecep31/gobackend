@@ -10,19 +10,22 @@ primary_region = "sin"
   S3_ENDPOINT="s3.ap-southeast-1.amazonaws.com"
   S3_BUCKET='pilput-storage'
   S3_REGION='ap-southeast-1'
-  POSTGRES_DB='gobackend'
-  POSTGRES_HOST='gobackend-db.internal'
-  POSTGRES_PORT=5433
   DOMAIN="pilput.dev"
   ENABLE_LIMITER="true"
   MIGRATE=true
 
 [build]
+  image = "cecep31/gobackend:latest"
 
 [http_service]
   internal_port = 8080
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ["app"]
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
