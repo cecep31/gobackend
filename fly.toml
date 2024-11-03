@@ -12,7 +12,6 @@ primary_region = 'sin'
 [env]
   DOMAIN = 'pilput.dev'
   ENABLE_LIMITER = 'true'
-  MIGRATE = 'true'
   S3_BUCKET = 'pilput-storage'
   S3_ENDPOINT = 's3.ap-southeast-1.amazonaws.com'
   S3_REGION = 'ap-southeast-1'
