@@ -1,4 +1,4 @@
-image: golang:latest
+image: golang:1.23-alpine
 
 stages:          # List of stages for jobs, and their order of execution
   - build
