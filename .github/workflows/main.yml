@@ -1,4 +1,4 @@
-name: docker
+name: docker-build-and-deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:    
-  build:
+  docker:
     runs-on: ubuntu-latest
     steps:
       -
@@ -29,7 +29,6 @@ jobs:
           tags: cecep31/gobackend:latest
 
   deploy:
-    needs: build
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
