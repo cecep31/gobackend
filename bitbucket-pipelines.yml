@@ -3,13 +3,12 @@ image: golang:1.23-alpine
 
 pipelines:
   default:
-    - parallel:
-      - step:
-          name: Test and Build
-          script:
-            - go build 
-      - step:
-          name: Lint code
-          image: golangci/golangci-lint:v1.31.0
-          script:
-            - echo "Linting code..."
+    - step:
+        name: Test and Build
+        script:
+          - go build 
+    - step:
+        name: Lint code
+        image: golangci/golangci-lint:v1.31.0
+        script:
+          - echo "Linting code..."
