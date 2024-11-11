@@ -45,7 +45,7 @@ func main() {
 
 	app := server.Create()
 
-	v2 := app.Group("v2")
+	v2 := app.Group("v1")
 	auth := app.Group("auth")
 	api.SetupAuthRoutes(auth, authservice)
 	api.UserRouter(v2, userserivce)

@@ -18,7 +18,6 @@ func UserRouter(app fiber.Router, service user.Service) {
 		return c.SendStatus(fiber.StatusServiceUnavailable)
 	})
 	app.Delete("users/:id", middleware.Protected(), middleware.IsSuperAdmin, handlers.DeletUser(service))
-
 }
 
 func SetupAuthRoutes(app fiber.Router, service auth.Service) {
