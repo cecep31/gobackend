@@ -45,12 +45,12 @@ func main() {
 
 	app := server.Create()
 
-	v2 := app.Group("v1")
+	v1 := app.Group("v1")
 	auth := app.Group("auth")
 	api.SetupAuthRoutes(auth, authservice)
-	api.UserRouter(v2, userserivce)
-	api.PostRouter(v2, postservice)
-	api.WriterRouter(v2, userserivce)
+	api.UserRouter(v1, userserivce)
+	api.PostRouter(v1, postservice)
+	api.WriterRouter(v1, userserivce)
 
 	if err := server.Listen(app); err != nil {
 		log.Panic(err)
