@@ -30,6 +30,7 @@ func SetupAuthRoutes(app fiber.Router, service auth.Service) {
 
 func PostRouter(app fiber.Router, service posts.Service) {
 	app.Get("posts", handlers.GetPosts(service))
+	app.Get("posts/random", handlers.GetPostsRandom(service))
 	app.Get("posts/:slug", handlers.GetPost(service))
 	app.Post("posts", middleware.Protected(), handlers.AddPost(service))
 	app.Put("posts/:id", middleware.Protected(), handlers.UpdatePost(service))

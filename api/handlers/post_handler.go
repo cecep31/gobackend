@@ -65,18 +65,30 @@ func UpdatePost(service posts.Service) fiber.Handler {
 		return c.Status(fiber.StatusCreated).JSON(&requestBody)
 	}
 }
+
+func GetPostsRandom(service posts.Service) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		postsdata, err := service.GetPostsRandom()
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error":   err.Error(),
+				"success": false,
+				"data":    nil,
+				"message": "error",
+			})
+		}
+		return c.JSON(fiber.Map{
+			"data":    postsdata,
+			"error":   nil,
+			"success": true,
+			"message": "success",
+		})
+	}
+}
+
 func GetPosts(service posts.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		random := c.Query("random")
-		if random == "true" {
-			postsdata, err := service.GetPostsRandom()
-			if err != nil {
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error": err.Error(),
-				})
-			}
-			return c.JSON(postsdata)
-		}
+
 		offset := c.Query("offset", "0")
 		limit := c.Query("limit", "100")
 
