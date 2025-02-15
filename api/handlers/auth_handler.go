@@ -142,7 +142,7 @@ func UpdateUserProfile(service auth.Service) fiber.Handler {
 		claims := userlocal.Claims.(jwt.MapClaims)
 		id := claims["id"].(string)
 
-		var requestBody entities.Users
+		var requestBody entities.User
 
 		if err := c.BodyParser(&requestBody); err != nil {
 			return err

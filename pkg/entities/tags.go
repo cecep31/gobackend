@@ -1,6 +1,6 @@
 package entities
 
-type Tags struct {
+type Tag struct {
 	ID   uint   `gorm:"primaryKey"`
 	Name string `json:"name"`
 }

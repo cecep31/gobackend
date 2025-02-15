@@ -2,7 +2,7 @@ package entities
 
 import "gobackend/database/template"
 
-type Users struct {
+type User struct {
 	template.DefaultModel
 	Username     string `json:"username" gorm:"uniqueIndex;"`
 	FirstName    string `json:"first_name" gorm:"default:pilput"`

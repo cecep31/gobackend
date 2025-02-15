@@ -13,14 +13,14 @@ import (
 )
 
 type Service interface {
-	InserPosts(post *entities.Posts) (*entities.Posts, error)
-	GetPosts() (*[]entities.Posts, error)
-	GetPost(slug string) (*entities.Posts, error)
-	GetPostsRandom() (*[]entities.Posts, error)
+	InserPosts(post *entities.Post) (*entities.Post, error)
+	GetPosts() (*[]entities.Post, error)
+	GetPost(slug string) (*entities.Post, error)
+	GetPostsRandom() (*[]entities.Post, error)
 	GetTotalPosts() (int64, error)
-	GetPostsPaginated(offset int, Limit int) ([]entities.Posts, error)
+	GetPostsPaginated(offset int, Limit int) ([]entities.Post, error)
 	UpdatePost(post *PostUpdate) error
-	GetPostByid(id string) (*entities.Posts, error)
+	GetPostByid(id string) (*entities.Post, error)
 	DeletePost(id string) error
 	UploadPhoto(ctx *fasthttp.RequestCtx, file *multipart.FileHeader, uploader uuid.UUID) (string, error)
 	ValidFileExtension(filename string, allowedExtensions []string) bool
@@ -39,26 +39,26 @@ func NewService(r Repository, miniorepo storage.Repository) Service {
 }
 
 func (s *service) UpdatePost(post *PostUpdate) error {
-	newpost := entities.Posts{Title: post.Title, Body: post.Body, CreatedBy: post.CreatedBy, Slug: post.Slug, Photo_url: post.Photo_url}
+	newpost := entities.Post{Title: post.Title, Body: post.Body, CreatedBy: post.CreatedBy, Slug: post.Slug, Photo_url: post.Photo_url}
 	return s.repository.UpdatePost(&newpost)
 }
-func (s *service) InserPosts(post *entities.Posts) (*entities.Posts, error) {
+func (s *service) InserPosts(post *entities.Post) (*entities.Post, error) {
 	return s.repository.CreatePost(post)
 }
-func (s *service) GetPosts() (*[]entities.Posts, error) {
-	var posts []entities.Posts
+func (s *service) GetPosts() (*[]entities.Post, error) {
+	var posts []entities.Post
 	return s.repository.GetPosts(&posts)
 }
 
-func (s *service) GetPostsRandom() (*[]entities.Posts, error) {
+func (s *service) GetPostsRandom() (*[]entities.Post, error) {
 	return s.repository.GetPostsRandom(6)
 }
 
-func (s *service) GetPost(slug string) (*entities.Posts, error) {
+func (s *service) GetPost(slug string) (*entities.Post, error) {
 	return s.repository.GetPostBySlug(slug)
 }
-func (s *service) GetPostByid(id string) (*entities.Posts, error) {
-	post := new(entities.Posts)
+func (s *service) GetPostByid(id string) (*entities.Post, error) {
+	post := new(entities.Post)
 	id_uuid, _ := uuid.Parse(id)
 	post.ID = id_uuid
 	return s.repository.GetPost(id, post)
@@ -68,7 +68,7 @@ func (s *service) GetTotalPosts() (int64, error) {
 	return s.repository.CountPosts()
 }
 
-func (s *service) GetPostsPaginated(offset int, Limit int) ([]entities.Posts, error) {
+func (s *service) GetPostsPaginated(offset int, Limit int) ([]entities.Post, error) {
 	return s.repository.FindPaginated(offset, Limit)
 }
 func (s *service) DeletePost(id string) error {
@@ -76,7 +76,7 @@ func (s *service) DeletePost(id string) error {
 	if err != nil {
 		return err
 	}
-	post := new(entities.Posts)
+	post := new(entities.Post)
 	post.ID = id_uuid
 	return s.repository.DeletePostById(post)
 }

@@ -15,5 +15,5 @@ type Files struct {
 	Type       string     `json:"type"`
 	Created_by uuid.UUID  `json:"created_by"`
 	Deleted_at *time.Time `json:"deleted_at"`
-	Uploader   Users      `gorm:"foreignKey:Created_by"`
+	Uploader   User       `gorm:"foreignKey:Created_by"`
 }

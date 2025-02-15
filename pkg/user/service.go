@@ -9,9 +9,9 @@ import (
 
 type Service interface {
 	InserUser(user *Users) (*Users, error)
-	GetUsers() (*[]entities.Users, error)
-	GetUser(id uuid.UUID) (*entities.Users, error)
-	DeleteUser(user *entities.Users) error
+	GetUsers() (*[]entities.User, error)
+	GetUser(id uuid.UUID) (*entities.User, error)
+	DeleteUser(user *entities.User) error
 	GetWriter() (interface{}, error)
 }
 
@@ -39,15 +39,15 @@ func (s *service) InserUser(user *Users) (*Users, error) {
 	user.Password = hashpass
 	return s.repository.CreateUser(user)
 }
-func (s *service) GetUsers() (*[]entities.Users, error) {
+func (s *service) GetUsers() (*[]entities.User, error) {
 	return s.repository.GetUsers()
 }
-func (s *service) GetUser(id uuid.UUID) (*entities.Users, error) {
-	var user entities.Users
+func (s *service) GetUser(id uuid.UUID) (*entities.User, error) {
+	var user entities.User
 	user.ID = id
 	return s.repository.GetUser(&user)
 }
-func (s *service) DeleteUser(user *entities.Users) error {
+func (s *service) DeleteUser(user *entities.User) error {
 	return s.repository.DeleteUser(user)
 }
 

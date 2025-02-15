@@ -12,6 +12,6 @@ type PostComments struct {
 	PostId           string
 	ParrentCommentId uint64
 	CreatedBy        uuid.UUID       `json:"created_by"`
-	Creator          Users           `json:"creator" gorm:"foreignKey:CreatedBy"`
+	Creator          User            `json:"creator" gorm:"foreignKey:CreatedBy"`
 	replies          []*PostComments `gorm:"foreignKey:ID"`
 }

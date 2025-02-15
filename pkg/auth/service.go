@@ -17,12 +17,12 @@ import (
 
 type Service interface {
 	GetUserInfoGoogle(token string) (*GoogleResponse, error)
-	GetUserOrCreate(profile *GoogleResponse) (*entities.Users, error)
-	SetTokenJwt(user *entities.Users) (string, error)
-	GetProfile(id string) (*entities.Users, error)
-	UpdateProfile(user *entities.Users) error
-	GetUserByEmail(email string) (*entities.Users, error)
-	GenerateToken(user *entities.Users) (string, error)
+	GetUserOrCreate(profile *GoogleResponse) (*entities.User, error)
+	SetTokenJwt(user *entities.User) (string, error)
+	GetProfile(id string) (*entities.User, error)
+	UpdateProfile(user *entities.User) error
+	GetUserByEmail(email string) (*entities.User, error)
+	GenerateToken(user *entities.User) (string, error)
 }
 
 type serivce struct {
@@ -68,12 +68,12 @@ func (service *serivce) GetUserInfoGoogle(token string) (*GoogleResponse, error)
 	return &data, nil
 }
 
-func (s *serivce) GetUserOrCreate(profile *GoogleResponse) (*entities.Users, error) {
+func (s *serivce) GetUserOrCreate(profile *GoogleResponse) (*entities.User, error) {
 	user, err := s.authrepository.GetUserByEmail(profile.Email)
 	if err == nil {
 		return user, err
 	}
-	usercreate := new(entities.Users)
+	usercreate := new(entities.User)
 	usercreate.Email = profile.Email
 	usercreate.FirstName = profile.Given_name
 	usercreate.LastName = profile.Family_name
@@ -86,7 +86,7 @@ func (s *serivce) GetUserOrCreate(profile *GoogleResponse) (*entities.Users, err
 
 }
 
-func (s *serivce) SetTokenJwt(user *entities.Users) (string, error) {
+func (s *serivce) SetTokenJwt(user *entities.User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["id"] = user.ID
@@ -100,8 +100,8 @@ func (s *serivce) SetTokenJwt(user *entities.Users) (string, error) {
 	return t, nil
 }
 
-func (s *serivce) GetProfile(id string) (*entities.Users, error) {
-	profile := new(entities.Users)
+func (s *serivce) GetProfile(id string) (*entities.User, error) {
+	profile := new(entities.User)
 	id_uuid, err := uuid.Parse(id)
 	if err != nil {
 		return nil, err
@@ -110,15 +110,15 @@ func (s *serivce) GetProfile(id string) (*entities.Users, error) {
 	return s.userreposistory.GetUser(profile)
 }
 
-func (s *serivce) UpdateProfile(user *entities.Users) error {
+func (s *serivce) UpdateProfile(user *entities.User) error {
 	return s.userreposistory.UpdateUser(user)
 }
 
-func (s *serivce) GetUserByEmail(email string) (*entities.Users, error) {
+func (s *serivce) GetUserByEmail(email string) (*entities.User, error) {
 	return s.userreposistory.GetUserByEmail(email)
 }
 
-func (service *serivce) GenerateToken(user *entities.Users) (string, error) {
+func (service *serivce) GenerateToken(user *entities.User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["id"] = user.ID

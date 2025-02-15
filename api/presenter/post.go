@@ -15,7 +15,7 @@ type post struct {
 	CreatedBy uuid.UUID `json:"created_by"`
 }
 
-func PostSuccess(postData *entities.Posts) *fiber.Map {
+func PostSuccess(postData *entities.Post) *fiber.Map {
 	resp := &fiber.Map{
 		"success": true,
 		"data": fiber.Map{
@@ -28,7 +28,7 @@ func PostSuccess(postData *entities.Posts) *fiber.Map {
 
 	return resp
 }
-func PostsSuccessResponse(data *[]entities.Posts) *fiber.Map {
+func PostsSuccessResponse(data *[]entities.Post) *fiber.Map {
 
 	if len(*data) == 0 {
 		return &fiber.Map{
